@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB6C834A-B58E-4BBF-8BC5-4DEE6A925B4B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>TES3Lib</RootNamespace>
+    <AssemblyName>TES3Lib</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Records\ACTI.cs" />
+    <Compile Include="Records\ALCH.cs" />
+    <Compile Include="Records\APPA.cs" />
+    <Compile Include="Records\ARMO.cs" />
+    <Compile Include="Base\Subrecord.cs" />
+    <Compile Include="Records\BODY.cs" />
+    <Compile Include="Records\BOOK.cs" />
+    <Compile Include="Records\BSGN.cs" />
+    <Compile Include="Records\CLAS.cs" />
+    <Compile Include="Records\CLOT.cs" />
+    <Compile Include="Records\CONT.cs" />
+    <Compile Include="Records\CREA.cs" />
+    <Compile Include="Records\DIAL.cs" />
+    <Compile Include="Records\DOOR.cs" />
+    <Compile Include="Records\ENCH.cs" />
+    <Compile Include="Records\FACT.cs" />
+    <Compile Include="Records\REFR.cs" />
+    <Compile Include="Subrecords\NPC_\AIDT.cs" />
+    <Compile Include="Subrecords\NPC_\AI_A.cs" />
+    <Compile Include="Subrecords\NPC_\AI_E.cs" />
+    <Compile Include="Subrecords\NPC_\AI_F.cs" />
+    <Compile Include="Subrecords\NPC_\AI_T.cs" />
+    <Compile Include="Subrecords\NPC_\AI_W.cs" />
+    <Compile Include="Subrecords\NPC_\ANAM.cs" />
+    <Compile Include="Subrecords\NPC_\BNAM.cs" />
+    <Compile Include="Subrecords\NPC_\CNAM.cs" />
+    <Compile Include="Subrecords\NPC_\CNDT.cs" />
+    <Compile Include="Subrecords\NPC_\DNAM.cs" />
+    <Compile Include="Subrecords\NPC_\DODT.cs" />
+    <Compile Include="Subrecords\NPC_\FLAG.cs" />
+    <Compile Include="Subrecords\NPC_\FNAM.cs" />
+    <Compile Include="Subrecords\NPC_\KNAM.cs" />
+    <Compile Include="Subrecords\NPC_\MODL.cs" />
+    <Compile Include="Subrecords\NPC_\NAME.cs" />
+    <Compile Include="Subrecords\NPC_\NPCO.cs" />
+    <Compile Include="Subrecords\NPC_\NPCS.cs" />
+    <Compile Include="Subrecords\NPC_\NPDT.cs" />
+    <Compile Include="Subrecords\NPC_\RNAM.cs" />
+    <Compile Include="Subrecords\NPC_\XSCL.cs" />
+    <Compile Include="Subrecords\REFR\FRMR.cs" />
+    <Compile Include="Records\INFO.cs" />
+    <Compile Include="Records\INGR.cs" />
+    <Compile Include="Records\LAND.cs" />
+    <Compile Include="Records\LEVC.cs" />
+    <Compile Include="Records\LEVI.cs" />
+    <Compile Include="Records\LIGH.cs" />
+    <Compile Include="Records\LOCK.cs" />
+    <Compile Include="Records\LTEX.cs" />
+    <Compile Include="Records\MGEF.cs" />
+    <Compile Include="Records\MISC.cs" />
+    <Compile Include="Records\PROB.cs" />
+    <Compile Include="Records\RACE.cs" />
+    <Compile Include="Records\REGN.cs" />
+    <Compile Include="Records\REPA.cs" />
+    <Compile Include="Records\SCPT.cs" />
+    <Compile Include="Records\SKIL.cs" />
+    <Compile Include="Records\SNDG.cs" />
+    <Compile Include="Records\SOUN.cs" />
+    <Compile Include="Records\SPEL.cs" />
+    <Compile Include="Records\STAT.cs" />
+    <Compile Include="Records\WEAP.cs" />
+    <Compile Include="Subrecords\CELL\AMBI.cs" />
+    <Compile Include="Subrecords\CELL\DATA.cs" />
+    <Compile Include="Subrecords\CELL\NAM0.cs" />
+    <Compile Include="Subrecords\CELL\NAM5.cs" />
+    <Compile Include="Subrecords\CELL\NAME.cs" />
+    <Compile Include="Subrecords\CELL\RGNN.cs" />
+    <Compile Include="Subrecords\CELL\WHGT.cs" />
+    <Compile Include="Subrecords\REFR\ANAM.cs" />
+    <Compile Include="Subrecords\REFR\BNAM.cs" />
+    <Compile Include="Subrecords\REFR\DATA.cs" />
+    <Compile Include="Subrecords\REFR\DELE.cs" />
+    <Compile Include="Subrecords\REFR\DNAM.cs" />
+    <Compile Include="Subrecords\REFR\DODT.cs" />
+    <Compile Include="Subrecords\REFR\FLTV.cs" />
+    <Compile Include="Subrecords\REFR\INTV.cs" />
+    <Compile Include="Subrecords\REFR\KNAM.cs" />
+    <Compile Include="Subrecords\REFR\NAM9.cs" />
+    <Compile Include="Subrecords\REFR\NAME.cs" />
+    <Compile Include="Subrecords\REFR\TNAM.cs" />
+    <Compile Include="Subrecords\REFR\UNAM.cs" />
+    <Compile Include="Subrecords\REFR\XSCL.cs" />
+    <Compile Include="Subrecords\REFR\XSOL.cs" />
+    <Compile Include="Subrecords\STAT\MODL.cs" />
+    <Compile Include="Subrecords\STAT\NAME.cs" />
+    <Compile Include="Subrecords\TES3\DATA.cs" />
+    <Compile Include="Subrecords\TES3\HEDR.cs" />
+    <Compile Include="Subrecords\TES3\MAST.cs" />
+    <Compile Include="TES3.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Base\Record.cs" />
+    <Compile Include="Records\CELL.cs" />
+    <Compile Include="Records\NPC_.cs" />
+    <Compile Include="Records\PGRD.cs" />
+    <Compile Include="Records\TES3.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Util\Utility.csproj">
+      <Project>{1BC5CBBB-E155-4D9A-BC55-6FE75109C1B9}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
