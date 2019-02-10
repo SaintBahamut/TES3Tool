@@ -53,6 +53,10 @@
       <Project>{eb6c834a-b58e-4bbf-8bc5-4dee6a925b4b}</Project>
       <Name>TES3Lib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TES4Lib\TES4Lib.csproj">
+      <Project>{53183f83-12f9-499b-afad-c28415ba2ae5}</Project>
+      <Name>TES4Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

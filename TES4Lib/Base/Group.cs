@@ -1,25 +1,43 @@
-﻿using Utility;
+﻿using System;
+using System.Collections.Generic;
+using Utility;
 
 namespace TES4Lib.Structures.Base
 {
     public class Group
     {
-        public string Name { get; set; }
-        public ulong Size { get; set; }
+        readonly public string Name;
+        public int Size { get; set; }
         public string Label { get; set; }
-        public long Type { get; set; }
-        public ulong Stamp { get; set; }
-        public byte[] RawData { get; set; }
+        public int Type { get; set; }
+        public int Stamp { get; set; }
+        public byte[] Data { get; set; }
+        private byte[] RawData { get; set; }
+
+        private List<Record> records = new List<Record>();
+
+        public List<Record> Records
+        {
+            get { return records; }
+        }
+
+        public Group SubGroup { get; set; }
 
         public Group(byte [] rawData)
         {
-            rawData = RawData;
+            RawData = rawData;
             var reader = new ByteReader();
             Name = reader.ReadBytes<string>(RawData, 4);
-            Size = reader.ReadBytes<ulong>(RawData);
+            Size = reader.ReadBytes<int>(RawData);
             Label = reader.ReadBytes<string>(RawData, 4);
-            Type = reader.ReadBytes<long>(RawData);
-            Stamp = reader.ReadBytes<ulong>(RawData);
-        }     
+            Type = reader.ReadBytes<int>(RawData);
+            Stamp = reader.ReadBytes<int>(RawData);
+            Data = reader.ReadBytes<byte[]>(RawData, RawData.Length - 20);
+        }
+
+        protected virtual void BuildRecords(ByteReader reader)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
