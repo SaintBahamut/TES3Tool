@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using TES3Lib.Records;
 using TES3Lib.Subrecords.REFR;
 using Utility;
 
@@ -98,7 +97,9 @@ namespace TES3Lib.Structures.Base
             var properties = this.GetType()
                 .GetProperties(System.Reflection.BindingFlags.Public |
                                System.Reflection.BindingFlags.Instance |
-                               System.Reflection.BindingFlags.DeclaredOnly).ToList();
+                               System.Reflection.BindingFlags.DeclaredOnly)
+                               .OrderBy(x => x.MetadataToken)
+                               .ToList();
            
             if (properties.Any(x => x.Name.Equals("NAME")))
             {
@@ -115,12 +116,11 @@ namespace TES3Lib.Structures.Base
                 data.AddRange(subrecord.SerializeSubrecord());
             }
 
-            var stuff = Encoding.ASCII.GetBytes(Name)
+            return Encoding.ASCII.GetBytes(Name)
                 .Concat(BitConverter.GetBytes(data.Count()))
                 .Concat(BitConverter.GetBytes(Header))
                 .Concat(BitConverter.GetBytes(Flags))
                 .Concat(data).ToArray();
-            return stuff;
         }
 
         protected string GetRecordName(ByteReader reader)

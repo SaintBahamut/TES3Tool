@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using TES3Lib.Structures.Base;
 using TES3Lib.Subrecords.REFR;
 using Utility;
 
@@ -49,23 +53,26 @@ namespace TES3Lib.Records
                 Console.WriteLine($"REFR parse failure! {e}");
                 throw;
             }
+        }
 
-            //int size;
-            //string name;
+        public byte[] SerializeRecord()
+        {
+            var properties = this.GetType()
+                .GetProperties(System.Reflection.BindingFlags.Public |
+                               System.Reflection.BindingFlags.Instance |
+                               System.Reflection.BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
 
-            //name = GetRecordName(reader, data);
-            //size = GetRecordSize(reader, data);
-            //FRMR = new FRMR(reader.ReadBytes<byte[]>(data, size));
 
-            //name = GetRecordName(reader, data);
-            //size = GetRecordSize(reader, data);
-            //NAME = new NAME(reader.ReadBytes<byte[]>(data, size));
+            List<byte> data = new List<byte>();
+            foreach (PropertyInfo property in properties)
+            {
+                var subrecord = (Subrecord)property.GetValue(this);
+                if (subrecord == null) continue;
 
-            //name = GetRecordName(reader, data);
-            //size = GetRecordSize(reader, data);
-            //XSCL = new XSCL(reader.ReadBytes<byte[]>(data, size));
+                data.AddRange(subrecord.SerializeSubrecord());
+            }
 
-            //WHGT = name.Equals("WHGT") ? new WHGT(reader.ReadBytes<byte[]>(base.Data, size)) : null;
+            return data.ToArray();
         }
 
         private string GetRecordName(ByteReader reader, byte[] data)

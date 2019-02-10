@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using TES3Lib.Structures.Base;
 using TES3Lib.Subrecords.CELL;
 using Utility;
@@ -33,13 +36,11 @@ namespace TES3Lib.Records
 
         public CELL(byte[] rawData) : base(rawData)
         {
-            IsImplemented = false;
             BuildSubrecords();
         }
 
         public override void BuildSubrecords()
         {
-   
             var readerData = new ByteReader();
             while (Data.Length != readerData.offset)
             {
@@ -67,11 +68,41 @@ namespace TES3Lib.Records
                     break;
                 }
             }
-
-
-
         }
 
+        public override byte[] SerializeRecord()
+        {
+            var properties = this.GetType()
+                .GetProperties(System.Reflection.BindingFlags.Public |
+                               System.Reflection.BindingFlags.Instance |
+                               System.Reflection.BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
+    
+            List<byte> data = new List<byte>();
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.Name == "REFR") continue;
+                var subrecord = (Subrecord)property.GetValue(this);
+                if (subrecord == null) continue;
+
+                data.AddRange(subrecord.SerializeSubrecord());
+            }
+
+            if(REFR.Count() > 0)
+            {
+                List<byte> cellReferences = new List<byte>();
+                foreach (var refr in REFR)
+                {
+                    cellReferences.AddRange(refr.SerializeRecord());
+                }
+                data.AddRange(cellReferences.ToArray());
+            }
+
+            return Encoding.ASCII.GetBytes(Name)
+                .Concat(BitConverter.GetBytes(data.Count()))
+                .Concat(BitConverter.GetBytes(Header))
+                .Concat(BitConverter.GetBytes(Flags))
+                .Concat(data).ToArray();
+        }
 
     }
 }

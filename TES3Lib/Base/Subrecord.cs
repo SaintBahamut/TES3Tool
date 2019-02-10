@@ -1,19 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 using Utility;
 
 namespace TES3Lib.Structures.Base
 {
     abstract public class Subrecord
     {
-        private object serializedRecords;
-
-        public string Name { get; set; }
+        readonly public string Name;
         public int Size { get; set; }
-        public byte[] Data { get; set; }
+        protected byte[] Data { get; set; }
         private byte[] RawData { get; set; }
 
-        public bool IsImplemented { get; set; }
+        protected bool IsImplemented = true;
 
         public Subrecord(byte[] rawData)
         {
@@ -31,24 +32,26 @@ namespace TES3Lib.Structures.Base
 
         public virtual byte[] SerializeSubrecord()
         {
-            if (!IsImplemented)
-                return RawData;
+            if (!IsImplemented) return RawData;
 
-            var properties = this.GetType().GetProperties();
-            var serializedSubrecords = new List<byte>();
+            var properties = this.GetType()
+                .GetProperties(System.Reflection.BindingFlags.Public |
+                               System.Reflection.BindingFlags.Instance |
+                               System.Reflection.BindingFlags.DeclaredOnly)
+                               .OrderBy(x => x.MetadataToken)
+                               .ToList();
 
-            //name, size, arbitral shit
-
+            List<byte> data = new List<byte>();
             foreach (PropertyInfo property in properties)
             {
-                var subrecordData = (Subrecord)property.GetValue(this);
-
-
-
-                serializedSubrecords.AddRange(subrecordData.SerializeSubrecord());
+                var value = property.GetValue(this);
+                data.AddRange(ByteWriter.ToBytes(value, property.PropertyType));
             }
 
-            return serializedSubrecords.ToArray();
+            var serialized = Encoding.ASCII.GetBytes(Name)
+               .Concat(BitConverter.GetBytes(data.Count()))
+               .Concat(data).ToArray();
+            return serialized;
         }
     }
 }

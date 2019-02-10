@@ -8,6 +8,7 @@ namespace ESMLab
         static void Main(string[] args)
         {
             string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\TEST2.ESP";
+            //string file = "D:\\Out.esp";
             var tes3 = TES3Load(file);
             tes3.TES3Save("D:\\Out.esp");
 

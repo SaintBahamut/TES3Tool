@@ -142,11 +142,10 @@
     <Compile Include="Records\TES3.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Util\Utility.csproj">
+    <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{1BC5CBBB-E155-4D9A-BC55-6FE75109C1B9}</Project>
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

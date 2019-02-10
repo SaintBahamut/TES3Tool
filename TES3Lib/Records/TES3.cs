@@ -1,6 +1,5 @@
 ﻿using TES3Lib.Structures.Base;
 using TES3Lib.Subrecords.TES3;
-using Utility;
 
 namespace TES3Lib.Records
 {

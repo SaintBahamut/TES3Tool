@@ -13,7 +13,7 @@ namespace TES3Lib.Subrecords.CELL
         public RGNN(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Name = reader.ReadBytes<string>(base.Data, base.Size);
+            RegionName = reader.ReadBytes<string>(base.Data, base.Size);
         }
     }
 }

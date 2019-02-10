@@ -1,4 +1,9 @@
-﻿using TES3Lib.Structures.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using TES3Lib.Structures.Base;
 using Utility;
 
 namespace TES3Lib.Subrecords.TES3
@@ -27,5 +32,27 @@ namespace TES3Lib.Subrecords.TES3
             Description = reader.ReadBytes<string>(base.Data, 256);
             NumRecords = reader.ReadBytes<int>(base.Data);
         }
+
+        public override byte[] SerializeSubrecord()
+        { 
+            //being lazy here...
+            byte[] nameBytes = new byte[32];
+            byte[] descBytes = new byte[256];
+            Encoding.ASCII.GetBytes(CompanyName).CopyTo(nameBytes, 0);
+            Encoding.ASCII.GetBytes(Description).CopyTo(descBytes, 0);
+
+
+            List<byte> data = new List<byte>();
+            data.AddRange(BitConverter.GetBytes(Version));
+            data.AddRange(BitConverter.GetBytes(Unknown));
+            data.AddRange(nameBytes);
+            data.AddRange(descBytes);
+            data.AddRange(BitConverter.GetBytes(NumRecords));
+
+            var serialized = Encoding.ASCII.GetBytes(Name)
+               .Concat(BitConverter.GetBytes(data.Count()))
+               .Concat(data).ToArray();
+            return serialized;
+    }
     }
 }
