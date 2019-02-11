@@ -6,6 +6,7 @@ namespace TES3Lib.Records
     {
         public BSGN(byte[] rawData) : base(rawData)
         {
+            IsImplemented = false;
             BuildSubrecords();
         }
     }

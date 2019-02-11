@@ -6,6 +6,8 @@ namespace TES3Lib.Records
     {
         public MGEF(byte[] rawData) : base(rawData)
         {
+            IsImplemented = false;
+            BuildSubrecords();
         }
     }
 }

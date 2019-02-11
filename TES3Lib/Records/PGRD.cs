@@ -7,6 +7,7 @@ namespace TES3Lib.Records
         public PGRD(byte[] rawData) : base(rawData)
         {
             IsImplemented = false;
+            BuildSubrecords();
         }
     }
 }

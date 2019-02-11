@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Utility;
 
 namespace TES4Lib.Structures.Base
@@ -21,6 +22,13 @@ namespace TES4Lib.Structures.Base
             get { return records; }
         }
 
+        private List<Group> groups = new List<Group>();
+
+        public List<Group> Groups
+        {
+            get { return groups; }
+        }
+
         public Group SubGroup { get; set; }
 
         public Group(byte [] rawData)
@@ -35,9 +43,29 @@ namespace TES4Lib.Structures.Base
             Data = reader.ReadBytes<byte[]>(RawData, RawData.Length - 20);
         }
 
-        protected virtual void BuildRecords(ByteReader reader)
+        /// <summary>
+        /// Builds Records or Groups
+        /// </summary>
+        protected virtual void BuildRecords()
         {
-            throw new NotImplementedException();
+            if (Data.Length > 0) return;
+
+            var reader = new ByteReader();
+            var name = reader.ReadBytes<string>(Data, 4);
+            var size = reader.ReadBytes<int>(Data);
+            reader.offset = -8;
+
+            if (!name.Equals("GROUP"))
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                Record record = assembly
+                    .CreateInstance($"TES4Lib.Records.{name}", false, BindingFlags.Default, null, new object[] { reader.ReadBytes<byte[]>(Data, size) }, null, null) as Record;
+                Records.Add(record);
+            }
+            else
+            {
+                Groups.Add(new Group(reader.ReadBytes<byte[]>(Data, size)));
+            }
         }
     }
 }

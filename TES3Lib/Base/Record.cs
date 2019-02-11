@@ -79,7 +79,8 @@ namespace TES3Lib.Structures.Base
                     var subrecordName = GetRecordName(readerData);
                     var subrecordSize = GetRecordSize(readerData);
                     var subrecordProp = this.GetType().GetProperty(subrecordName);
-                    var subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
+                    var subrecordData = readerData.ReadBytes<byte[]>(Data, subrecordSize);
+                    var subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
                     subrecordProp.SetValue(this, subrecord);
                 }
                 catch (Exception e)

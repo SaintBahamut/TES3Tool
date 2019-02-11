@@ -10,8 +10,8 @@ namespace TES3Lib.Records
 
         public STAT(byte[] rawData) : base(rawData)
         {
-            BuildSubrecords();
             IsImplemented = false;
+            BuildSubrecords();
         }
     }
 }

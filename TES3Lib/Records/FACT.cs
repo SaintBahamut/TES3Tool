@@ -6,6 +6,8 @@ namespace TES3Lib.Records
     {
         public FACT(byte[] rawData) : base(rawData)
         {
+            IsImplemented = false;
+            BuildSubrecords();
         }
     }
 }

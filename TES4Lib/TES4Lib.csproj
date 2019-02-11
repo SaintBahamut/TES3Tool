@@ -40,7 +40,69 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Records\ACHR.cs" />
+    <Compile Include="Records\ACRE.cs" />
+    <Compile Include="Records\ACTI.cs" />
+    <Compile Include="Records\ALCH.cs" />
+    <Compile Include="Records\AMMO.cs" />
     <Compile Include="Groups\CELL.cs" />
+    <Compile Include="Records\ANIO.cs" />
+    <Compile Include="Records\APPA.cs" />
+    <Compile Include="Records\ARMO.cs" />
+    <Compile Include="Records\BGSN.cs" />
+    <Compile Include="Records\BOOK.cs" />
+    <Compile Include="Records\CELL.cs" />
+    <Compile Include="Records\CLAS.cs" />
+    <Compile Include="Records\CLMT.cs" />
+    <Compile Include="Records\CLOT.cs" />
+    <Compile Include="Records\CREA.cs" />
+    <Compile Include="Records\CSTY.cs" />
+    <Compile Include="Records\DIAL.cs" />
+    <Compile Include="Records\DOOR.cs" />
+    <Compile Include="Records\EFSH.cs" />
+    <Compile Include="Records\ENCH.cs" />
+    <Compile Include="Records\EYES.cs" />
+    <Compile Include="Records\FACT.cs" />
+    <Compile Include="Records\FLOR.cs" />
+    <Compile Include="Records\FURN.cs" />
+    <Compile Include="Records\GLOB.cs" />
+    <Compile Include="Records\GMST.cs" />
+    <Compile Include="Records\GRAS.cs" />
+    <Compile Include="Records\HAIR.cs" />
+    <Compile Include="Records\IDLE.cs" />
+    <Compile Include="Records\INFO.cs" />
+    <Compile Include="Records\INGR.cs" />
+    <Compile Include="Records\KEYM.cs" />
+    <Compile Include="Records\LAND.cs" />
+    <Compile Include="Records\LIGH.cs" />
+    <Compile Include="Records\LSCR.cs" />
+    <Compile Include="Records\LTEX.cs" />
+    <Compile Include="Records\LVLC.cs" />
+    <Compile Include="Records\LVLI.cs" />
+    <Compile Include="Records\LVSP.cs" />
+    <Compile Include="Records\MGEF.cs" />
+    <Compile Include="Records\MISC.cs" />
+    <Compile Include="Records\NPC_.cs" />
+    <Compile Include="Records\PACK.cs" />
+    <Compile Include="Records\PGRD.cs" />
+    <Compile Include="Records\QUST.cs" />
+    <Compile Include="Records\RACE.cs" />
+    <Compile Include="Records\REFR.cs" />
+    <Compile Include="Records\REGN.cs" />
+    <Compile Include="Records\ROAD.cs" />
+    <Compile Include="Records\SBSP.cs" />
+    <Compile Include="Records\SCPT.cs" />
+    <Compile Include="Records\SGST.cs" />
+    <Compile Include="Records\SKIL.cs" />
+    <Compile Include="Records\SLGM.cs" />
+    <Compile Include="Records\SOUN.cs" />
+    <Compile Include="Records\SPEL.cs" />
+    <Compile Include="Records\STAT.cs" />
+    <Compile Include="Records\TREE.cs" />
+    <Compile Include="Records\WATR.cs" />
+    <Compile Include="Records\WEAP.cs" />
+    <Compile Include="Records\WRLD.cs" />
+    <Compile Include="Records\WTHR.cs" />
     <Compile Include="TES4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Base\Group.cs" />
@@ -55,7 +117,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Subrecords\" />
+    <Folder Include="Subrecords\ACHR\" />
+    <Folder Include="Subrecords\ACRE\" />
+    <Folder Include="Subrecords\CELL\" />
+    <Folder Include="Subrecords\PGRD\" />
+    <Folder Include="Subrecords\REFR\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

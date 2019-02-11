@@ -6,8 +6,8 @@ namespace TES3Lib.Records
     {
         public REGN(byte[] rawData) : base(rawData)
         {
-            BuildSubrecords();
             IsImplemented = false;
+            BuildSubrecords();
         }
     }
 }
