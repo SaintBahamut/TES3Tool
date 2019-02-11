@@ -31,13 +31,15 @@ namespace TES4Lib
 
             TES4.Tes4 = ReadTES4Record(fileStream);
 
-            var reader = new ByteReader();
+            
             var groupHeader = new byte[8];
-            while (reader.offset != fileStream.Length)
+            while (fileStream.Position != fileStream.Length)
             {
+                var reader = new ByteReader();
                 int size = ReadGroupSize(fileStream, reader, groupHeader);
 
                 ReadGroup(TES4, fileStream, size);
+                Console.WriteLine($"{fileStream.Position} of {fileStream.Length} ");
             }
 
             return TES4;

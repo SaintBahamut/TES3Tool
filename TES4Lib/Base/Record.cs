@@ -28,7 +28,7 @@ namespace TES4Lib.Structures.Base
             Size = reader.ReadBytes<int>(RawData);
             Flag = reader.ReadBytes<int>(RawData, 4);
             FormId = reader.ReadBytes<byte[]>(RawData, 8);
-            Data = reader.ReadBytes<byte[]>(RawData, (int)Size);
+            Data = reader.ReadBytes<byte[]>(RawData, Size);
         }
 
         /// <summary>
@@ -36,6 +36,8 @@ namespace TES4Lib.Structures.Base
         /// </summary>
         protected virtual void BuildSubrecords()
         {
+            if (!IsImplemented) return;
+
             var readerData = new ByteReader();
             while (Data.Length != readerData.offset)
             {

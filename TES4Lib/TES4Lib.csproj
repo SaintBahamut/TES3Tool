@@ -45,7 +45,6 @@
     <Compile Include="Records\ACTI.cs" />
     <Compile Include="Records\ALCH.cs" />
     <Compile Include="Records\AMMO.cs" />
-    <Compile Include="Groups\CELL.cs" />
     <Compile Include="Records\ANIO.cs" />
     <Compile Include="Records\APPA.cs" />
     <Compile Include="Records\ARMO.cs" />
@@ -117,6 +116,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Groups\" />
     <Folder Include="Subrecords\ACHR\" />
     <Folder Include="Subrecords\ACRE\" />
     <Folder Include="Subrecords\CELL\" />

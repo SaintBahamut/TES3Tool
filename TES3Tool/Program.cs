@@ -13,7 +13,7 @@ namespace ESMLab
             //var tes3 = TES3Load(file);
             //tes3.TES3Save("D:\\Out.esp");
 
-            string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\BOBOLIONTEST.esp";
+            string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\oblivion.esm";
             var tes4 = TES4Load(file);
 
 

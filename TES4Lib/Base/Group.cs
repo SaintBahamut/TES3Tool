@@ -29,8 +29,6 @@ namespace TES4Lib.Structures.Base
             get { return groups; }
         }
 
-        public Group SubGroup { get; set; }
-
         public Group(byte [] rawData)
         {
             RawData = rawData;
@@ -41,30 +39,35 @@ namespace TES4Lib.Structures.Base
             Type = reader.ReadBytes<int>(RawData);
             Stamp = reader.ReadBytes<int>(RawData);
             Data = reader.ReadBytes<byte[]>(RawData, RawData.Length - 20);
+            BuildRecords();
         }
 
         /// <summary>
         /// Builds Records or Groups
         /// </summary>
-        protected virtual void BuildRecords()
+        private void BuildRecords()
         {
-            if (Data.Length > 0) return;
+            if (Data.Length == 0) return; //group has no records or subgroups
 
             var reader = new ByteReader();
-            var name = reader.ReadBytes<string>(Data, 4);
-            var size = reader.ReadBytes<int>(Data);
-            reader.offset = -8;
+            while (Data.Length!=reader.offset)
+            {
+                var name = reader.ReadBytes<string>(Data, 4);
+                var size = reader.ReadBytes<int>(Data);
+                reader.offset -= 8;
 
-            if (!name.Equals("GROUP"))
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                Record record = assembly
-                    .CreateInstance($"TES4Lib.Records.{name}", false, BindingFlags.Default, null, new object[] { reader.ReadBytes<byte[]>(Data, size) }, null, null) as Record;
-                Records.Add(record);
-            }
-            else
-            {
-                Groups.Add(new Group(reader.ReadBytes<byte[]>(Data, size)));
+                if (!name.Equals("GRUP"))
+                {
+                    Assembly assembly = Assembly.GetExecutingAssembly();
+                    var rawRecord = reader.ReadBytes<byte[]>(Data, size + 20);
+                    Record record = assembly
+                        .CreateInstance($"TES4Lib.Records.{name}", false, BindingFlags.Default, null, new object[] { rawRecord }, null, null) as Record;
+                    Records.Add(record);
+                }
+                else
+                {
+                    Groups.Add(new Group(reader.ReadBytes<byte[]>(Data, size)));
+                }
             }
         }
     }
