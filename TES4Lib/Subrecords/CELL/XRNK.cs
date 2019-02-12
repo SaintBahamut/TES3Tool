@@ -1,0 +1,16 @@
+﻿using TES4Lib.Structures.Base;
+using Utility;
+
+namespace TES4Lib.Subrecords.CELL
+{
+    public class XRNK : Subrecord
+    {
+        public int FactionRank { get; set; }
+
+        public XRNK(byte[] rawData) : base(rawData)
+        {
+            var reader = new ByteReader();
+            FactionRank = reader.ReadBytes<int>(base.Data);
+        }
+    }
+}

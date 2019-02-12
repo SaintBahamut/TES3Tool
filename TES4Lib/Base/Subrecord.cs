@@ -5,7 +5,7 @@ namespace TES4Lib.Structures.Base
     public class Subrecord
     {
         public string Name { get; set; }
-        public ulong Size { get; set; }
+        public short Size { get; set; }
         public byte[] Data { get; set; }
         public byte[] RawData { get; set; }
 
@@ -14,7 +14,7 @@ namespace TES4Lib.Structures.Base
             RawData = rawData;
             var reader = new ByteReader();
             Name = reader.ReadBytes<string>(RawData, 4);
-            Size = reader.ReadBytes<ulong>(RawData);
+            Size = reader.ReadBytes<short>(RawData);
             Data = reader.ReadBytes<byte[]>(RawData, (int)Size);
         }
     }

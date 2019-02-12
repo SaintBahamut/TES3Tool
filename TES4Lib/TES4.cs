@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using TES4Lib.Structures.Base;
 using Utility;
 
@@ -12,11 +14,11 @@ namespace TES4Lib
     {
         const int HeaderSize = 20;
         public Records.TES4 Tes4 { get; set; }
-        public List<Group> Groups { get; set; }
+        public ConcurrentBag<Group> Groups { get; set; }
 
         public TES4()
         {
-            Groups = new List<Group>();
+            Groups = new ConcurrentBag<Group>();
         }
 
         /// <summary>
@@ -24,22 +26,39 @@ namespace TES4Lib
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static TES4 TES4Load(string filePath)
+        public static TES4 TES4Load(string filePath, List<string> filteredGrops =null)
         {
+            if (filteredGrops == null) filteredGrops = new List<string>();
+            filteredGrops.Add("CELL");
+
             var TES4 = new TES4();
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
             TES4.Tes4 = ReadTES4Record(fileStream);
 
-            
-            var groupHeader = new byte[8];
+            var groupHeader = new byte[12];
             while (fileStream.Position != fileStream.Length)
             {
                 var reader = new ByteReader();
                 int size = ReadGroupSize(fileStream, reader, groupHeader);
+                string type = ReadGroupType(fileStream, reader, groupHeader);
 
-                ReadGroup(TES4, fileStream, size);
-                Console.WriteLine($"{fileStream.Position} of {fileStream.Length} ");
+                if (!filteredGrops.Contains(type))
+                {
+                    fileStream.Position += size;
+                    continue;
+                }
+
+                var data = new byte[size];
+                fileStream.Read(data, 0, data.Length);
+
+                //ThreadPool.QueueUserWorkItem(new WaitCallback((object a) =>
+                //{
+                    var g = new Group(data);
+                    TES4.Groups.Add(g);
+                    Console.WriteLine($"group {g.Label} built total: {TES4.Groups.Count}");
+
+                //}));
             }
 
             return TES4;
@@ -90,9 +109,25 @@ namespace TES4Lib
         {
             var data = new byte[size];
             fileStream.Read(data, 0, data.Length);
-            TES4.Groups.Add(new Group(data));
+     
+            ThreadPool.QueueUserWorkItem(new WaitCallback((object a) =>
+            {
+                var g = new Group(data);
+                TES4.Groups.Add(g);
+                Console.WriteLine($"group {g.Label} built total: {TES4.Groups.Count}");
+            
+
+            }));
+           
         }
 
-       
+        private static string ReadGroupType(FileStream fileStream, ByteReader reader, byte[] groupHeader)
+        {
+            fileStream.Read(groupHeader, 0, groupHeader.Length);
+            fileStream.Position -= groupHeader.Length;
+            var type = reader.ReadBytes<string>(groupHeader,4);
+            return type;
+        }
+
     }
 }

@@ -102,6 +102,19 @@
     <Compile Include="Records\WEAP.cs" />
     <Compile Include="Records\WRLD.cs" />
     <Compile Include="Records\WTHR.cs" />
+    <Compile Include="Subrecords\CELL\DATA.cs" />
+    <Compile Include="Subrecords\CELL\EDID.cs" />
+    <Compile Include="Subrecords\CELL\FULL.cs" />
+    <Compile Include="Subrecords\CELL\XCCM.cs" />
+    <Compile Include="Subrecords\CELL\XCLC.cs" />
+    <Compile Include="Subrecords\CELL\XCLL.cs" />
+    <Compile Include="Subrecords\CELL\XCLR.cs" />
+    <Compile Include="Subrecords\CELL\XCLW.cs" />
+    <Compile Include="Subrecords\CELL\XCMT.cs" />
+    <Compile Include="Subrecords\CELL\XCWT.cs" />
+    <Compile Include="Subrecords\CELL\XGLB.cs" />
+    <Compile Include="Subrecords\CELL\XOWN.cs" />
+    <Compile Include="Subrecords\CELL\XRNK.cs" />
     <Compile Include="TES4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Base\Group.cs" />
@@ -119,7 +132,6 @@
     <Folder Include="Groups\" />
     <Folder Include="Subrecords\ACHR\" />
     <Folder Include="Subrecords\ACRE\" />
-    <Folder Include="Subrecords\CELL\" />
     <Folder Include="Subrecords\PGRD\" />
     <Folder Include="Subrecords\REFR\" />
   </ItemGroup>

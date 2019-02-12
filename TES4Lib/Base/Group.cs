@@ -54,7 +54,8 @@ namespace TES4Lib.Structures.Base
             {
                 var name = reader.ReadBytes<string>(Data, 4);
                 var size = reader.ReadBytes<int>(Data);
-                reader.offset -= 8;
+                var type = reader.ReadBytes<string>(Data,4);
+                reader.offset -= 12;
 
                 if (!name.Equals("GRUP"))
                 {

@@ -27,7 +27,8 @@ namespace TES4Lib.Structures.Base
             Name = reader.ReadBytes<string>(RawData, 4);
             Size = reader.ReadBytes<int>(RawData);
             Flag = reader.ReadBytes<int>(RawData, 4);
-            FormId = reader.ReadBytes<byte[]>(RawData, 8);
+            FormId = reader.ReadBytes<byte[]>(RawData, 4);
+            VersionControlInfo = reader.ReadBytes<int>(RawData, 4);
             Data = reader.ReadBytes<byte[]>(RawData, Size);
         }
 
@@ -46,8 +47,8 @@ namespace TES4Lib.Structures.Base
                     var subrecordName = GetRecordName(readerData);
                     var subrecordSize = GetRecordSize(readerData);
                     var subrecordProp = this.GetType().GetProperty(subrecordName);
-                    var subrecordData = readerData.ReadBytes<byte[]>(Data, subrecordSize);
-                    //figure out compression...
+                    var subrecordData = readerData.ReadBytes<byte[]>(Data, (int)subrecordSize);
+                   
 
                     var subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
                     subrecordProp.SetValue(this, subrecord);
@@ -67,11 +68,12 @@ namespace TES4Lib.Structures.Base
             return name;
         }
 
-        protected int GetRecordSize(ByteReader reader)
+        protected short GetRecordSize(ByteReader reader)
         {
             reader.ShiftForwardBy(4);
-            var size = reader.ReadBytes<int>(Data) + 8;
-            reader.ShiftBackBy(8);
+            short size = reader.ReadBytes<short>(Data);
+            size += 6;
+            reader.ShiftBackBy(6);
             return size;
         }
 

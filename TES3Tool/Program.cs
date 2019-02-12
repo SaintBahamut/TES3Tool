@@ -1,6 +1,7 @@
 ﻿using System;
 using static TES4Lib.TES4;
 using static TES3Lib.TES3;
+using System.Threading;
 
 namespace ESMLab
 {
@@ -13,8 +14,14 @@ namespace ESMLab
             //var tes3 = TES3Load(file);
             //tes3.TES3Save("D:\\Out.esp");
 
-            string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\oblivion.esm";
+            //string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Morrowind.esm";
+            //var tes3 = TES3Load(file);
+
+            //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\BOBOLIONTEST.esp";
+            string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\OBLIVION.ESM";
             var tes4 = TES4Load(file);
+
+
 
 
             Console.WriteLine("Done");
