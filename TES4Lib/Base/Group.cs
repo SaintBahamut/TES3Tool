@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using Utility;
 
 namespace TES4Lib.Structures.Base
@@ -35,11 +36,36 @@ namespace TES4Lib.Structures.Base
             var reader = new ByteReader();
             Name = reader.ReadBytes<string>(RawData, 4);
             Size = reader.ReadBytes<int>(RawData);
-            Label = reader.ReadBytes<string>(RawData, 4);
+            var labelRaw = reader.ReadBytes<byte[]>(RawData, 4);
             Type = reader.ReadBytes<int>(RawData);
+            Label = GenerateLabel(Type, labelRaw);
             Stamp = reader.ReadBytes<int>(RawData);
             Data = reader.ReadBytes<byte[]>(RawData, RawData.Length - 20);
             BuildRecords();
+        }
+
+        private string GenerateLabel(int type, byte[] rawLabel)
+        {
+            switch (type)
+            {
+                case 0:
+                    return Encoding.ASCII.GetString(rawLabel);
+                case 1:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    return BitConverter.ToString(rawLabel).Replace("-", "");
+                case 2:
+                case 3:
+                    return "Exterior block (unsupported)";
+                case 4:
+                case 5:
+                    return $"Block number {BitConverter.ToInt32(rawLabel, 0)}";
+                default:
+                    return "";
+            }
         }
 
         /// <summary>
