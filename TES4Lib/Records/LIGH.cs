@@ -1,12 +1,23 @@
 ﻿using TES4Lib.Structures.Base;
+using TES4Lib.Subrecords.LIGH;
 
 namespace TES4Lib.Records
 {
-    public class LICH : Record
+    public class LIGH : Record
     {
-        public LICH(byte[] rawData) : base(rawData)
+        public EDID EDID { get; set; }
+        public FULL FULL { get; set; }
+        public MODL MODL { get; set; }
+        public MODB MODB { get; set; }
+        public MODT MODT { get; set; }
+        public SCRI SCRI { get; set; }
+        public ICON ICON { get; set; }
+        public DATA DATA { get; set; }
+        public FNAM FNAM { get; set; }
+        public SNAM SNAM { get; set; }
+
+        public LIGH(byte[] rawData) : base(rawData)
         {
-            IsImplemented = false;
             BuildSubrecords();
         }
     }

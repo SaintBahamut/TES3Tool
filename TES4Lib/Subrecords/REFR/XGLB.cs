@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TES4Lib.Structures.Base;
 using Utility;
 
@@ -15,7 +16,7 @@ namespace TES4Lib.Subrecords.REFR
         {
             var reader = new ByteReader();
             var globalVariableBytes = reader.ReadBytes<byte[]>(base.Data, base.Size);
-            GlobalVariable = BitConverter.ToString(globalVariableBytes).Replace("-", "");
+            GlobalVariable = BitConverter.ToString(globalVariableBytes.Reverse().ToArray()).Replace("-", "");
 
         }
     }

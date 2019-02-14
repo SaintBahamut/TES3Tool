@@ -8,9 +8,14 @@ namespace TES3Lib.Records
         public NAME NAME { get; set; }
         public MODL MODL { get; set; }
 
+        public STAT()
+        {
+            Flags = 0;
+            Header = 0;
+        }
+
         public STAT(byte[] rawData) : base(rawData)
         {
-            IsImplemented = false;
             BuildSubrecords();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Utility;
@@ -56,13 +57,14 @@ namespace TES4Lib.Structures.Base
                 case 8:
                 case 9:
                 case 10:
-                    return BitConverter.ToString(rawLabel).Replace("-", "");
+                    return BitConverter.ToString(rawLabel.Reverse().ToArray()).Replace("-", "");
                 case 2:
+                    return $"Interior Cell Block {BitConverter.ToInt32(rawLabel, 0)}";
                 case 3:
-                    return "Exterior block (unsupported)";
+                    return $"Interior Cell Sub-Block";
                 case 4:
                 case 5:
-                    return $"Block number {BitConverter.ToInt32(rawLabel, 0)}";
+                    return $"Exterior data (unsuported)";
                 default:
                     return "";
             }

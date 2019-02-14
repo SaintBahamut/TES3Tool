@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TES4Lib.Structures.Base;
 using Utility;
 
@@ -12,7 +13,7 @@ namespace TES4Lib.Subrecords.REFR
         {
             var reader = new ByteReader();
             var baseFormIdBytes = reader.ReadBytes<byte[]>(base.Data, base.Size);
-            BaseFormId = BitConverter.ToString(baseFormIdBytes).Replace("-", "");
+            BaseFormId = BitConverter.ToString(baseFormIdBytes.Reverse().ToArray()).Replace("-", "");
 
         }
     }

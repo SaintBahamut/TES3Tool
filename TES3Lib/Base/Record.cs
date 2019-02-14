@@ -25,7 +25,7 @@ namespace TES3Lib.Structures.Base
         /// <summary>
         /// Not known (4 bytes)
         /// </summary>
-        readonly public int Header;
+        public int Header { get; set; }
 
         /// <summary>
         /// Record flags (4 bytes)
@@ -117,7 +117,7 @@ namespace TES3Lib.Structures.Base
                 data.AddRange(subrecord.SerializeSubrecord());
             }
 
-            return Encoding.ASCII.GetBytes(Name)
+            return Encoding.ASCII.GetBytes(this.GetType().Name)
                 .Concat(BitConverter.GetBytes(data.Count()))
                 .Concat(BitConverter.GetBytes(Header))
                 .Concat(BitConverter.GetBytes(Flags))

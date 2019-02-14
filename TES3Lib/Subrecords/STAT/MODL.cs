@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.STAT
     {
         public string ModelPath { get; set; }
 
+        public MODL(string modelPath)
+        {
+            ModelPath = modelPath;
+        }
+
         public MODL(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
