@@ -13,6 +13,11 @@ namespace TES3Lib.Subrecords.CELL
 
         public float FogDensity { get; set; }
 
+        public AMBI()
+        {
+
+        }
+
         public AMBI(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

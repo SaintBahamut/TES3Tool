@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.CELL
     {
         public int ObjectCount { get; set; }
 
+        public NAM0()
+        {
+
+        }
+
         public NAM0(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

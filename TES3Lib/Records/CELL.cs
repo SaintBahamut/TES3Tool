@@ -34,6 +34,11 @@ namespace TES3Lib.Records
             set { _REFR = value; }
         }
 
+        public CELL()
+        {
+
+        }
+
         public CELL(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();

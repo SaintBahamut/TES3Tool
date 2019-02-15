@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using TES4Lib.Structures.Base;
 using Utility;
 
@@ -13,6 +14,7 @@ namespace TES4Lib
     public class TES4
     {
         const int HeaderSize = 20;
+ 
         public Records.TES4 Tes4 { get; set; }
         public ConcurrentBag<Group> Groups { get; set; }
 
@@ -28,8 +30,8 @@ namespace TES4Lib
         /// <returns></returns>
         public static TES4 TES4Load(string filePath, List<string> filteredGrops =null)
         {
-            if (filteredGrops == null) filteredGrops = new List<string>();
-            filteredGrops.Add("CELL");
+            if (filteredGrops == null) filteredGrops = new List<string>();// {"CELL","STAT","LIGH"}; 
+          
 
             var TES4 = new TES4();
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
@@ -37,13 +39,14 @@ namespace TES4Lib
             TES4.Tes4 = ReadTES4Record(fileStream);
 
             var groupHeader = new byte[12];
+            List<Task> tasks = new List<Task>();
             while (fileStream.Position != fileStream.Length)
             {
                 var reader = new ByteReader();
                 int size = ReadGroupSize(fileStream, reader, groupHeader);
                 string type = ReadGroupType(fileStream, reader, groupHeader);
 
-                if (!filteredGrops.Contains(type))
+                if (filteredGrops.Count < 0 && !filteredGrops.Contains(type))
                 {
                     fileStream.Position += size;
                     continue;
@@ -52,13 +55,19 @@ namespace TES4Lib
                 var data = new byte[size];
                 fileStream.Read(data, 0, data.Length);
 
-                //ThreadPool.QueueUserWorkItem(new WaitCallback((object a) =>
-                //{
+                Task task = new Task(() =>
+                {
                     var g = new Group(data);
                     TES4.Groups.Add(g);
                     Console.WriteLine($"group {g.Label} built total: {TES4.Groups.Count}");
+                });
+                task.Start();
+                tasks.Add(task);
+            }
 
-                //}));
+            foreach (Task task in tasks)
+            {
+                task.Wait();
             }
 
             return TES4;

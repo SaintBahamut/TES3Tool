@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Utility;
 
 namespace TES4Lib.Structures.Base
@@ -9,7 +10,7 @@ namespace TES4Lib.Structures.Base
         public string Name { get; set; }
         public int Size { get; set; }
         public int Flag { get; set; }
-        public byte[] FormId { get; set; }
+        public string FormId { get; set; }
         public int VersionControlInfo { get; set; }
         public byte[] Data { get; set; }
         private byte[] RawData { get; set; }
@@ -27,7 +28,7 @@ namespace TES4Lib.Structures.Base
             Name = reader.ReadBytes<string>(RawData, 4);
             Size = reader.ReadBytes<int>(RawData);
             Flag = reader.ReadBytes<int>(RawData, 4);
-            FormId = reader.ReadBytes<byte[]>(RawData, 4);
+            FormId = BitConverter.ToString(reader.ReadBytes<byte[]>(RawData, 4).Reverse().ToArray()).Replace("-", "");
             VersionControlInfo = reader.ReadBytes<int>(RawData, 4);
             Data = reader.ReadBytes<byte[]>(RawData, Size);
         }

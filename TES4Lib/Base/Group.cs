@@ -16,7 +16,10 @@ namespace TES4Lib.Structures.Base
         public int Stamp { get; set; }
         public byte[] Data { get; set; }
         private byte[] RawData { get; set; }
+    
 
+        //Global table for quick access to objects
+        public static Dictionary<string, Record> FormIdIndex = new Dictionary<string,Record>();
         private List<Record> records = new List<Record>();
 
         public List<Record> Records
@@ -91,6 +94,8 @@ namespace TES4Lib.Structures.Base
                     var rawRecord = reader.ReadBytes<byte[]>(Data, size + 20);
                     Record record = assembly
                         .CreateInstance($"TES4Lib.Records.{name}", false, BindingFlags.Default, null, new object[] { rawRecord }, null, null) as Record;
+
+                    if (record != null && String.IsNullOrEmpty(record.FormId)) FormIdIndex.Add(record.FormId, record);
                     Records.Add(record);
                 }
                 else

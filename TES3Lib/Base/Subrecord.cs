@@ -48,7 +48,7 @@ namespace TES3Lib.Structures.Base
                 data.AddRange(ByteWriter.ToBytes(value, property.PropertyType));
             }
 
-            var serialized = Encoding.ASCII.GetBytes(Name)
+            var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
                .Concat(BitConverter.GetBytes(data.Count()))
                .Concat(data).ToArray();
             return serialized;

@@ -55,7 +55,8 @@ namespace TES3Lib.Structures.Base
 
         public Record()
         {
-
+            Flags = 0;
+            Header = 0;
         }
 
         public Record(byte[] rawData)

@@ -10,6 +10,11 @@ namespace TES3Lib.Subrecords.CELL
         /// </summary>
         public string RegionName { get; set; }
 
+        public RGNN()
+        {
+
+        }
+
         public RGNN(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

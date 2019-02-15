@@ -9,12 +9,16 @@ namespace TES3Lib.Subrecords.CELL
         /// Cell ID string. Can be an empty string for exterior cells in which case
 		/// the region name is used instead.
         /// </summary>
-        public string Name { get; set; }
+        public string CellName { get; set; }
+
+        public NAME()
+        {
+        }
 
         public NAME(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Name = reader.ReadBytes<string>(base.Data, base.Size);
+            CellName = reader.ReadBytes<string>(base.Data, base.Size);
         }
     }
 }
