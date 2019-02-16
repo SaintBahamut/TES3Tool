@@ -3,10 +3,15 @@ using Utility;
 
 namespace TES3Lib.Subrecords.TES3
 {
-    internal class MAST : Subrecord
+    public class MAST : Subrecord
     {
         // variable size
         public string Filename { get; set; }
+
+        public MAST()
+        {
+
+        }
 
         public MAST(byte[] rawData) : base(rawData)
         {

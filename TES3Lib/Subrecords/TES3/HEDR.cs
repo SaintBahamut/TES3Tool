@@ -8,7 +8,7 @@ using Utility;
 
 namespace TES3Lib.Subrecords.TES3
 {
-    internal class HEDR : Subrecord
+    public class HEDR : Subrecord
     {
 
         public float Version { get; set; }
@@ -22,6 +22,11 @@ namespace TES3Lib.Subrecords.TES3
         public string Description { get; set; }
 
         public int NumRecords { get; set; }
+
+        public HEDR()
+        {
+
+        }
 
         public HEDR(byte[] rawData) : base(rawData)
         {

@@ -8,12 +8,19 @@ namespace TES4Lib.Subrecords.CELL
         /// <summary>
         /// eh need hex edit this shit
         /// </summary>
+        /// 
+        public int Ambient { get; set; }
+        public int Directional { get; set; }
+        public int Fog { get; set; }
+       
         public byte[] Lighting { get; set; }
 
         public XCLL(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Lighting = reader.ReadBytes<byte[]>(base.Data, base.Size);
+            Ambient = reader.ReadBytes<int>(base.Data);
+            Directional = reader.ReadBytes<int>(base.Data);
+            Fog = reader.ReadBytes<int>(base.Data);
         }
     }
 }

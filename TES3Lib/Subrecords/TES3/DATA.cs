@@ -3,14 +3,19 @@ using Utility;
 
 namespace TES3Lib.Subrecords.TES3
 {
-    internal class DATA : Subrecord
+    public class DATA : Subrecord
     {
-        public long Data { get; set; }
+        public long MasterDataSize { get; set; }
+
+        public DATA()
+        {
+
+        }
 
         public DATA(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            this.Data = reader.ReadBytes<long>(base.Data, Size);
+            MasterDataSize = reader.ReadBytes<long>(base.Data, Size);
         }
     }
 }
