@@ -1,6 +1,6 @@
 ﻿using Utility;
 
-namespace TES4Lib.Structures.Base
+namespace TES4Lib.Base
 {
     public class Subrecord
     {

@@ -31,6 +31,10 @@ namespace TES3Lib.Records
         public XSOL XSOL { get; set; }
         public DATA DATA { get; set; }
 
+        public REFR()
+        {
+
+        }
 
         public REFR(byte[] data, ByteReader reader)
         {       

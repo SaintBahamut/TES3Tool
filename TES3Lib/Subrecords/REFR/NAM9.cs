@@ -10,6 +10,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public int Unknown { get; set; }
 
+        public NAM9()
+        {
+
+        }
+
         public NAM9(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

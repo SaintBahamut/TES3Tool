@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using TES4Lib.Structures.Base;
+using TES4Lib.Base;
 using Utility;
 
 
@@ -46,7 +46,7 @@ namespace TES4Lib
                 int size = ReadGroupSize(fileStream, reader, groupHeader);
                 string type = ReadGroupType(fileStream, reader, groupHeader);
 
-                if (filteredGrops.Count < 0 && !filteredGrops.Contains(type))
+                if (filteredGrops.Count > 0 && !filteredGrops.Contains(type))
                 {
                     fileStream.Position += size;
                     continue;

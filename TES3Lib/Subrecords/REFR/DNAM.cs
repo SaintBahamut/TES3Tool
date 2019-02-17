@@ -12,6 +12,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public string DoorName { get; set; }
 
+        public DNAM()
+        {
+
+        }
+
         public DNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

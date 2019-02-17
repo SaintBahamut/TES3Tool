@@ -15,6 +15,11 @@ namespace TES3Lib.Subrecords.REFR
         public float YRotate { get; set; }
         public float ZRotate { get; set; }
 
+        public DATA()
+        {
+
+        }
+
         public DATA(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

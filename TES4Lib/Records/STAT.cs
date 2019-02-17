@@ -1,4 +1,4 @@
-﻿using TES4Lib.Structures.Base;
+﻿using TES4Lib.Base;
 using TES4Lib.Subrecords.STAT;
 
 namespace TES4Lib.Records

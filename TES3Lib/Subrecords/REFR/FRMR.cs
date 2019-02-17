@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public int ObjectIndex { get; set; }
 
+        public FRMR()
+        {
+
+        }
+
         public FRMR(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

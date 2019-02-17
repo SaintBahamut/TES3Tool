@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public float Scale { get; set; }
 
+        public XSCL()
+        {
+
+        }
+
         public XSCL(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

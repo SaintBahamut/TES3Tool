@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public int LockLevel { get; set; }
 
+        public FLTV()
+        {
+
+        }
+
         public FLTV(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

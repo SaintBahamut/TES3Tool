@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public string ObjectId { get; set; }
 
+        public NAME()
+        {
+
+        }
+
         public NAME(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

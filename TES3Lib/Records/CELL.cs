@@ -102,7 +102,7 @@ namespace TES3Lib.Records
                 data.AddRange(cellReferences.ToArray());
             }
 
-            return Encoding.ASCII.GetBytes(Name)
+            return Encoding.ASCII.GetBytes(this.GetType().Name)
                 .Concat(BitConverter.GetBytes(data.Count()))
                 .Concat(BitConverter.GetBytes(Header))
                 .Concat(BitConverter.GetBytes(Flags))

@@ -1,7 +1,9 @@
 ﻿using System;
 using static TES4Lib.TES4;
 using static TES3Lib.TES3;
+using static ESMLab.RecordConverter.Oblivion2Morrowind;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace ESMLab
 {
@@ -18,11 +20,13 @@ namespace ESMLab
             //var tes3 = TES3Load(file);
 
             //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\BOBOLIONTEST.esp";
-            //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\CONVERIX.ESP";
-            string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
-            var tes4 = TES4Load(file);
+            string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\CONVERIX.ESP";
+            //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
+            var tes4 = TES4Load(file, new List<string> {"CELL"});
 
+            var test = ConvertInteriorCells(tes4);
 
+            //test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path
 
 
             Console.WriteLine("Done");

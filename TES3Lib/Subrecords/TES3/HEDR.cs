@@ -54,7 +54,7 @@ namespace TES3Lib.Subrecords.TES3
             data.AddRange(descBytes);
             data.AddRange(BitConverter.GetBytes(NumRecords));
 
-            var serialized = Encoding.ASCII.GetBytes(Name)
+            var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
                .Concat(BitConverter.GetBytes(data.Count()))
                .Concat(data).ToArray();
             return serialized;

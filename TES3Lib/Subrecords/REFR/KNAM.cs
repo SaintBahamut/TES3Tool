@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public string DoorKeyId { get; set; }
 
+        public KNAM()
+        {
+
+        }
+
         public KNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

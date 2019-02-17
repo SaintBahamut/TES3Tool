@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using Utility;
 
-namespace TES4Lib.Structures.Base
+namespace TES4Lib.Base
 {
     public class Group
     {

@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public string OwnerId { get; set; }
 
+        public ANAM()
+        {
+
+        }
+
         public ANAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

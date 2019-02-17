@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public string RankId { get; set; }
 
+        public BNAM()
+        {
+
+        }
+
         public BNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public byte ReferenceBlocked { get; set; }
 
+        public UNAM()
+        {
+
+        }
+
         public UNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

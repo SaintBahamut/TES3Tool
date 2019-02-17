@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using TES4Lib.Structures.Base;
+using TES4Lib.Base;
 using Utility;
 
 namespace TES4Lib.Subrecords.LIGH

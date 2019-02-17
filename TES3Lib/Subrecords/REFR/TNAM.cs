@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public string TrapName { get; set; }
 
+        public TNAM()
+        {
+
+        }
+
         public TNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

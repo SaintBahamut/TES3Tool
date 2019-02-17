@@ -10,6 +10,11 @@ namespace TES3Lib.Subrecords.REFR
     {
         public string CreatureId { get; set; }
 
+        public XSOL()
+        {
+
+        }
+
         public XSOL(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
