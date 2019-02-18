@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using TES3Lib.Base;
 using TES3Lib.Subrecords.REFR;
 using Utility;
 
-namespace TES3Lib.Structures.Base
+namespace TES3Lib.Base
 {
     abstract public class Record
     {

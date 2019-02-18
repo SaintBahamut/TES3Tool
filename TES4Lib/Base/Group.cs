@@ -95,7 +95,8 @@ namespace TES4Lib.Base
                     Record record = assembly
                         .CreateInstance($"TES4Lib.Records.{name}", false, BindingFlags.Default, null, new object[] { rawRecord }, null, null) as Record;
 
-                    if (record != null && String.IsNullOrEmpty(record.FormId)) FormIdIndex.Add(record.FormId, record);
+                    if (record != null && !String.IsNullOrEmpty(record.FormId))
+                        FormIdIndex.Add(record.FormId, record);
                     Records.Add(record);
                 }
                 else

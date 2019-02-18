@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using Utility;
 
-namespace TES3Lib.Structures.Base
+namespace TES3Lib.Base
 {
     abstract public class Subrecord
     {

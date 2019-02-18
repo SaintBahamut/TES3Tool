@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using TES3Lib.Structures.Base;
+using TES3Lib.Base;
 using Utility;
 
 namespace TES3Lib

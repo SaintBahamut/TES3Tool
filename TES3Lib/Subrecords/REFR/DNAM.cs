@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TES3Lib.Structures.Base;
+using TES3Lib.Base;
 using Utility;
 
 namespace TES3Lib.Subrecords.REFR
