@@ -171,5 +171,15 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             return mwREFR;
         }  
+
+        //internal static TES3Lib.Records.REFR ConvertACHR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
+        //{
+
+        //}
+
+        //internal static TES3Lib.Records.REFR ConvertACRE(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
+        //{
+
+        //}
     }
 }

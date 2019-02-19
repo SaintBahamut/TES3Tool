@@ -42,30 +42,53 @@ namespace TES3Tool.TES4RecordConverter
                 {
                     foreach (TES4Lib.Records.CELL cellRecord in cellSubBlock.Records)
                     {
+
+                        if (GetTES4DeletedRecordFlag(cellRecord.Flag) != 0) continue;
+
                         //hack for now to get SI only
                         if ((cellRecord.EDID.CellEditorId.Contains("SE") || cellRecord.EDID.CellEditorId.Contains("XP")) && cellRecord.FULL != null)
                         {
                             var convertedCell = ConvertCELL(cellRecord);
                             if (convertedCell == null) throw new Exception("Output cell was null");
 
+                          
+
                             var cellReferences = cellSubBlock.Groups.FirstOrDefault(x => x.Label == cellRecord.FormId);
+                            if (cellReferences == null) continue;
+
                             foreach (var childrenType in cellReferences.Groups) //can have 3 with labels: persistent 8; temporaty 9; distant 10;
                             {
                                 int refrNumber = 1;
-                                foreach (TES4Lib.Records.REFR objectReference in childrenType.Records)
+                                foreach (var obRef in childrenType.Records)
                                 {
-                                    if (objectReference.NAME == null) continue;
-                                    var convertedRecordData = ConvertRecord(TES4Lib.Base.Group.FormIdIndex[objectReference.NAME.BaseFormId]);
+                                    if (GetTES4DeletedRecordFlag(obRef.Flag) != 0) continue;
 
-                                    if (!ConvertedRecords.ContainsKey(convertedRecordData.Item1))
+                                    TES3Lib.Records.REFR mwREFR;
+                                    switch (obRef.GetType().Name)
                                     {
-                                        ConvertedRecords.Add(convertedRecordData.Item1, new List<TES3Lib.Base.Record>());
-                                    }
+                                        case "REFR":
+                                            var obREFR = (TES4Lib.Records.REFR)obRef;
+                                            if (obREFR.NAME == null) continue;
 
-                                    ConvertedRecords[convertedRecordData.Item1].Add(convertedRecordData.Item3);
-                                    var convertedReference = ConvertREFR(objectReference, convertedRecordData.Item2, refrNumber);
-                                    refrNumber++;
-                                    convertedCell.REFR.Add(convertedReference);
+                                            var obRecordFromREFR = TES4Lib.Base.Group.FormIdIndex.FirstOrDefault(x => x.Key == obREFR.NAME.BaseFormId);
+                                            if (obRecordFromREFR.Value == null) continue;
+
+                                            //var obRecordFromREFR = TES4Lib.Base.Group.FormIdIndex[obREFR.NAME.BaseFormId];
+                                            var mwRecordFromREFR = ConvertRecord(obRecordFromREFR.Value);
+
+                                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Item1)) ConvertedRecords.Add(mwRecordFromREFR.Item1, new List<TES3Lib.Base.Record>());
+
+                                            ConvertedRecords[mwRecordFromREFR.Item1].Add(mwRecordFromREFR.Item3);
+
+                                            mwREFR = ConvertREFR(obREFR, mwRecordFromREFR.Item2, refrNumber);
+                                            convertedCell.REFR.Add(mwREFR);
+                                            refrNumber++;
+                                            break;
+                                        case "ACHR":
+                                            continue;
+                                        case "ACRE":
+                                            continue;   
+                                    } 
                                 }
                             }
 
@@ -77,13 +100,13 @@ namespace TES3Tool.TES4RecordConverter
 
             foreach (KeyValuePair<string, List<TES3Lib.Base.Record>> recordType in ConvertedRecords)
             {
-                foreach (var record in recordType.Value)
-                {
-                    tes3.Records.Add(record);
-                }
+                tes3.Records.InsertRange(1, recordType.Value);
             }
 
             return tes3;
         }
+
+      
+
     }
 }

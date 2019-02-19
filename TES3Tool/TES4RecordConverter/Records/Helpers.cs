@@ -10,7 +10,7 @@ namespace TES3Tool.TES4RecordConverter.Records
     {
         internal static int GetTES4DeletedRecordFlag(int recordFlags)
         {
-            return recordFlags & 0x20;
+            return recordFlags & 0x00000020;
         }
 
         internal static int GetTES4CantWaitRecordFlag(int recordFlags)
