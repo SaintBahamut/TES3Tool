@@ -62,6 +62,12 @@
     <Compile Include="Records\ENCH.cs" />
     <Compile Include="Records\FACT.cs" />
     <Compile Include="Records\REFR.cs" />
+    <Compile Include="Subrecords\DOOR\ANAM.cs" />
+    <Compile Include="Subrecords\DOOR\FNAM.cs" />
+    <Compile Include="Subrecords\DOOR\MODL.cs" />
+    <Compile Include="Subrecords\DOOR\NAME.cs" />
+    <Compile Include="Subrecords\DOOR\SCIP.cs" />
+    <Compile Include="Subrecords\DOOR\SNAM.cs" />
     <Compile Include="Subrecords\NPC_\AIDT.cs" />
     <Compile Include="Subrecords\NPC_\AI_A.cs" />
     <Compile Include="Subrecords\NPC_\AI_E.cs" />
@@ -128,6 +134,10 @@
     <Compile Include="Subrecords\REFR\UNAM.cs" />
     <Compile Include="Subrecords\REFR\XSCL.cs" />
     <Compile Include="Subrecords\REFR\XSOL.cs" />
+    <Compile Include="Subrecords\Shared\FNAM.cs" />
+    <Compile Include="Subrecords\Shared\MODL.cs" />
+    <Compile Include="Subrecords\Shared\NAME.cs" />
+    <Compile Include="Subrecords\Shared\SCIP.cs" />
     <Compile Include="Subrecords\STAT\MODL.cs" />
     <Compile Include="Subrecords\STAT\NAME.cs" />
     <Compile Include="Subrecords\TES3\DATA.cs" />
@@ -146,6 +156,9 @@
       <Project>{1BC5CBBB-E155-4D9A-BC55-6FE75109C1B9}</Project>
       <Name>Utility</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Subrecords\LIGH\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
