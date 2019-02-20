@@ -62,11 +62,15 @@
     <Compile Include="Records\ENCH.cs" />
     <Compile Include="Records\FACT.cs" />
     <Compile Include="Records\REFR.cs" />
+    <Compile Include="Subrecords\BOOK\BKDT.cs" />
+    <Compile Include="Subrecords\BOOK\TEXT.cs" />
     <Compile Include="Subrecords\CELL\NAME.cs" />
     <Compile Include="Subrecords\CONT\CNDT.cs" />
     <Compile Include="Subrecords\CONT\FLAG.cs" />
     <Compile Include="Subrecords\DOOR\ANAM.cs" />
     <Compile Include="Subrecords\LIGH\LHDT.cs" />
+    <Compile Include="Subrecords\MISC\ENAM.cs" />
+    <Compile Include="Subrecords\MISC\MCDT.cs" />
     <Compile Include="Subrecords\NPC_\AIDT.cs" />
     <Compile Include="Subrecords\NPC_\AI_A.cs" />
     <Compile Include="Subrecords\NPC_\AI_E.cs" />
@@ -132,6 +136,8 @@
     <Compile Include="Subrecords\REFR\UNAM.cs" />
     <Compile Include="Subrecords\REFR\XSCL.cs" />
     <Compile Include="Subrecords\REFR\XSOL.cs" />
+    <Compile Include="Subrecords\WEAP\ENAM.cs" />
+    <Compile Include="Subrecords\WEAP\WPDT.cs" />
     <Compile Include="Subrecords\_Shared\FNAM.cs" />
     <Compile Include="Subrecords\_Shared\ITEX.cs" />
     <Compile Include="Subrecords\_Shared\MODL.cs" />
@@ -140,8 +146,6 @@
     <Compile Include="Subrecords\_Shared\SCRI.cs" />
     <Compile Include="Subrecords\_Shared\SCPT.cs" />
     <Compile Include="Subrecords\_Shared\SCIP.cs" />
-    <Compile Include="Subrecords\STAT\MODL.cs" />
-    <Compile Include="Subrecords\STAT\NAME.cs" />
     <Compile Include="Subrecords\TES3\DATA.cs" />
     <Compile Include="Subrecords\TES3\HEDR.cs" />
     <Compile Include="Subrecords\TES3\MAST.cs" />

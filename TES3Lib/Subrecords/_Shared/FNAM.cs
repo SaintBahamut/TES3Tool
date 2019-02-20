@@ -8,7 +8,7 @@ namespace TES3Lib.Subrecords.Shared
     /// </summary>
     public class FNAM : Subrecord
     {
-        public string Name { get; set; }
+        public new string Name { get; set; }
 
         public FNAM(byte[] rawData) : base(rawData)
         {

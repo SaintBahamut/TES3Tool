@@ -14,7 +14,6 @@ namespace TES3Tool.TES4RecordConverter.Records
         internal static (string,string, TES3Lib.Base.Record) ConvertRecord(TES4Lib.Base.Record obRecord)
         {
             var recordType = obRecord.GetType().Name;
-            string id;
 
             switch (recordType)
             {
@@ -37,8 +36,8 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             return new TES3Lib.Records.STAT()
             {
-                MODL = new TES3Lib.Subrecords.STAT.MODL(obSTAT.MODL.ModelFileName),
-                NAME = new TES3Lib.Subrecords.STAT.NAME(obSTAT.EDID.EditorId),
+                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = obSTAT.MODL.ModelFileName },
+                NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = obSTAT.EDID.EditorId },
             };
         }
 
@@ -48,7 +47,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             var mwCELL = new TES3Lib.Records.CELL();
             mwCELL.NAME = new TES3Lib.Subrecords.CELL.NAME();
-            mwCELL.NAME.Name = obCELL.FULL.CellName;
+            mwCELL.NAME.CellName = obCELL.FULL.CellName;
 
             mwCELL.DATA = new TES3Lib.Subrecords.CELL.DATA();
 
@@ -112,11 +111,11 @@ namespace TES3Tool.TES4RecordConverter.Records
                 mwREFR.XSCL.Scale = obREFR.XSCL.Scale;
             }
 
-            if (false)
-            {
-                //this data should be somewhere in record flag, not relevant, at lest for now
-                mwREFR.DELE = new TES3Lib.Subrecords.REFR.DELE();
-            }
+            //if (false)
+            //{
+            //    //this data should be somewhere in record flag, not relevant, at lest for now
+            //    mwREFR.DELE = new TES3Lib.Subrecords.REFR.DELE();
+            //}
 
             if (!IsNull(obREFR.XTEL))
             {

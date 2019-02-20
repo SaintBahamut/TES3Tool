@@ -3,6 +3,9 @@ using Utility;
 
 namespace TES3Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Script name
+    /// </summary>
     public class SCIP : Subrecord
     {
         public string ScriptName { get; set; }
