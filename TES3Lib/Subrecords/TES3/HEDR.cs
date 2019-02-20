@@ -13,7 +13,10 @@ namespace TES3Lib.Subrecords.TES3
 
         public float Version { get; set; }
 
-        public int Unknown { get; set; }
+        /// <summary>
+        /// 1 - ESM ; 0 - ESP
+        /// </summary>
+        public int ESMFlag { get; set; }
 
         //32 bytes
         public string CompanyName { get; set; }
@@ -32,7 +35,7 @@ namespace TES3Lib.Subrecords.TES3
         {
             var reader = new ByteReader();
             Version = reader.ReadBytes<float>(base.Data);
-            Unknown = reader.ReadBytes<int>(base.Data);
+            ESMFlag = reader.ReadBytes<int>(base.Data);
             CompanyName = reader.ReadBytes<string>(base.Data, 32);
             Description = reader.ReadBytes<string>(base.Data, 256);
             NumRecords = reader.ReadBytes<int>(base.Data);
@@ -49,7 +52,7 @@ namespace TES3Lib.Subrecords.TES3
 
             List<byte> data = new List<byte>();
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(Unknown));
+            data.AddRange(BitConverter.GetBytes(ESMFlag));
             data.AddRange(nameBytes);
             data.AddRange(descBytes);
             data.AddRange(BitConverter.GetBytes(NumRecords));

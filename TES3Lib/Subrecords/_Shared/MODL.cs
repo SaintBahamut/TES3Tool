@@ -1,8 +1,11 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.DOOR
+namespace TES3Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Model path (32 characters max!)
+    /// </summary>
     public class MODL : Subrecord
     {
         public string ModelPath { get; set; }

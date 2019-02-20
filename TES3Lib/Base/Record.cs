@@ -73,6 +73,8 @@ namespace TES3Lib.Base
 
         public virtual void BuildSubrecords()
         {
+            if (!IsImplemented) return;
+
             var readerData = new ByteReader();
             while (Data.Length != readerData.offset)
             {

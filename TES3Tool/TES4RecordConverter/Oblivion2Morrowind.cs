@@ -20,7 +20,7 @@ namespace TES3Tool.TES4RecordConverter
             header.HEDR.CompanyName = "TES3Tool\0";
             header.HEDR.Description = "\0";
             header.HEDR.NumRecords = 666;
-            header.HEDR.Unknown = 1;
+            header.HEDR.ESMFlag = 0;
             header.HEDR.Version = 1.3f;
             header.MAST.Filename = "Morrowind.esm\0";
             header.DATA.MasterDataSize = 6666; //should not break but fix that later

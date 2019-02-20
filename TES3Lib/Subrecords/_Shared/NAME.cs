@@ -1,8 +1,11 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.DOOR
+namespace TES3Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Editor Id
+    /// </summary>
     public class NAME : Subrecord
     {
         public string EditorId { get; set; }

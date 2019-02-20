@@ -5,8 +5,10 @@ namespace TES3Lib.Subrecords.DOOR
 {
     public class ANAM : Subrecord
     {
-  
-        public string SoundNameOpen { get; set; }
+        /// <summary>
+        /// Sound name of door close
+        /// </summary>
+        public string SoundNameClose { get; set; }
 
         public ANAM()
         {
@@ -16,7 +18,7 @@ namespace TES3Lib.Subrecords.DOOR
         public ANAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            SoundNameOpen = reader.ReadBytes<string>(base.Data, base.Size);
+            SoundNameClose = reader.ReadBytes<string>(base.Data, base.Size);
         }
     }
 }

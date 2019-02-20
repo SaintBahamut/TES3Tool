@@ -1,11 +1,14 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.DOOR
+namespace TES3Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Sound name
+    /// </summary>
     public class SNAM : Subrecord
     {
-        public string SoundNameClose { get; set; }
+        public string SoundName { get; set; }
 
         public SNAM()
         {
@@ -15,7 +18,7 @@ namespace TES3Lib.Subrecords.DOOR
         public SNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            SoundNameClose = reader.ReadBytes<string>(base.Data, base.Size);
+            SoundName = reader.ReadBytes<string>(base.Data, base.Size);
         }
     }
 }

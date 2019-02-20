@@ -48,7 +48,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             var mwCELL = new TES3Lib.Records.CELL();
             mwCELL.NAME = new TES3Lib.Subrecords.CELL.NAME();
-            mwCELL.NAME.CellName = obCELL.FULL.CellName;
+            mwCELL.NAME.Name = obCELL.FULL.CellName;
 
             mwCELL.DATA = new TES3Lib.Subrecords.CELL.DATA();
 

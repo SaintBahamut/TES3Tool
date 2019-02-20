@@ -45,7 +45,6 @@ namespace TES3Lib.Records
                     var subrecordName = GetRecordName(reader, data);
                     var subrecordSize = GetRecordSize(reader, data);
                     var subrecordProp = this.GetType().GetProperty(subrecordName);
-                   //Console.WriteLine($"{subrecordName} offset:{reader.offset} subsize:{subrecordSize} datasize:{data.Length}");
                 
                     object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { reader.ReadBytes<byte[]>(data, subrecordSize) });
                     subrecordProp.SetValue(this, subrecord);

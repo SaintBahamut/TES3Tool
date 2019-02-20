@@ -1,18 +1,18 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.DOOR
+namespace TES3Lib.Subrecords.Shared
 {
-    public class SCIP : Subrecord
+    public class SCRI : Subrecord
     {
         public string ScriptName { get; set; }
 
-        public SCIP()
+        public SCRI()
         {
 
         }
 
-        public SCIP(byte[] rawData) : base(rawData)
+        public SCRI(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
             ScriptName = reader.ReadBytes<string>(base.Data, base.Size);

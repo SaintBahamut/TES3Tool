@@ -1,8 +1,11 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.DOOR
+namespace TES3Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Display name of object
+    /// </summary>
     public class FNAM : Subrecord
     {
         public string Name { get; set; }

@@ -13,7 +13,10 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-            //string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\TEST2.ESP";
+            string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\silverlight.ESP";
+            var tes3 = TES3Load(file);
+            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minitest.ESP");
+
             ////string file = "D:\\Out.esp";
             //var tes3 = TES3Load(file);
             //tes3.TES3Save("D:\\Out.esp");
@@ -22,11 +25,11 @@ namespace TES3Tool
             //var tes3 = TES3Load(file);
 
             //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\BOBOLIONTEST.esp";
-            string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\CONVERIX.ESP";
-            string fileesm = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
+           // string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\CONVERIX.ESP";
+//          string fileesm = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
 
 
-            var stat = TES4Load(fileesm, new List<string> { "STAT","CELL" });
+           // var stat = TES4Load(fileesm, new List<string> { "STAT","CELL" });
            
 
             //var tes4 = TES4Load(file, new List<string> {"CELL"});
@@ -36,9 +39,9 @@ namespace TES3Tool
 
            
 
-            var test = ConvertInteriorCells(stat);
+            //var test = ConvertInteriorCells(stat);
 
-            test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path
+            //test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path
 
 
             Console.WriteLine("Done");
