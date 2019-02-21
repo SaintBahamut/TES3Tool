@@ -13,9 +13,9 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-            string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\silverlight.ESP";
-            var tes3 = TES3Load(file);
-            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minitest.ESP");
+            //string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\silverlight.ESP";
+            //var tes3 = TES3Load(file);
+            //tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minitest.ESP");
 
             ////string file = "D:\\Out.esp";
             //var tes3 = TES3Load(file);
@@ -25,19 +25,20 @@ namespace TES3Tool
             //var tes3 = TES3Load(file);
 
             //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\BOBOLIONTEST.esp";
-           // string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\CONVERIX.ESP";
-//          string fileesm = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
+            // string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\CONVERIX.ESP";
+            string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
+            var tes4 = TES4Load(fileESM, new List<string> { "FURN" });
 
 
-           // var stat = TES4Load(fileesm, new List<string> { "STAT","CELL" });
-           
+            // var stat = TES4Load(fileesm, new List<string> { "STAT","CELL" });
 
-            //var tes4 = TES4Load(file, new List<string> {"CELL"});
 
-           // tes4.Groups.Add(stat.Groups.ToList()[0]);
-          
 
-           
+
+            // tes4.Groups.Add(stat.Groups.ToList()[0]);
+
+
+
 
             //var test = ConvertInteriorCells(stat);
 

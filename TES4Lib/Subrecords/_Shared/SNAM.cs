@@ -3,7 +3,7 @@ using System.Linq;
 using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.LIGH
+namespace TES4Lib.Subrecords.Shared
 {
     public class SNAM : Subrecord
     {
@@ -14,7 +14,6 @@ namespace TES4Lib.Subrecords.LIGH
             var reader = new ByteReader();
             var baseFormIdBytes = reader.ReadBytes<byte[]>(base.Data, base.Size);
             SoundFormId = BitConverter.ToString(baseFormIdBytes.Reverse().ToArray()).Replace("-", "");
-
         }
     }
 }

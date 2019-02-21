@@ -1,8 +1,11 @@
 ﻿using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.LIGH
+namespace TES4Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Icon file name
+    /// </summary>
     public class ICON : Subrecord
     {
         public string IconFileName { get; set; }

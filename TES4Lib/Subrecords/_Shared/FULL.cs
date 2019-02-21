@@ -1,8 +1,11 @@
 ﻿using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.LIGH
+namespace TES4Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Display name of record
+    /// </summary>
     public class FULL : Subrecord
     {
         public string FullName { get; set; }

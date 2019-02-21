@@ -13,11 +13,17 @@ namespace TES3Lib.Records
     public class CONT : Record
     {
         public NAME NAME { get; set; }
+
         public MODL MODL { get; set; }
+
         public FNAM FNAM { get; set; }
+
         public CNDT CNDT { get; set; }
+
         public FLAG FLAG { get; set; }
+
         public SCRI SCRI { get; set; }
+
         public List<NPCO> NPCO = new List<NPCO>();
 
         public CONT(byte[] rawData) : base(rawData)
