@@ -45,4 +45,18 @@ namespace TES3Tool.TES4RecordConverter.Records
 
         internal static bool IsNull(object tested) => tested == null ? true : false;
     }
+
+    public class ConvertedRecordResult
+    {
+        public readonly string Type;
+        public readonly string EditorId;
+        public readonly TES3Lib.Base.Record Record;
+
+        public ConvertedRecordResult(string type, string editorId, TES3Lib.Base.Record record)
+        {
+            Type = type;
+            EditorId = editorId;
+            Record = record;
+        }
+    }
 }

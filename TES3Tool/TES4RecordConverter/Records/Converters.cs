@@ -1,6 +1,8 @@
 ﻿using static TES3Tool.TES4RecordConverter.Records.Helpers;
 using static TES3Tool.TES4RecordConverter.Records.Converters;
+using static TES3Tool.TES4RecordConverter.Oblivion2Morrowind;
 using System;
+using System.Linq;
 
 namespace TES3Tool.TES4RecordConverter.Records
 {
@@ -11,23 +13,68 @@ namespace TES3Tool.TES4RecordConverter.Records
         /// </summary>
         /// <param name="obRecord">oblivion record to convert</param>
         /// <returns>Record Type:EditorID:Record</returns>
-        internal static (string,string, TES3Lib.Base.Record) ConvertRecord(TES4Lib.Base.Record obRecord)
+        internal static ConvertedRecordResult ConvertRecord(TES4Lib.Base.Record obRecord)
         {
             var recordType = obRecord.GetType().Name;
 
-            switch (recordType)
+            //STATIC
+            if(recordType.Equals("STAT"))
             {
-                case "STAT":
-                    var mwRecord = ConvertSTAT((TES4Lib.Records.STAT)obRecord);
-                    return (mwRecord.GetType().Name, mwRecord.NAME.EditorId, mwRecord);
-                default:
-                    return ("","",null);
+                var mwSTAT = ConvertSTAT((TES4Lib.Records.STAT)obRecord);
+                return new ConvertedRecordResult(mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
             }
+
+            //FURNITURE
+            if(recordType.Equals("FURN"))
+            {
+                var obFURN = (TES4Lib.Records.FURN)obRecord;
+                ///BED
+                if (obFURN.MNAM.ActiveMarkerFlags[0].Equals("8"))
+                {
+                    var mwACTI = ConvertFURN2ACTI(obFURN);
+                    return new ConvertedRecordResult(mwACTI.GetType().Name, mwACTI.NAME.EditorId, mwACTI);
+                }
+                //CHAIRS AND OTHERS
+                else
+                {
+                    var mwSTAT = ConvertFURN2STAT(obFURN);
+                    return new ConvertedRecordResult(mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
+                }
+            }
+
+            if(recordType.Equals("LIGH"))
+            {
+                var mwLIGHT = ConvertLIGH((TES4Lib.Records.LIGH)obRecord);
+                return new ConvertedRecordResult(mwLIGHT.GetType().Name, mwLIGHT.NAME.EditorId, mwLIGHT);
+            }
+
+ 
+            return null;
         }
 
 
 
         static TES3Lib.Records.LIGH ConvertLIGH(TES4Lib.Records.LIGH obLIGH)
+        {
+            var LIGH = new TES3Lib.Records.LIGH();
+            LIGH.NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = obLIGH.EDID.EditorId };
+            LIGH.FNAM = !IsNull(obLIGH.FULL) ? new TES3Lib.Subrecords.Shared.FNAM() { Name = obLIGH.FULL.Name } : null;
+            LIGH.LHDT = null;
+            LIGH.SCPT = null;
+            LIGH.ITEX = !IsNull(obLIGH.ICON) ? new TES3Lib.Subrecords.Shared.ITEX() { IconPath = obLIGH.ICON.IconFileName } : null;
+            LIGH.MODL = !IsNull(obLIGH.MODL) ? new TES3Lib.Subrecords.Shared.MODL() { ModelPath = obLIGH.MODL.ModelPath } : null;
+
+            if(!IsNull(obLIGH.SNAM))//if has sound convert it as well
+            {
+                var obSOUND = ConvertRecordFromREFR(obLIGH.SNAM.SoundFormId);
+                if (!IsNull(obSOUND))
+                    LIGH.SNAM = new TES3Lib.Subrecords.Shared.SNAM() { SoundName = obSOUND.Record.NAME.EditorId };
+            }       
+
+            return LIGH;
+        }
+
+        static TES3Lib.Records.SOUN ConvertSOUND(TES4Lib.Records.SOUN obSOUND)
         {
             return null;
         }
@@ -41,7 +88,27 @@ namespace TES3Tool.TES4RecordConverter.Records
             };
         }
 
-        internal static TES3Lib.Records.CELL ConvertCELL(TES4Lib.Records.CELL obCELL)
+        static TES3Lib.Records.ACTI ConvertFURN2ACTI(TES4Lib.Records.FURN obFURN)
+        {
+            return new TES3Lib.Records.ACTI()
+            {
+                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = obFURN.MODL.ModelPath },
+                NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = obFURN.EDID.EditorId },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = obFURN.FULL.FullName},
+                SCRI = new TES3Lib.Subrecords.Shared.SCRI() { ScriptName = "Bed_Standard\0"}
+            };
+        }
+
+        static TES3Lib.Records.STAT ConvertFURN2STAT(TES4Lib.Records.FURN obFURN)
+        {
+            return new TES3Lib.Records.STAT()
+            {
+                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = obFURN.MODL.ModelPath },
+                NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = obFURN.EDID.EditorId },
+            };
+        }
+
+        static TES3Lib.Records.CELL ConvertCELL(TES4Lib.Records.CELL obCELL)
         {
             if (GetTES4DeletedRecordFlag(obCELL.Flag) == 0x20) return null; //we dont need deleted records for conversion
 
@@ -95,7 +162,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwCELL;
         }
 
-        internal static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
+        static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
         {
             var mwREFR = new TES3Lib.Records.REFR();
 

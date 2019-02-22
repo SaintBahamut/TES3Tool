@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using TES3Lib.Base;
+using TES3Lib.Subrecords.Shared;
 using TES3Lib.Subrecords.REFR;
 using Utility;
 
@@ -36,6 +36,8 @@ namespace TES3Lib.Base
         public int Flags { get; set; }
 
         public DELE DELE { get; set; }
+
+        public TES3Lib.Subrecords.Shared.NAME NAME { get; set; }
 
         /// <summary>
         /// Raw bytes of records data (variable)

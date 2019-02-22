@@ -10,6 +10,11 @@ namespace TES3Lib.Subrecords.Shared
     {
         public new string Name { get; set; }
 
+        public FNAM()
+        {
+
+        }
+
         public FNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

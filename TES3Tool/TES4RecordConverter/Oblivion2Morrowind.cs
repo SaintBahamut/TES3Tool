@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static TES3Tool.TES4RecordConverter.Records.Helpers;
 using static TES3Tool.TES4RecordConverter.Records.Converters;
-
+using TES3Tool.TES4RecordConverter.Records;
 
 namespace TES3Tool.TES4RecordConverter
 {
@@ -51,11 +51,10 @@ namespace TES3Tool.TES4RecordConverter
                             var convertedCell = ConvertCELL(cellRecord);
                             if (convertedCell == null) throw new Exception("Output cell was null");
 
-                          
-
                             var cellReferences = cellSubBlock.Groups.FirstOrDefault(x => x.Label == cellRecord.FormId);
                             if (cellReferences == null) continue;
 
+                            Console.WriteLine($"BEGIN CONVERTING \"{convertedCell.NAME.CellName}\" CELL");
                             foreach (var childrenType in cellReferences.Groups) //can have 3 with labels: persistent 8; temporaty 9; distant 10;
                             {
                                 int refrNumber = 1;
@@ -68,19 +67,13 @@ namespace TES3Tool.TES4RecordConverter
                                     {
                                         case "REFR":
                                             var obREFR = (TES4Lib.Records.REFR)obRef;
-                                            if (obREFR.NAME == null) continue;
+                                            if (IsNull(obREFR.NAME)) continue;
 
-                                            var obRecordFromREFR = TES4Lib.Base.Group.FormIdIndex.FirstOrDefault(x => x.Key == obREFR.NAME.BaseFormId);
-                                            if (obRecordFromREFR.Value == null) continue;
+                                            var mwRecordFromREFR = ConvertRecordFromREFR(obREFR.NAME.BaseFormId);
+                                            if (IsNull(mwRecordFromREFR)) continue;
 
-                                            //var obRecordFromREFR = TES4Lib.Base.Group.FormIdIndex[obREFR.NAME.BaseFormId];
-                                            var mwRecordFromREFR = ConvertRecord(obRecordFromREFR.Value);
+                                            mwREFR = ConvertREFR(obREFR, mwRecordFromREFR.EditorId, refrNumber);
 
-                                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Item1)) ConvertedRecords.Add(mwRecordFromREFR.Item1, new List<TES3Lib.Base.Record>());
-
-                                            ConvertedRecords[mwRecordFromREFR.Item1].Add(mwRecordFromREFR.Item3);
-
-                                            mwREFR = ConvertREFR(obREFR, mwRecordFromREFR.Item2, refrNumber);
                                             convertedCell.REFR.Add(mwREFR);
                                             refrNumber++;
                                             break;
@@ -93,6 +86,7 @@ namespace TES3Tool.TES4RecordConverter
                             }
 
                             tes3.Records.Add(convertedCell);
+                            Console.WriteLine($"DONE CONVERTING \"{convertedCell.NAME.CellName}\" CELL");
                         }
                     }
                 }
@@ -106,7 +100,26 @@ namespace TES3Tool.TES4RecordConverter
             return tes3;
         }
 
-      
+        public static ConvertedRecordResult ConvertRecordFromREFR(string BaseFormId)
+        {
+            var obRecordFromREFR = TES4Lib.Base.Group.FormIdIndex.FirstOrDefault(x => x.Key.Equals(BaseFormId));
+            if (IsNull(obRecordFromREFR.Value)) return null;
+
+            //convert ob2mw
+            var mwRecordFromREFR = ConvertRecord(obRecordFromREFR.Value);
+
+            //check if key like this exist
+            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<TES3Lib.Base.Record>());
+
+            //check if record like this already added (i know order is fucked, but not really have idea how to make it better atm)
+            if (!ConvertedRecords[mwRecordFromREFR.Type].Any(x => !IsNull(x.NAME) & x.NAME.Equals(mwRecordFromREFR.EditorId)))
+            {
+                ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR.Record);
+            }
+
+            return mwRecordFromREFR;
+        }
+
 
     }
 }

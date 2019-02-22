@@ -16,6 +16,10 @@ namespace TES3Lib.Records
         public MODL MODL { get; set; }
         public SNAM SNAM { get; set; }
 
+        public LIGH()
+        {
+        }
+
         public LIGH(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
