@@ -4,28 +4,35 @@ using System.Linq;
 using static TES3Tool.TES4RecordConverter.Records.Helpers;
 using static TES3Tool.TES4RecordConverter.Records.Converters;
 using TES3Tool.TES4RecordConverter.Records;
+using System.Threading.Tasks;
 
 namespace TES3Tool.TES4RecordConverter
 {
     public static class Oblivion2Morrowind
     {
-        public static Dictionary<string, List<TES3Lib.Base.Record>> ConvertedRecords = new Dictionary<string, List<TES3Lib.Base.Record>>(); 
+        public static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>(); 
+
+        static string GetBaseIdFromFormId(string formId)
+        {
+            string BaseId = string.Empty;
+            Parallel.ForEach(ConvertedRecords, (record, state) =>
+            {
+                if(!string.IsNullOrEmpty(BaseId)) state.Break();
+                var result = record.Value.FirstOrDefault(x => x.OriginFormId.Equals(formId));
+                BaseId = !IsNull(result) ? result.EditorId : string.Empty; 
+            });
+
+
+            return BaseId;
+        }
+
+
+
 
         public static TES3Lib.TES3 ConvertInteriorCells(TES4Lib.TES4 tes4)
         {
-            var tes3 = new TES3Lib.TES3();
 
-            //build header
-            var header = new TES3Lib.Records.TES3();
-            header.HEDR.CompanyName = "TES3Tool\0";
-            header.HEDR.Description = "\0";
-            header.HEDR.NumRecords = 666;
-            header.HEDR.ESMFlag = 0;
-            header.HEDR.Version = 1.3f;
-            header.MAST.Filename = "Morrowind.esm\0";
-            header.DATA.MasterDataSize = 6666; //should not break but fix that later
-
-            tes3.Records.Add(header);
+           
 
             //convert cells
             var cellGroupsTop = tes4.Groups.FirstOrDefault(x => x.Label == "CELL");
@@ -34,6 +41,7 @@ namespace TES3Tool.TES4RecordConverter
                 Console.WriteLine("no CELL records");
                 return null;
             }
+            ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
 
             //this is soooo bad
             foreach (var cellBlock in cellGroupsTop.Groups)
@@ -80,42 +88,65 @@ namespace TES3Tool.TES4RecordConverter
                                         case "ACHR":
                                             continue;
                                         case "ACRE":
-                                            continue;   
-                                    } 
+                                            continue;
+                                    }
                                 }
                             }
+                            ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId,"CELL",convertedCell.NAME.CellName, convertedCell));
 
-                            tes3.Records.Add(convertedCell);
                             Console.WriteLine($"DONE CONVERTING \"{convertedCell.NAME.CellName}\" CELL");
                         }
                     }
                 }
             }
 
-            foreach (KeyValuePair<string, List<TES3Lib.Base.Record>> recordType in ConvertedRecords)
+            Console.WriteLine($"INTERIOR CELL AND REFERENCED RECORDS CONVERSION DONE \n BUILDING TES3 PLUGIN/MASTER INSTANCE");
+
+            var tes3 = new TES3Lib.TES3();
+            TES3Lib.Records.TES3 header = createTES3HEader();
+            tes3.Records.Add(header);
+
+            //ok bub you need order shit
+            foreach (KeyValuePair<string, List<ConvertedRecordData>> recordType in ConvertedRecords)
             {
-                tes3.Records.InsertRange(1, recordType.Value);
+                tes3.Records.InsertRange(1, recordType.Value.Select(x=>x.Record));
             }
+
+            //dispose references
+            ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
 
             return tes3;
         }
 
-        public static ConvertedRecordResult ConvertRecordFromREFR(string BaseFormId)
+        private static TES3Lib.Records.TES3 createTES3HEader()
         {
-            var obRecordFromREFR = TES4Lib.Base.Group.FormIdIndex.FirstOrDefault(x => x.Key.Equals(BaseFormId));
+            var header = new TES3Lib.Records.TES3();
+            header.HEDR.CompanyName = "TES3Tool\0";
+            header.HEDR.Description = "\0";
+            header.HEDR.NumRecords = 666;
+            header.HEDR.ESMFlag = 0;
+            header.HEDR.Version = 1.3f;
+            header.MAST.Filename = "Morrowind.esm\0";
+            header.DATA.MasterDataSize = 6666; //should not break but fix that later
+            return header;
+        }
+
+        public static ConvertedRecordData ConvertRecordFromREFR(string BaseFormId)
+        {
+            var obRecordFromREFR = TES4Lib.TES4.TES4RecordIndex.FirstOrDefault(x => x.Key.Equals(BaseFormId));
             if (IsNull(obRecordFromREFR.Value)) return null;
 
             //convert ob2mw
             var mwRecordFromREFR = ConvertRecord(obRecordFromREFR.Value);
 
             //check if key like this exist
-            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<TES3Lib.Base.Record>());
+            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
 
             //check if record like this already added (i know order is fucked, but not really have idea how to make it better atm)
-            if (!ConvertedRecords[mwRecordFromREFR.Type].Any(x => !IsNull(x.NAME) & x.NAME.Equals(mwRecordFromREFR.EditorId)))
-            {
-                ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR.Record);
-            }
+            //if (!ConvertedRecords[mwRecordFromREFR.Type].Any(x => !IsNull(x.NAME) & x.NAME.Equals(mwRecordFromREFR.EditorId)))
+            //{
+            //    ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR.Record);
+            //}
 
             return mwRecordFromREFR;
         }

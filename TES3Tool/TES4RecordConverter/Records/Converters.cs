@@ -13,7 +13,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         /// </summary>
         /// <param name="obRecord">oblivion record to convert</param>
         /// <returns>Record Type:EditorID:Record</returns>
-        internal static ConvertedRecordResult ConvertRecord(TES4Lib.Base.Record obRecord)
+        internal static ConvertedRecordData ConvertRecord(TES4Lib.Base.Record obRecord)
         {
             var recordType = obRecord.GetType().Name;
 
@@ -21,7 +21,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             if(recordType.Equals("STAT"))
             {
                 var mwSTAT = ConvertSTAT((TES4Lib.Records.STAT)obRecord);
-                return new ConvertedRecordResult(mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
+                return new ConvertedRecordData(obRecord.FormId ,mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
             }
 
             //FURNITURE
@@ -32,20 +32,20 @@ namespace TES3Tool.TES4RecordConverter.Records
                 if (obFURN.MNAM.ActiveMarkerFlags[0].Equals("8"))
                 {
                     var mwACTI = ConvertFURN2ACTI(obFURN);
-                    return new ConvertedRecordResult(mwACTI.GetType().Name, mwACTI.NAME.EditorId, mwACTI);
+                    return new ConvertedRecordData(obRecord.FormId, mwACTI.GetType().Name, mwACTI.NAME.EditorId, mwACTI);
                 }
                 //CHAIRS AND OTHERS
                 else
                 {
                     var mwSTAT = ConvertFURN2STAT(obFURN);
-                    return new ConvertedRecordResult(mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
+                    return new ConvertedRecordData(obRecord.FormId, mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
                 }
             }
 
             if(recordType.Equals("LIGH"))
             {
                 var mwLIGHT = ConvertLIGH((TES4Lib.Records.LIGH)obRecord);
-                return new ConvertedRecordResult(mwLIGHT.GetType().Name, mwLIGHT.NAME.EditorId, mwLIGHT);
+                return new ConvertedRecordData(obRecord.FormId, mwLIGHT.GetType().Name, mwLIGHT.NAME.EditorId, mwLIGHT);
             }
 
  
@@ -108,7 +108,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             };
         }
 
-        static TES3Lib.Records.CELL ConvertCELL(TES4Lib.Records.CELL obCELL)
+        internal static TES3Lib.Records.CELL ConvertCELL(TES4Lib.Records.CELL obCELL)
         {
             if (GetTES4DeletedRecordFlag(obCELL.Flag) == 0x20) return null; //we dont need deleted records for conversion
 
@@ -162,7 +162,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwCELL;
         }
 
-        static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
+        internal static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
         {
             var mwREFR = new TES3Lib.Records.REFR();
 

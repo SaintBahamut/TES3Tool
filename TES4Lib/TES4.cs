@@ -11,12 +11,16 @@ using Utility;
 
 namespace TES4Lib
 {
+
     public class TES4
     {
         const int HeaderSize = 20;
  
         public Records.TES4 Tes4 { get; set; }
         public ConcurrentBag<Group> Groups { get; set; }
+
+        //Global table for quick access to objects
+        public static Dictionary<string, Record> TES4RecordIndex = new Dictionary<string, Record>();
 
         public TES4()
         {

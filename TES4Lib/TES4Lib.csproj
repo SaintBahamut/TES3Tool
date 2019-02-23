@@ -167,7 +167,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Groups\" />
     <Folder Include="Subrecords\ACHR\" />
     <Folder Include="Subrecords\ACRE\" />
     <Folder Include="Subrecords\PGRD\" />

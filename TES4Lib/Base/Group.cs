@@ -18,8 +18,7 @@ namespace TES4Lib.Base
         private byte[] RawData { get; set; }
     
 
-        //Global table for quick access to objects
-        public static Dictionary<string, Record> FormIdIndex = new Dictionary<string,Record>();
+        
         private List<Record> records = new List<Record>();
 
         public List<Record> Records
@@ -96,7 +95,7 @@ namespace TES4Lib.Base
                         .CreateInstance($"TES4Lib.Records.{name}", false, BindingFlags.Default, null, new object[] { rawRecord }, null, null) as Record;
 
                     if (record != null && !String.IsNullOrEmpty(record.FormId))
-                        FormIdIndex.Add(record.FormId, record);
+                        TES4Lib.TES4.TES4RecordIndex.Add(record.FormId, record);
                     Records.Add(record);
                 }
                 else

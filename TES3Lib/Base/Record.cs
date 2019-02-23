@@ -37,8 +37,6 @@ namespace TES3Lib.Base
 
         public DELE DELE { get; set; }
 
-        public TES3Lib.Subrecords.Shared.NAME NAME { get; set; }
-
         /// <summary>
         /// Raw bytes of records data (variable)
         /// </summary>
