@@ -8,6 +8,22 @@ namespace TES3Tool.TES4RecordConverter.Records
 {
     internal static class Helpers
     {
+        internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
+
+        internal static string GetBaseIdFromFormId(string formId)
+        {
+            string BaseId = string.Empty;
+            Parallel.ForEach(ConvertedRecords, (record, state) =>
+            {
+                if (!string.IsNullOrEmpty(BaseId)) state.Break();
+                var result = record.Value.FirstOrDefault(x => x.OriginFormId.Equals(formId));
+                BaseId = !IsNull(result) ? result.EditorId : string.Empty;
+            });
+
+
+            return BaseId;
+        }
+
         internal static int GetTES4DeletedRecordFlag(int recordFlags)
         {
             return recordFlags & 0x00000020;

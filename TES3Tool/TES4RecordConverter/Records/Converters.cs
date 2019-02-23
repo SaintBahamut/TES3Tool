@@ -1,8 +1,8 @@
 ﻿using static TES3Tool.TES4RecordConverter.Records.Helpers;
-using static TES3Tool.TES4RecordConverter.Records.Converters;
 using static TES3Tool.TES4RecordConverter.Oblivion2Morrowind;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace TES3Tool.TES4RecordConverter.Records
 {
@@ -15,7 +15,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         /// <returns>Record Type:EditorID:Record</returns>
         internal static ConvertedRecordData ConvertRecord(TES4Lib.Base.Record obRecord)
         {
-            var recordType = obRecord.GetType().Name;
+            var recordType = obRecord.Name;
 
             //STATIC
             if(recordType.Equals("STAT"))
@@ -42,11 +42,15 @@ namespace TES3Tool.TES4RecordConverter.Records
                 }
             }
 
+            //LIGHT
             if(recordType.Equals("LIGH"))
             {
                 var mwLIGHT = ConvertLIGH((TES4Lib.Records.LIGH)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwLIGHT.GetType().Name, mwLIGHT.NAME.EditorId, mwLIGHT);
             }
+
+            //SOUND
+
 
  
             return null;
@@ -59,19 +63,50 @@ namespace TES3Tool.TES4RecordConverter.Records
             var LIGH = new TES3Lib.Records.LIGH();
             LIGH.NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = obLIGH.EDID.EditorId };
             LIGH.FNAM = !IsNull(obLIGH.FULL) ? new TES3Lib.Subrecords.Shared.FNAM() { Name = obLIGH.FULL.Name } : null;
-            LIGH.LHDT = null;
+
+            LIGH.LHDT = new TES3Lib.Subrecords.LIGH.LHDT
+            {
+                Weight = obLIGH.DATA.Weight,
+                Value = obLIGH.DATA.Value,
+                Color = obLIGH.DATA.Color,
+                Time = obLIGH.DATA.Time,
+                Radius = obLIGH.DATA.Radius,
+                Flags = ConvertLIGHFlags(obLIGH.DATA.Flags)
+            };
+
             LIGH.SCPT = null;
             LIGH.ITEX = !IsNull(obLIGH.ICON) ? new TES3Lib.Subrecords.Shared.ITEX() { IconPath = obLIGH.ICON.IconFileName } : null;
             LIGH.MODL = !IsNull(obLIGH.MODL) ? new TES3Lib.Subrecords.Shared.MODL() { ModelPath = obLIGH.MODL.ModelPath } : null;
 
             if(!IsNull(obLIGH.SNAM))//if has sound convert it as well
             {
-                var obSOUND = ConvertRecordFromREFR(obLIGH.SNAM.SoundFormId);
-                if (!IsNull(obSOUND))
-                    LIGH.SNAM = new TES3Lib.Subrecords.Shared.SNAM() { SoundName = obSOUND.Record.NAME.EditorId };
+                var BaseId = GetBaseIdFromFormId(obLIGH.SNAM.SoundFormId);
+                if (string.IsNullOrEmpty(BaseId))
+                {
+                    var mwRecordFromREFR = ConvertRecordFromREFR(obLIGH.SNAM.SoundFormId);
+                    if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                    ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
+                    BaseId = mwRecordFromREFR.EditorId;
+                }
+
+                LIGH.SNAM = new TES3Lib.Subrecords.Shared.SNAM() { SoundName = BaseId };
             }       
 
             return LIGH;
+        }
+
+        private static int ConvertLIGHFlags(int flags)
+        {
+            int output = 0;
+            output = output | (flags & 0x00000001);
+            output = output | (flags & 0x00000002);
+            output = output | (flags & 0x00000004);
+            output = output | (flags & 0x00000008);
+            output = output | (flags & 0x00000020);
+            output = output | (flags & 0x00000040);
+            output = output | (flags & 0x00000080);
+            output = output | (flags & 0x00000100);
+            return output;
         }
 
         static TES3Lib.Records.SOUN ConvertSOUND(TES4Lib.Records.SOUN obSOUND)

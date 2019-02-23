@@ -16,11 +16,11 @@ namespace TES4Lib.Subrecords.LIGH
         /// A value of -1 represents an infinite duration.
         /// Default value of -1.
         /// </summary>
-        public float Time { get; set; }
+        public int Time { get; set; }
 
         public int Radius { get; set; }
 
-        public byte[] Color { get; set; }
+        public int Color { get; set; }
 
         /// <summary>
         /// Light flags:
@@ -45,9 +45,9 @@ namespace TES4Lib.Subrecords.LIGH
         public DATA(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Time = reader.ReadBytes<float>(base.Data);
+            Time = reader.ReadBytes<int>(base.Data);
             Radius = reader.ReadBytes<int>(base.Data);
-            Color = reader.ReadBytes<byte[]>(base.Data,4);
+            Color = reader.ReadBytes<int>(base.Data);
             Flags = reader.ReadBytes<int>(base.Data);
 
             if (base.Size == 32)

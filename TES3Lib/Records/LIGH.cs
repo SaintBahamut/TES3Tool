@@ -1,5 +1,7 @@
 ﻿using TES3Lib.Base;
 using TES3Lib.Subrecords.Shared;
+using TES3Lib.Subrecords.LIGH;
+
 
 namespace TES3Lib.Records
 {

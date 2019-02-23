@@ -62,6 +62,7 @@
     <Compile Include="Records\ENCH.cs" />
     <Compile Include="Records\FACT.cs" />
     <Compile Include="Records\REFR.cs" />
+    <Compile Include="RecordTypes.cs" />
     <Compile Include="Subrecords\ARMO\AODT.cs" />
     <Compile Include="Subrecords\ARMO\BNAM.cs" />
     <Compile Include="Subrecords\ARMO\CNAM.cs" />

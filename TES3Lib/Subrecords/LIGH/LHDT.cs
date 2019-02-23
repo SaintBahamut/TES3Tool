@@ -1,7 +1,7 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.Shared
+namespace TES3Lib.Subrecords.LIGH
 {
     public class LHDT : Subrecord
     {
