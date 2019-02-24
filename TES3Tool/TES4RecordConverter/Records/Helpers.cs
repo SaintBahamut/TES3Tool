@@ -8,6 +8,12 @@ namespace TES3Tool.TES4RecordConverter.Records
 {
     internal static class Helpers
     {
+        internal static string GenerateSoundScript(string SoundEditorId)
+        {
+            string template = "begin Sound__PLACEHOLDER_\r\n\r\nif(CellChanged == 0)\r\n\tif(GetSoundPlaying \"_PLACEHOLDER_\" == 0 )\r\n\t\tPlayLoopSound3DVP \"_PLACEHOLDER_\", 1.0, 1.0\r\n\tendif\r\nendif\r\n\r\nend";
+            return template.Replace("_PLACEHOLDER_", SoundEditorId);
+        }
+
         internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
 
         internal static string GetBaseIdFromFormId(string formId)

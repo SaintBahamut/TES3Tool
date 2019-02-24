@@ -48,18 +48,22 @@ namespace TES3Lib.Records
                         BBSL bbsl = new BBSL();
                         bbsl.INDX = new INDX(reader.ReadBytes<byte[]>(Data, subrecordSize));
 
+                        if (Data.Length != reader.offset) break;
+
                         string nextSubrecord = GetRecordName(reader);
                         int nextSize = GetRecordSize(reader);
 
-                        if (subrecordName.Equals("BNAM"))
+                        if (nextSubrecord.Equals("BNAM"))
                         {
-                            bbsl.BNAM = new BNAM(reader.ReadBytes<byte[]>(Data, subrecordSize));
+                            bbsl.BNAM = new BNAM(reader.ReadBytes<byte[]>(Data, nextSize));
                         }
+
+                        if (Data.Length != reader.offset) break;
 
                         nextSubrecord = GetRecordName(reader);
                         nextSize = GetRecordSize(reader);
 
-                        if (subrecordName.Equals("CNAM"))
+                        if (nextSubrecord.Equals("CNAM"))
                         {
                             bbsl.CNAM = new CNAM(reader.ReadBytes<byte[]>(Data, nextSize));
                         }
@@ -75,7 +79,7 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building CONT record something is borkeeeed {e}");
+                    Console.WriteLine($"error in building ARMO record something is borkeeeed {e}");
                     break;
                 }
             }

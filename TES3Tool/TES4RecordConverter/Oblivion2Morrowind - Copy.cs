@@ -6,7 +6,7 @@ using static TES3Tool.TES4RecordConverter.Records.Converters;
 using TES3Tool.TES4RecordConverter.Records;
 using System.Threading.Tasks;
 
-namespace TES3Tool.TES4RecordConverter
+namespace TES3Tool.TES4RecordConverterx
 {
     public static class Oblivion2Morrowind
     {
@@ -55,13 +55,21 @@ namespace TES3Tool.TES4RecordConverter
                                         case "REFR":
                                             var obREFR = (TES4Lib.Records.REFR)obRef;
 
-
+                                            //walkaround for SOUND references that cant be placed in Morrowind, marking FormId with a prefix
+                                            bool sounRefFlag = false;
+                                            {
+                                                TES4Lib.Base.Record record;
+                                                TES4Lib.TES4.TES4RecordIndex.TryGetValue(obREFR.NAME.BaseFormId, out record);
+                                                if (!IsNull(record) && record.Name.Equals("SOUN"))
+                                                    sounRefFlag = true;
+                                            }
+                                          
                                             if (IsNull(obREFR.NAME)) continue;
 
-                                            var BaseId = GetBaseIdFromFormId(obREFR.NAME.BaseFormId);
+                                            var BaseId = GetBaseIdFromFormId(!sounRefFlag ? obREFR.NAME.BaseFormId : $"a{obREFR.NAME.BaseFormId}");
                                             if(string.IsNullOrEmpty(BaseId))
                                             {
-                                                var mwRecordFromREFR = ConvertRecordFromREFR(obREFR.NAME.BaseFormId);
+                                                var mwRecordFromREFR = !sounRefFlag ? ConvertRecordFromREFR(obREFR.NAME.BaseFormId) : ConvertSOUNRecordFromREFR(obREFR.NAME.BaseFormId);
                                                 if (IsNull(mwRecordFromREFR)) continue;
 
                                                 if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
@@ -130,6 +138,21 @@ namespace TES3Tool.TES4RecordConverter
             var mwRecordFromREFR = ConvertRecord(record);
 
             return mwRecordFromREFR;
+        }
+
+        /// <summary>
+        /// Need special routine
+        /// </summary>
+        /// <param name="BaseFormId"></param>
+        /// <returns></returns>
+        public static ConvertedRecordData ConvertSOUNRecordFromREFR(string BaseFormId)
+        {
+            TES4Lib.Base.Record record;
+            TES4Lib.TES4.TES4RecordIndex.TryGetValue(BaseFormId, out record);
+            if (IsNull(record)) return null;
+
+            var mwACTI = ConvertSOUN2ACTI((TES4Lib.Records.SOUN)record);
+            return new ConvertedRecordData(record.FormId, mwACTI.GetType().Name, mwACTI.NAME.EditorId, mwACTI);
         }
     }
 }

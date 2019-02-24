@@ -141,6 +141,9 @@
     <Compile Include="Subrecords\REFR\XSED.cs" />
     <Compile Include="Subrecords\REFR\XTEL.cs" />
     <Compile Include="Subrecords\REFR\XTRG.cs" />
+    <Compile Include="Subrecords\SOUN\FNAM.cs" />
+    <Compile Include="Subrecords\SOUN\SNDD.cs" />
+    <Compile Include="Subrecords\SOUN\SNDX.cs" />
     <Compile Include="Subrecords\STAT\EDID.cs" />
     <Compile Include="Subrecords\STAT\MODB.cs" />
     <Compile Include="Subrecords\STAT\MODL.cs" />

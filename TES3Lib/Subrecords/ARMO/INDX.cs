@@ -47,7 +47,7 @@ namespace TES3Lib.Subrecords.ARMO
         public INDX(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Type = reader.ReadBytes<byte[]>(base.Data)[0];
+            Type = reader.ReadBytes<byte[]>(base.Data, base.Size)[0];
         }
     }
 }

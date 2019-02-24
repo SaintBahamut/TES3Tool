@@ -13,8 +13,8 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-            //string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\silverlight.ESP";
-            //var tes3 = TES3Load(file);
+            string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minitest.ESP";
+            var tes3 = TES3Load(file);
             //tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minitest.ESP");
 
             ////string file = "D:\\Out.esp";
@@ -26,8 +26,8 @@ namespace TES3Tool
 
             //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\BOBOLIONTEST.esp";
             // string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\CONVERIX.ESP";
-            string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
-            var tes4 = TES4Load(fileESM, new List<string> { "FURN" });
+            // string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
+            // var tes4 = TES4Load(fileESM, new List<string> { "SOUN" });
 
 
             // var stat = TES4Load(fileesm, new List<string> { "STAT","CELL" });

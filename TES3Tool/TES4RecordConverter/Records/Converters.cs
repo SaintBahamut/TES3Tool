@@ -24,7 +24,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId ,mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
             }
 
-            //FURNITURE
+            //FURNITURE (output is eighter static object or activator)
             if(recordType.Equals("FURN"))
             {
                 var obFURN = (TES4Lib.Records.FURN)obRecord;
@@ -49,10 +49,20 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwLIGHT.GetType().Name, mwLIGHT.NAME.EditorId, mwLIGHT);
             }
 
-            //SOUND
+            //ACTIVATOR
+            if(recordType.Equals("ACTI"))
+            {
+                var mwACTI = ConvertACTI((TES4Lib.Records.ACTI)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwACTI.GetType().Name, mwACTI.NAME.EditorId, mwACTI);
+            }
 
+            //SOUND (ouptut is activator with hooked playback scipt)
+            if (recordType.Equals("SOUN"))
+            {
+                var mwSOUN = ConvertSOUN2ACTI((TES4Lib.Records.SOUN)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwSOUN.GetType().Name, mwSOUN.NAME.EditorId, mwSOUN);
+            }
 
- 
             return null;
         }
 
@@ -109,9 +119,19 @@ namespace TES3Tool.TES4RecordConverter.Records
             return output;
         }
 
-        static TES3Lib.Records.SOUN ConvertSOUND(TES4Lib.Records.SOUN obSOUND)
+        static TES3Lib.Records.SOUN ConvertSOUN(TES4Lib.Records.SOUN obSOUND)
         {
             return null;
+        }
+
+        static TES3Lib.Records.ACTI ConvertACTI(TES4Lib.Records.ACTI obACTI)
+        {
+            return new TES3Lib.Records.ACTI()
+            {
+                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = obACTI.MODL.ModelPath },
+                NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = obACTI.EDID.EditorId },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = obACTI.FULL.FullName },
+            };
         }
 
         static TES3Lib.Records.STAT ConvertSTAT(TES4Lib.Records.STAT obSTAT)
@@ -141,6 +161,46 @@ namespace TES3Tool.TES4RecordConverter.Records
                 MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = obFURN.MODL.ModelPath },
                 NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = obFURN.EDID.EditorId },
             };
+        }
+
+        static TES3Lib.Records.ACTI ConvertSOUN2ACTI(TES4Lib.Records.SOUN obSOUN)
+        {
+            //first sound
+            var SOUN = ConvertSOUN(obSOUN);
+            SOUN.NAME.EditorId = $"s{SOUN.NAME.EditorId}"; //sound record id will be prefixed with s
+            var SOUNData = new ConvertedRecordData($"s{obSOUN.FormId}", SOUN.GetType().Name, SOUN.NAME.EditorId, SOUN);
+            if (!ConvertedRecords.ContainsKey(SOUN.Name)) ConvertedRecords.Add(SOUN.Name, new List<ConvertedRecordData>());
+                ConvertedRecords[SOUN.Name].Add(SOUNData);
+
+            //then script
+            var SCPT = new TES3Lib.Records.SCPT();
+            SCPT.SCHD.Name = $"Sound_{SOUN.NAME.EditorId}";
+            SCPT.SCHD.LocalVarSize = 6;
+            SCPT.SCHD.NumFloats = 6;
+            SCPT.SCHD.NumLongs = 6;
+            SCPT.SCHD.NumShorts = 6;
+            SCPT.SCHD.ScriptDataSize = 6;
+
+            SCPT.SCVR = new TES3Lib.Subrecords.SCPT.SCVR();
+            SCPT.SCVR.LocalScriptVariables = "betterrecompilethis\0";
+
+            SCPT.SCDT = new TES3Lib.Subrecords.SCPT.SCDT();
+            SCPT.SCDT.CompiledScript = new byte[6];
+
+            SCPT.SCTX = new TES3Lib.Subrecords.SCPT.SCTX();
+            SCPT.SCTX.ScriptText = GenerateSoundScript(SOUN.NAME.EditorId);
+
+            if (!ConvertedRecords.ContainsKey(SCPT.GetType().Name)) ConvertedRecords.Add(SCPT.GetType().Name, new List<ConvertedRecordData>());
+            ConvertedRecords[SCPT.GetType().Name].Add(new ConvertedRecordData("SOUNDSCPT","SCPT", SCPT.SCHD.Name, SCPT));
+
+            //then activator itself
+            var ACTI = new TES3Lib.Records.ACTI();
+            ACTI.MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath="SI/SoundEmitter.nif"};
+            ACTI.NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = SOUN.NAME.EditorId };
+            ACTI.FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = SOUN.NAME.EditorId };
+            ACTI.SCRI = new TES3Lib.Subrecords.Shared.SCRI() { ScriptName=""};
+
+            return ACTI;
         }
 
         internal static TES3Lib.Records.CELL ConvertCELL(TES4Lib.Records.CELL obCELL)
