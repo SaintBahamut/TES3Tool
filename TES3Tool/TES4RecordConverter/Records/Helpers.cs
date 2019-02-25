@@ -66,6 +66,21 @@ namespace TES3Tool.TES4RecordConverter.Records
         }
 
         internal static bool IsNull(object tested) => tested == null ? true : false;
+
+        internal static string ModelPathFormater(string sourcePath)
+        {
+            return sourcePath;
+        }
+
+        internal static string IconPathFormater(string sourcePath)
+        {
+            return sourcePath;
+        }
+
+        internal static string SoundPathFormater(string sourcePath)
+        {
+            return sourcePath;
+        }
     }
 
     public class ConvertedRecordData

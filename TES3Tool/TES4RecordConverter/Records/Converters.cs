@@ -3,6 +3,7 @@ using static TES3Tool.TES4RecordConverter.Oblivion2Morrowind;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using TES4Lib.Records;
 
 namespace TES3Tool.TES4RecordConverter.Records
 {
@@ -63,10 +64,48 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwSOUN.GetType().Name, mwSOUN.NAME.EditorId, mwSOUN);
             }
 
+            //MISC
+            if(recordType.Equals("MISC"))
+            {
+                var mwMISC = ConvertMISC((TES4Lib.Records.MISC)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwMISC.GetType().Name, mwMISC.NAME.EditorId, mwMISC);
+            }
+
+            //KEYM (outputs MISC)
+            if (recordType.Equals("KEYM"))
+            {
+                var mwMISC = ConvertKEYM((TES4Lib.Records.KEYM)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwMISC.GetType().Name, mwMISC.NAME.EditorId, mwMISC);
+            }
+
             return null;
         }
 
+        static TES3Lib.Records.MISC ConvertMISC(TES4Lib.Records.MISC obRecord)
+        {
+            return new TES3Lib.Records.MISC
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = obRecord.EDID.EditorId },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = ModelPathFormater(obRecord.MODL.ModelPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = obRecord.FULL.Name },
+                MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obRecord.DATA.Weight, Value = obRecord.DATA.Value, Unknown = 0 },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = ModelPathFormater(obRecord.ICON.IconFileName) },
+                SCRI = null,
+            };
+        }
 
+        static TES3Lib.Records.MISC ConvertKEYM(TES4Lib.Records.KEYM obRecord)
+        {
+            return new TES3Lib.Records.MISC
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = obRecord.EDID.EditorId },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = ModelPathFormater(obRecord.MODL.ModelPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = obRecord.FULL.Name },
+                MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obRecord.DATA.Weight, Value = obRecord.DATA.Value, Unknown = 0 },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = ModelPathFormater(obRecord.ICON.IconFileName) },
+                SCRI = null,
+            };
+        }
 
         static TES3Lib.Records.LIGH ConvertLIGH(TES4Lib.Records.LIGH obLIGH)
         {
@@ -105,7 +144,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return LIGH;
         }
 
-        private static int ConvertLIGHFlags(int flags)
+        static int ConvertLIGHFlags(int flags)
         {
             int output = 0;
             output = output | (flags & 0x00000001);
@@ -121,7 +160,23 @@ namespace TES3Tool.TES4RecordConverter.Records
 
         static TES3Lib.Records.SOUN ConvertSOUN(TES4Lib.Records.SOUN obSOUND)
         {
-            return null;
+            return new TES3Lib.Records.SOUN()
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME()
+                {
+                    EditorId = $"s{obSOUND.EDID.EditorId}",
+                },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM()
+                {
+                    Name = obSOUND.FNAM.SoundFilename
+                },
+                DATA = new TES3Lib.Subrecords.SOUN.DATA()
+                {
+                    Volume = 1,
+                    MinRange = obSOUND.SNDX.MinAttentuationDist,
+                    MaxRange = obSOUND.SNDX.MinAttentuationDist,
+                }
+            };
         }
 
         static TES3Lib.Records.ACTI ConvertACTI(TES4Lib.Records.ACTI obACTI)

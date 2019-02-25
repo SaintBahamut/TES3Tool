@@ -116,8 +116,10 @@
     <Compile Include="Subrecords\CELL\XOWN.cs" />
     <Compile Include="Subrecords\CELL\XRNK.cs" />
     <Compile Include="Subrecords\FURN\MNAM.cs" />
+    <Compile Include="Subrecords\KEYM\DATA.cs" />
     <Compile Include="Subrecords\LIGH\DATA.cs" />
     <Compile Include="Subrecords\LIGH\FNAM.cs" />
+    <Compile Include="Subrecords\MISC\DATA.cs" />
     <Compile Include="Subrecords\REFR\DATA.cs" />
     <Compile Include="Subrecords\REFR\EDID.cs" />
     <Compile Include="Subrecords\REFR\FNAM.cs" />
