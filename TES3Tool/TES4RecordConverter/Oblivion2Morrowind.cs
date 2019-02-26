@@ -55,7 +55,6 @@ namespace TES3Tool.TES4RecordConverter
                                         case "REFR":
                                             var obREFR = (TES4Lib.Records.REFR)obRef;
 
-
                                             if (IsNull(obREFR.NAME)) continue;
 
                                             var BaseId = GetBaseIdFromFormId(obREFR.NAME.BaseFormId);
@@ -82,7 +81,19 @@ namespace TES3Tool.TES4RecordConverter
                                     }
                                 }
                             }
-                            ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId,"CELL",convertedCell.NAME.CellName, convertedCell));
+
+                            foreach (var item in ConvertedRecords["CELL"])
+                            {
+                                bool cellWithSameNameExists = (item.Record as TES3Lib.Records.CELL).NAME.CellName.Equals(convertedCell.NAME.CellName);
+                                if (cellWithSameNameExists)
+                                {
+                                    convertedCell.NAME.CellName = CellNameFormatter($"{convertedCell.NAME.CellName.Replace("\0"," ")}{cellRecord.EDID.CellEditorId}");
+                                    break;
+                                }  
+                            }
+                            
+                                        
+                            ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId,"CELL", cellRecord.EDID.CellEditorId, convertedCell));
 
                             Console.WriteLine($"DONE CONVERTING \"{convertedCell.NAME.CellName}\" CELL");
                         }
@@ -101,6 +112,8 @@ namespace TES3Tool.TES4RecordConverter
                 if (!ConvertedRecords.ContainsKey(record)) continue;
                 tes3.Records.InsertRange(tes3.Records.Count, ConvertedRecords[record].Select(x => x.Record));
             }
+
+
 
             //dispose references
             ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();

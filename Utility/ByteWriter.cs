@@ -11,8 +11,10 @@ namespace Utility
         public static byte[] ToBytes(object data, Type type)
         {
             if (type == typeof(byte[])) return (byte[])data;
+            if (type == typeof(byte)) return new byte[] { (byte)data };
             if (type == typeof(int)) return BitConverter.GetBytes((int)data);
             if (type == typeof(float)) return BitConverter.GetBytes((float)data);
+            if (type == typeof(short)) return BitConverter.GetBytes((short)data);
             if (type == typeof(string)) return Encoding.ASCII.GetBytes((string)data);
             if (type == typeof(long)) return BitConverter.GetBytes((long)data);
             if (type == typeof(ulong)) return BitConverter.GetBytes((ulong)data);

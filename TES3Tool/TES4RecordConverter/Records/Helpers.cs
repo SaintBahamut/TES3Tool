@@ -19,13 +19,11 @@ namespace TES3Tool.TES4RecordConverter.Records
         internal static string GetBaseIdFromFormId(string formId)
         {
             string BaseId = string.Empty;
-            Parallel.ForEach(ConvertedRecords, (record, state) =>
-            {
-                if (!string.IsNullOrEmpty(BaseId)) state.Break();
-                var result = record.Value.FirstOrDefault(x => x.OriginFormId.Equals(formId));
-                BaseId = !IsNull(result) ? result.EditorId : string.Empty;
-            });
 
+            var group = ConvertedRecords.AsParallel()
+                .FirstOrDefault(x => x.Value.Exists(y => y.OriginFormId.Equals(formId)));
+            var result = !IsNull(group.Key) ? group.Value.AsParallel().FirstOrDefault(x => x.OriginFormId.Equals(formId)) : null;
+            BaseId = !IsNull(result) ?  result.EditorId : string.Empty;
 
             return BaseId;
         }
@@ -69,18 +67,83 @@ namespace TES3Tool.TES4RecordConverter.Records
 
         internal static string ModelPathFormater(string sourcePath)
         {
-            return sourcePath;
+            var pathSplit = sourcePath.Split('\\');
+
+            for (int i = 0; i < pathSplit.Count()-1; i++)
+            {
+                pathSplit[i] = pathSplit[i].First().ToString();
+            }
+
+            var newPath = "SI\\" + string.Join("\\", pathSplit);
+
+            if(newPath.Count() > 32)
+            {
+                int diff = newPath.Count() - 32;
+                int pos = pathSplit.Count() - 1;
+                pathSplit[pos] = pathSplit[pos].Remove(0, diff);
+                newPath = "SI\\" + string.Join("\\", pathSplit);
+            }
+
+            return newPath;
         }
 
-        internal static string IconPathFormater(string sourcePath)
+        internal static string PathFormater(string sourcePath, string containingFolder)
         {
-            return sourcePath;
+            string fileName = sourcePath.Split('\\').Last();
+
+            string outputPath = $"{TES3Tool.Config.convertedRootFolder}\\{containingFolder}\\{fileName}";
+
+            int pathSize = outputPath.Count();
+            if (pathSize <= 32)
+                return outputPath;
+
+            int diff = pathSize - 32;
+            string newFileName = fileName.Remove(0, diff);
+
+            return $"{TES3Tool.Config.convertedRootFolder}\\{containingFolder}\\{newFileName}";
         }
 
-        internal static string SoundPathFormater(string sourcePath)
+        internal static string EditorIdFormater(string sourceEditorId)
         {
-            return sourcePath;
+            int idSize = sourceEditorId.Count();
+            if (idSize <= 32)
+                return sourceEditorId;
+
+            int diff = idSize - 32;
+            return sourceEditorId.Remove(0, diff);
         }
+
+        internal static string NameFormater(string recordDisplayName)
+        {
+            int idSize = recordDisplayName.Count();
+            if (idSize <= 32)
+                return recordDisplayName;
+
+            int diff = idSize - 32;
+            return recordDisplayName.Replace("\0", "").Remove(recordDisplayName.Length-diff,diff)+"\0";
+        }
+
+        internal static string CellNameFormatter(string recordDisplayName)
+        {
+            int idSize = recordDisplayName.Count();
+            if (idSize <= 64)
+                return recordDisplayName;
+
+            int diff = idSize - 64;
+            return recordDisplayName.Replace("\0", "").Remove(recordDisplayName.Length-1- diff, diff) + "\0";
+        }
+
+        internal static string SoundIdFormater(string sourceEditorId)
+        {
+            int idSize = sourceEditorId.Count();
+            if (idSize <= 31)
+                return $"s{sourceEditorId}";
+
+            int diff = idSize - 31;
+            string path =  $"s{sourceEditorId.Remove(0, diff)}";
+            return path;
+        }
+
     }
 
     public class ConvertedRecordData
