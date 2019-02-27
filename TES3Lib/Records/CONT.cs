@@ -26,6 +26,11 @@ namespace TES3Lib.Records
 
         public List<NPCO> NPCO = new List<NPCO>();
 
+        public CONT()
+        {
+
+        }
+
         public CONT(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();

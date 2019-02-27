@@ -18,6 +18,8 @@ namespace TES3Tool.TES4RecordConverter.Records
 
         internal static string GetBaseIdFromFormId(string formId)
         {
+            if (formId.Equals("0000000F")) return "Gold_001"; //gold
+
             string BaseId = string.Empty;
 
             var group = ConvertedRecords.AsParallel()

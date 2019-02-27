@@ -48,8 +48,7 @@ namespace TES4Lib.Base
                     var subrecordName = GetRecordName(readerData);
                     var subrecordSize = GetRecordSize(readerData);
                     var subrecordProp = this.GetType().GetProperty(subrecordName);
-                    var subrecordData = readerData.ReadBytes<byte[]>(Data, (int)subrecordSize);
-                   
+                    var subrecordData = readerData.ReadBytes<byte[]>(Data, (int)subrecordSize);    
 
                     var subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
                     subrecordProp.SetValue(this, subrecord);

@@ -30,7 +30,8 @@ namespace TES3Tool
             // var tes4 = TES4Load(fileESM, new List<string> { "SOUN" });
 
 
-            var stat = TES4Load(fileESM, new List<string> { "STAT", "CELL","SOUN","MISC","KEYM","FURN","ACTI","LIGH" });
+            var stat = TES4Load(fileESM, new List<string> { "STAT", "CELL","SOUN",
+                "MISC","KEYM","FURN","ACTI","LIGH","CONT" });
 
 
 

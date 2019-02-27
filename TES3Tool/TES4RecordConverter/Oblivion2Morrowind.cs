@@ -22,6 +22,7 @@ namespace TES3Tool.TES4RecordConverter
             }
             ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
 
+       
             //this is soooo bad
             foreach (var cellBlock in cellGroupsTop.Groups)
             {
@@ -90,8 +91,7 @@ namespace TES3Tool.TES4RecordConverter
                                     convertedCell.NAME.CellName = CellNameFormatter($"{convertedCell.NAME.CellName.Replace("\0"," ")}{cellRecord.EDID.CellEditorId}");
                                     break;
                                 }  
-                            }
-                            
+                            }                         
                                         
                             ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId,"CELL", cellRecord.EDID.CellEditorId, convertedCell));
 
@@ -112,8 +112,6 @@ namespace TES3Tool.TES4RecordConverter
                 if (!ConvertedRecords.ContainsKey(record)) continue;
                 tes3.Records.InsertRange(tes3.Records.Count, ConvertedRecords[record].Select(x => x.Record));
             }
-
-
 
             //dispose references
             ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();

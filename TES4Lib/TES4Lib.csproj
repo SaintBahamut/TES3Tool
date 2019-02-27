@@ -54,6 +54,7 @@
     <Compile Include="Records\CLAS.cs" />
     <Compile Include="Records\CLMT.cs" />
     <Compile Include="Records\CLOT.cs" />
+    <Compile Include="Records\CONT.cs" />
     <Compile Include="Records\CREA.cs" />
     <Compile Include="Records\CSTY.cs" />
     <Compile Include="Records\DIAL.cs" />
@@ -115,6 +116,9 @@
     <Compile Include="Subrecords\CELL\XGLB.cs" />
     <Compile Include="Subrecords\CELL\XOWN.cs" />
     <Compile Include="Subrecords\CELL\XRNK.cs" />
+    <Compile Include="Subrecords\CONT\CNTO.cs" />
+    <Compile Include="Subrecords\CONT\DATA.cs" />
+    <Compile Include="Subrecords\_Shared\QNAM.cs" />
     <Compile Include="Subrecords\FURN\MNAM.cs" />
     <Compile Include="Subrecords\KEYM\DATA.cs" />
     <Compile Include="Subrecords\LIGH\DATA.cs" />

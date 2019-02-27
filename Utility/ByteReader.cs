@@ -65,6 +65,12 @@ namespace Utility
                 offset += bytesToRead.Value;
                 return (T)Convert.ChangeType(converted, typeof(T));
             }
+            if (typeof(T) == typeof(byte))
+            {
+                var converted = data.Skip(offset).Take(1).ToArray()[0];
+                offset += sizeof(byte);
+                return (T)(object)converted;
+            }
 
             throw new Exception("Wrong input params");
         }

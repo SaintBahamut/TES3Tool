@@ -78,7 +78,52 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwMISC.GetType().Name, mwMISC.NAME.EditorId, mwMISC);
             }
 
+            //CONT
+            if (recordType.Equals("CONT"))
+            {
+                var mwCONT = ConvertCONT((TES4Lib.Records.CONT)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwCONT.GetType().Name, mwCONT.NAME.EditorId, mwCONT);
+            }
+
+
+
             return null;
+        }
+
+        private static object ConvertCONT(TES4Lib.Records.CONT obCONT)
+        {
+            var CONT = new TES3Lib.Records.CONT
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obCONT.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = ModelPathFormater(obCONT.MODL.ModelPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obCONT.FULL.Name) },
+                CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = obCONT.DATA.Weight },
+                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 0x0008 }
+            };
+
+            if(obCONT.CNTO.Count > 0)
+            {
+                CONT.NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>();
+
+                foreach (var item in obCONT.CNTO)
+                {
+                    var BaseId = GetBaseIdFromFormId(item.ItemId);
+                    if (string.IsNullOrEmpty(BaseId))
+                    {
+                        TES4Lib.Base.Record record;
+                        TES4Lib.TES4.TES4RecordIndex.TryGetValue(item.ItemId, out record);
+                        if (!IsNull(record))
+                        {
+                            var mwRecordFromREFR = ConvertRecordFromREFR(item.ItemId);
+                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.GetType().Name)) ConvertedRecords.Add(mwRecordFromREFR.GetType().Name, new List<ConvertedRecordData>());
+                            ConvertedRecords[mwRecordFromREFR.GetType().Name].Add(mwRecordFromREFR);
+                            CONT.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = mwRecordFromREFR.EditorId, Count = item.ItemCount });
+                        }                    
+                    }
+                }
+            }
+
+            return CONT;
         }
 
         static TES3Lib.Records.MISC ConvertMISC(TES4Lib.Records.MISC obRecord)
