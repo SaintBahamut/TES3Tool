@@ -118,6 +118,8 @@
     <Compile Include="Subrecords\CELL\XRNK.cs" />
     <Compile Include="Subrecords\CONT\CNTO.cs" />
     <Compile Include="Subrecords\CONT\DATA.cs" />
+    <Compile Include="Subrecords\FLOR\PFIG.cs" />
+    <Compile Include="Subrecords\FLOR\PFPC.cs" />
     <Compile Include="Subrecords\_Shared\QNAM.cs" />
     <Compile Include="Subrecords\FURN\MNAM.cs" />
     <Compile Include="Subrecords\KEYM\DATA.cs" />

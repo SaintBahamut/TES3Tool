@@ -14,9 +14,9 @@
         public static string LIGHPath = "l";
         public static string CLOTPath = "c";
         public static string SOUNPath = "s";
-        public static string FURNPath = "f";
+        public static string FURNPath = "u";
         public static string WEAPPath = "w";
         public static string CONTPath = "o";
-        public static string FLORPath = "o";
+        public static string FLORPath = "f";
     }
 }

@@ -19,14 +19,14 @@ namespace TES3Tool.TES4RecordConverter.Records
             var recordType = obRecord.Name;
 
             //STATIC
-            if(recordType.Equals("STAT"))
+            if (recordType.Equals("STAT"))
             {
                 var mwSTAT = ConvertSTAT((TES4Lib.Records.STAT)obRecord);
-                return new ConvertedRecordData(obRecord.FormId ,mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
+                return new ConvertedRecordData(obRecord.FormId, mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
             }
 
             //FURNITURE (output is eighter static object or activator)
-            if(recordType.Equals("FURN"))
+            if (recordType.Equals("FURN"))
             {
                 var obFURN = (TES4Lib.Records.FURN)obRecord;
                 ///BED
@@ -44,14 +44,14 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             //LIGHT
-            if(recordType.Equals("LIGH"))
+            if (recordType.Equals("LIGH"))
             {
                 var mwLIGHT = ConvertLIGH((TES4Lib.Records.LIGH)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwLIGHT.GetType().Name, mwLIGHT.NAME.EditorId, mwLIGHT);
             }
 
             //ACTIVATOR
-            if(recordType.Equals("ACTI"))
+            if (recordType.Equals("ACTI"))
             {
                 var mwACTI = ConvertACTI((TES4Lib.Records.ACTI)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwACTI.GetType().Name, mwACTI.NAME.EditorId, mwACTI);
@@ -65,7 +65,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             //MISC
-            if(recordType.Equals("MISC"))
+            if (recordType.Equals("MISC"))
             {
                 var mwMISC = ConvertMISC((TES4Lib.Records.MISC)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwMISC.GetType().Name, mwMISC.NAME.EditorId, mwMISC);
@@ -85,23 +85,99 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwCONT.GetType().Name, mwCONT.NAME.EditorId, mwCONT);
             }
 
+            //CONT (outputs CONT for ingredient producting plant if not output is STAT
+            if (recordType.Equals("FLOR"))
+            {
+                if (IsNull((obRecord as TES4Lib.Records.FLOR).PFIG))
+                {
+                    var mwCONT = ConvertFLOR2CONT((TES4Lib.Records.FLOR)obRecord);
+                    return new ConvertedRecordData(obRecord.FormId, mwCONT.GetType().Name, mwCONT.NAME.EditorId, mwCONT);
+                }
+                var mwSTAT = ConvertFLOR2STAT((TES4Lib.Records.FLOR)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
+            }
 
 
             return null;
         }
 
-        private static object ConvertCONT(TES4Lib.Records.CONT obCONT)
+        private static TES3Lib.Records.STAT ConvertFLOR2STAT(TES4Lib.Records.FLOR obFLOR)
+        {
+            return new TES3Lib.Records.STAT()
+            {
+                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obFLOR.MODL.ModelPath, TES3Tool.Config.FLORPath) },
+                NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = EditorIdFormater(obFLOR.EDID.EditorId) },
+            };
+        }
+
+        private static TES3Lib.Records.CONT ConvertFLOR2CONT(TES4Lib.Records.FLOR obFLOR)
+        {
+            var CONT = new TES3Lib.Records.CONT
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obFLOR.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obFLOR.MODL.ModelPath, TES3Tool.Config.FLORPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obFLOR.FULL.FullName) },
+                CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = 0 },
+                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 0x0008 | 0x0001 | 0x0002 }
+            };
+
+            if (!IsNull(obFLOR.PFIG))
+            {
+                var BaseId = GetBaseIdFromFormId(obFLOR.PFIG.IngredientProduced);
+                if (string.IsNullOrEmpty(BaseId))
+                {
+                    var rnd = new Random((int)DateTime.Now.Ticks); //calling gods
+                    var fate = rnd.Next(0, 3); //pray for a sign
+                    var qnt = 2;
+                    switch (fate) //interpret gods words
+                    {
+                        case 0:
+                            qnt = (int)obFLOR.PFPC.SpringProd;
+                            break;
+                        case 1:
+                            qnt = (int)obFLOR.PFPC.SummerProd;
+                            break;
+                        case 2:
+                            qnt = (int)obFLOR.PFPC.FallProd;
+                            break;
+                        case 4:
+                            qnt = (int)obFLOR.PFPC.WinterProd;
+                            break;
+                    }
+
+                    if (qnt == 0) //if gods are cruel, fuck them
+                        qnt = 2;
+
+
+                    TES4Lib.Base.Record record;
+                    TES4Lib.TES4.TES4RecordIndex.TryGetValue(obFLOR.PFIG.IngredientProduced, out record);
+                    if (!IsNull(record))
+                    {
+                        CONT.NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>();
+                        var mwRecordFromREFR = ConvertRecordFromREFR(BaseId);
+                        if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                        ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
+                        CONT.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = mwRecordFromREFR.EditorId, Count = qnt });
+                    }
+                }
+
+            }
+
+            return CONT;
+        }
+
+        private static TES3Lib.Records.CONT ConvertCONT(TES4Lib.Records.CONT obCONT)
         {
             var CONT = new TES3Lib.Records.CONT
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obCONT.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = ModelPathFormater(obCONT.MODL.ModelPath) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obCONT.FULL.Name) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obCONT.MODL.ModelPath, TES3Tool.Config.CONTPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCONT.FULL) ? obCONT.FULL.FullName : "" ) },
                 CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = obCONT.DATA.Weight },
                 FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 0x0008 }
             };
 
-            if(obCONT.CNTO.Count > 0)
+            if (obCONT.CNTO.Count > 0)
             {
                 CONT.NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>();
 
@@ -115,10 +191,10 @@ namespace TES3Tool.TES4RecordConverter.Records
                         if (!IsNull(record))
                         {
                             var mwRecordFromREFR = ConvertRecordFromREFR(item.ItemId);
-                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.GetType().Name)) ConvertedRecords.Add(mwRecordFromREFR.GetType().Name, new List<ConvertedRecordData>());
-                            ConvertedRecords[mwRecordFromREFR.GetType().Name].Add(mwRecordFromREFR);
+                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                            ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
                             CONT.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = mwRecordFromREFR.EditorId, Count = item.ItemCount });
-                        }                    
+                        }
                     }
                 }
             }
@@ -130,9 +206,9 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             return new TES3Lib.Records.MISC
             {
-                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obRecord.EDID.EditorId)},
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obRecord.EDID.EditorId) },
                 MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obRecord.MODL.ModelPath, TES3Tool.Config.MISCPath) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obRecord.FULL.Name) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obRecord.FULL.FullName) },
                 MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obRecord.DATA.Weight, Value = obRecord.DATA.Value, Unknown = 0 },
                 ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obRecord.ICON.IconFileName, TES3Tool.Config.MISCPath) },
                 SCRI = null,
@@ -145,7 +221,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obRecord.EDID.EditorId) },
                 MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obRecord.MODL.ModelPath, TES3Tool.Config.MISCPath) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = obRecord.FULL.Name },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obRecord.FULL.FullName) },
                 MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obRecord.DATA.Weight, Value = obRecord.DATA.Value, Unknown = 0 },
                 ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obRecord.ICON.IconFileName, TES3Tool.Config.MISCPath) },
                 SCRI = null,
@@ -156,7 +232,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             var LIGH = new TES3Lib.Records.LIGH();
             LIGH.NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = EditorIdFormater(obLIGH.EDID.EditorId) };
-            LIGH.FNAM = !IsNull(obLIGH.FULL) ? new TES3Lib.Subrecords.Shared.FNAM() { Name = obLIGH.FULL.Name } : null;
+            LIGH.FNAM = !IsNull(obLIGH.FULL) ? new TES3Lib.Subrecords.Shared.FNAM() { Name = NameFormater(obLIGH.FULL.FullName) } : null;
 
             LIGH.LHDT = new TES3Lib.Subrecords.LIGH.LHDT
             {
@@ -172,9 +248,9 @@ namespace TES3Tool.TES4RecordConverter.Records
             LIGH.ITEX = !IsNull(obLIGH.ICON) ? new TES3Lib.Subrecords.Shared.ITEX() { IconPath = PathFormater(obLIGH.ICON.IconFileName, TES3Tool.Config.LIGHPath) } : null;
             LIGH.MODL = !IsNull(obLIGH.MODL) ? new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obLIGH.MODL.ModelPath, TES3Tool.Config.LIGHPath) } : null;
 
-            if(!IsNull(obLIGH.SNAM))//if has sound convert it as well
+            if (!IsNull(obLIGH.SNAM))//if has sound convert it as well
             {
-                var BaseId = GetBaseIdFromFormId("s"+obLIGH.SNAM.SoundFormId);
+                var BaseId = GetBaseIdFromFormId("s" + obLIGH.SNAM.SoundFormId);
                 if (string.IsNullOrEmpty(BaseId))
                 {
 
@@ -182,15 +258,15 @@ namespace TES3Tool.TES4RecordConverter.Records
                     TES4Lib.TES4.TES4RecordIndex.TryGetValue(obLIGH.SNAM.SoundFormId, out record);
                     if (!IsNull(record))
                     {
-                        var mwRecordFromREFR = ConvertSOUN((TES4Lib.Records.SOUN)record);
-                        if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.GetType().Name)) ConvertedRecords.Add(mwRecordFromREFR.GetType().Name, new List<ConvertedRecordData>());
-                        ConvertedRecords[mwRecordFromREFR.GetType().Name].Add(new ConvertedRecordData($"s{obLIGH.SNAM.SoundFormId}", mwRecordFromREFR.GetType().Name, mwRecordFromREFR.NAME.EditorId, mwRecordFromREFR));
-                        BaseId = mwRecordFromREFR.NAME.EditorId;
-                    }       
+                        var mwSOUNDFromREFR = ConvertSOUN((TES4Lib.Records.SOUN)record);
+                        if (!ConvertedRecords.ContainsKey(mwSOUNDFromREFR.GetType().Name)) ConvertedRecords.Add(mwSOUNDFromREFR.GetType().Name, new List<ConvertedRecordData>());
+                        ConvertedRecords[mwSOUNDFromREFR.GetType().Name].Add(new ConvertedRecordData($"s{obLIGH.SNAM.SoundFormId}", mwSOUNDFromREFR.GetType().Name, mwSOUNDFromREFR.NAME.EditorId, mwSOUNDFromREFR));
+                        BaseId = mwSOUNDFromREFR.NAME.EditorId;
+                    }
                 }
 
                 LIGH.SNAM = new TES3Lib.Subrecords.Shared.SNAM() { SoundName = BaseId };
-            }       
+            }
 
             return LIGH;
         }
@@ -236,7 +312,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             {
                 MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obACTI.MODL.ModelPath, TES3Tool.Config.ACTIPath) },
                 NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = EditorIdFormater(obACTI.EDID.EditorId) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = !IsNull(obACTI.FULL) ? obACTI.FULL.FullName : "" },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = !IsNull(obACTI.FULL) ? NameFormater(obACTI.FULL.FullName) : "" },
             };
         }
 
@@ -244,7 +320,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             return new TES3Lib.Records.STAT()
             {
-                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obSTAT.MODL.ModelFileName, TES3Tool.Config.STATPath)},
+                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obSTAT.MODL.ModelFileName, TES3Tool.Config.STATPath) },
                 NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = EditorIdFormater(obSTAT.EDID.EditorId) },
             };
         }
@@ -255,8 +331,8 @@ namespace TES3Tool.TES4RecordConverter.Records
             {
                 MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obFURN.MODL.ModelPath, TES3Tool.Config.FURNPath) },
                 NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = EditorIdFormater(obFURN.EDID.EditorId) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = NameFormater(obFURN.FULL.FullName)},
-                SCRI = new TES3Lib.Subrecords.Shared.SCRI() { ScriptName = "Bed_Standard\0"}
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = NameFormater(obFURN.FULL.FullName) },
+                SCRI = new TES3Lib.Subrecords.Shared.SCRI() { ScriptName = "Bed_Standard\0" }
             };
         }
 
@@ -272,12 +348,6 @@ namespace TES3Tool.TES4RecordConverter.Records
         static TES3Lib.Records.ACTI ConvertSOUN2ACTI(TES4Lib.Records.SOUN obSOUN)
         {
             //first sound
-            //var SOUN = ConvertSOUN(obSOUN);
-
-            //var SOUNData = new ConvertedRecordData($"s{obSOUN.FormId}", SOUN.GetType().Name, SOUN.NAME.EditorId, SOUN);
-            //if (!ConvertedRecords.ContainsKey(SOUN.GetType().Name)) ConvertedRecords.Add(SOUN.GetType().Name, new List<ConvertedRecordData>());
-            //    ConvertedRecords[SOUN.GetType().Name].Add(SOUNData);
-
             var BaseId = GetBaseIdFromFormId("s" + obSOUN.FormId);
             if (string.IsNullOrEmpty(BaseId))
             {
@@ -321,15 +391,15 @@ namespace TES3Tool.TES4RecordConverter.Records
             };
 
             if (!ConvertedRecords.ContainsKey(SCPT.GetType().Name)) ConvertedRecords.Add(SCPT.GetType().Name, new List<ConvertedRecordData>());
-            ConvertedRecords[SCPT.GetType().Name].Add(new ConvertedRecordData("SOUNDSCPT","SCPT", SCPT.SCHD.Name, SCPT));
+            ConvertedRecords[SCPT.GetType().Name].Add(new ConvertedRecordData("SOUNDSCPT", "SCPT", SCPT.SCHD.Name, SCPT));
 
             //then activator itself
             var ACTI = new TES3Lib.Records.ACTI();
             string soundActiId = BaseId.TrimStart('s');
-            ACTI.MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath=$"{TES3Tool.Config.convertedRootFolder}\\SoundEmitter.nif\0"};
+            ACTI.MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = $"{TES3Tool.Config.convertedRootFolder}\\SoundEmitter.nif\0" };
             ACTI.NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = soundActiId };
             ACTI.FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = BaseId };
-            ACTI.SCRI = new TES3Lib.Subrecords.Shared.SCRI() { ScriptName = $"Sound_{BaseId}"};
+            ACTI.SCRI = new TES3Lib.Subrecords.Shared.SCRI() { ScriptName = $"Sound_{BaseId}" };
 
             return ACTI;
         }
@@ -410,32 +480,47 @@ namespace TES3Tool.TES4RecordConverter.Records
             //    mwREFR.DELE = new TES3Lib.Subrecords.REFR.DELE();
             //}
 
-            if (!IsNull(obREFR.XTEL))
+            if (!IsNull(obREFR.XTEL)) //not now
             {
-                mwREFR.DODT = new TES3Lib.Subrecords.REFR.DODT();
-                mwREFR.DODT.XPos = obREFR.XTEL.DestLocX;
-                mwREFR.DODT.YPos = obREFR.XTEL.DestLocY;
-                mwREFR.DODT.ZPos = obREFR.XTEL.DestLocZ;
-                mwREFR.DODT.XRotate = obREFR.XTEL.DestRotX;
-                mwREFR.DODT.YRotate = obREFR.XTEL.DestRotY;
-                mwREFR.DODT.ZRotate = obREFR.XTEL.DestRotX;
+                //mwREFR.DODT = new TES3Lib.Subrecords.REFR.DODT();
+                //mwREFR.DODT.XPos = obREFR.XTEL.DestLocX;
+                //mwREFR.DODT.YPos = obREFR.XTEL.DestLocY;
+                //mwREFR.DODT.ZPos = obREFR.XTEL.DestLocZ;
+                //mwREFR.DODT.XRotate = obREFR.XTEL.DestRotX;
+                //mwREFR.DODT.YRotate = obREFR.XTEL.DestRotY;
+                //mwREFR.DODT.ZRotate = obREFR.XTEL.DestRotX;
 
-                mwREFR.DNAM = new TES3Lib.Subrecords.REFR.DNAM();
+                //mwREFR.DNAM = new TES3Lib.Subrecords.REFR.DNAM();
                 //mwREFR.DNAM.DoorName = obREFR.XTEL.DestinationDoorReference; //hold right there criminal scum TODO: need dig on this
             }
 
-            if(!IsNull(obREFR.XLOC))
+            if (!IsNull(obREFR.XLOC))
             {
-                mwREFR.FLTV = new TES3Lib.Subrecords.REFR.FLTV(); //lock level
-                mwREFR.KNAM = new TES3Lib.Subrecords.REFR.KNAM(); //key data
-                //locks data
+                //mwREFR.FLTV = new TES3Lib.Subrecords.REFR.FLTV { LockLevel = (int)obREFR.XLOC.LockLevel };
 
-              mwREFR.TNAM = new TES3Lib.Subrecords.REFR.TNAM(); //traps, oblvion doesent have them
+                //if (!obREFR.XLOC.Key.Equals("00000000"))
+                //{
+                //    var BaseId = GetBaseIdFromFormId(obREFR.XLOC.Key);
+                //    if (string.IsNullOrEmpty(BaseId))
+                //    {
+                //        TES4Lib.Base.Record record;
+                //        TES4Lib.TES4.TES4RecordIndex.TryGetValue(obREFR.XLOC.Key, out record);
+                //        if (!IsNull(record))
+                //        {
+                //            var mwRecordFromREFR = ConvertRecordFromREFR(obREFR.XLOC.Key);
+                //            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.GetType().Name)) ConvertedRecords.Add(mwRecordFromREFR.GetType().Name, new List<ConvertedRecordData>());
+                //            ConvertedRecords[mwRecordFromREFR.GetType().Name].Add(mwRecordFromREFR);
+
+                //        }
+                //    }
+                //    mwREFR.KNAM = new TES3Lib.Subrecords.REFR.KNAM { DoorKeyId = BaseId };
+
+                //}
             }
 
             // uneeded?
             ///mwREFR.UNAM = new TES3Lib.Subrecords.REFR.UNAM();
-            
+
             //owner data laaateeer
             //mwREFR.ANAM = new TES3Lib.Subrecords.REFR.ANAM();
             //mwREFR.BNAM = new TES3Lib.Subrecords.REFR.BNAM();
@@ -449,8 +534,8 @@ namespace TES3Tool.TES4RecordConverter.Records
             //soul data, obREFR dont have it?
             //mwREFR.XSOL = new TES3Lib.Subrecords.REFR.XSOL();
 
-            
-            if(!IsNull(obREFR.DATA))
+
+            if (!IsNull(obREFR.DATA))
             {
                 mwREFR.DATA = new TES3Lib.Subrecords.REFR.DATA();
                 mwREFR.DATA.XPos = obREFR.DATA.LocX;
@@ -462,7 +547,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             return mwREFR;
-        }  
+        }
 
         //internal static TES3Lib.Records.REFR ConvertACHR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
         //{

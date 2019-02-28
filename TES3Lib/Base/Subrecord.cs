@@ -45,7 +45,16 @@ namespace TES3Lib.Base
             foreach (PropertyInfo property in properties)
             {
                 var value = property.GetValue(this);
-                data.AddRange(ByteWriter.ToBytes(value, property.PropertyType));
+                try
+                {
+                    data.AddRange(ByteWriter.ToBytes(value, property.PropertyType));
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+              
             }
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)

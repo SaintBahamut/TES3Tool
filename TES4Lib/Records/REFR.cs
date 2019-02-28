@@ -31,7 +31,6 @@ namespace TES4Lib.Records
 
         public REFR(byte[] rawData) : base(rawData)
         {
-           /// IsImplemented = false;
             BuildSubrecords();
         }
     }

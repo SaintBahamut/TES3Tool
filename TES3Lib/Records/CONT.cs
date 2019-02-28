@@ -75,11 +75,19 @@ namespace TES3Lib.Records
             List<byte> data = new List<byte>();
             foreach (PropertyInfo property in properties)
             {
-                if (property.Name == "NPCO") continue;
-                var subrecord = (Subrecord)property.GetValue(this);
-                if (subrecord == null) continue;
+                try
+                {
+                    if (property.Name == "NPCO") continue;
+                    var subrecord = (Subrecord)property.GetValue(this);
+                    if (subrecord == null) continue;
 
-                data.AddRange(subrecord.SerializeSubrecord());
+                    data.AddRange(subrecord.SerializeSubrecord());
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
 
             if (NPCO.Count() > 0)

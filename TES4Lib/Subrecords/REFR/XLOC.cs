@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TES4Lib.Base;
 using Utility;
 
@@ -15,12 +16,29 @@ namespace TES4Lib.Subrecords.REFR
         /// 0x00000004 = Is lock leveled
         /// </summary>
 
-        public byte[] LockData { get; set; }
+        public byte LockLevel { get; set; }
+        public byte[] Unknown1 { get; set; }
+        public string Key { get; set; }
+        public byte[] Unknown2 { get; set; }
+        public byte[] Flags { get; set; }
+
 
         public XLOC(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            var LockData = reader.ReadBytes<byte[]>(base.Data, base.Size);
+            LockLevel = reader.ReadBytes<byte>(base.Data);
+            Unknown1 = reader.ReadBytes<byte[]>(base.Data, 3);
+            Key = BitConverter.ToString(reader.ReadBytes<byte[]>(base.Data, 4).Reverse().ToArray()).Replace("-", "");
+
+            if (base.Size.Equals(12))
+            {
+               Flags = reader.ReadBytes<byte[]>(base.Data, 4);
+            }
+            else
+	        {
+                Unknown2 = Flags = reader.ReadBytes<byte[]>(base.Data, 4);
+                Flags = reader.ReadBytes<byte[]>(base.Data, 4);
+            }
         }
     }
 }
