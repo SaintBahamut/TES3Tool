@@ -23,8 +23,6 @@ namespace TES3Lib.Records
 
         public DOOR()
         {
-            Flags = 0;
-            Header = 0;
         }
 
         public DOOR(byte[] rawData) : base(rawData)

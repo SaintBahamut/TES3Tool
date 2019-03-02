@@ -3,6 +3,9 @@ using Utility;
 
 namespace TES4Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Unknown
+    /// </summary>
     public class MODT : Subrecord
     {
 

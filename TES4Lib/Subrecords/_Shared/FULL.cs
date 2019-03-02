@@ -8,12 +8,15 @@ namespace TES4Lib.Subrecords.Shared
     /// </summary>
     public class FULL : Subrecord
     {
-        public string FullName { get; set; }
+        /// <summary>
+        /// Ingame display name of record
+        /// </summary>
+        public string DisplayName { get; set; }
 
         public FULL(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            FullName = reader.ReadBytes<string>(base.Data, base.Size);
+            DisplayName = reader.ReadBytes<string>(base.Data, base.Size);
         }
     }
 }

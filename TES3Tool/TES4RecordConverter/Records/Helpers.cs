@@ -8,28 +8,34 @@ namespace TES3Tool.TES4RecordConverter.Records
 {
     internal static class Helpers
     {
+        internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
+
+        internal static List<TES3Lib.Subrecords.REFR.DNAM> DoorDestinations = new List<TES3Lib.Subrecords.REFR.DNAM>();
+
+        internal static List<ConvertedCellReference> CellReferences = new List<ConvertedCellReference>();
+
         internal static string GenerateSoundScript(string SoundEditorId)
         {
             string template = "begin Sound__PLACEHOLDER_\r\n\r\nif(CellChanged == 0)\r\n\tif(GetSoundPlaying \"_PLACEHOLDER_\" == 0 )\r\n\t\tPlayLoopSound3DVP \"_PLACEHOLDER_\", 1.0, 1.0\r\n\tendif\r\nendif\r\n\r\nend";
             return template.Replace("_PLACEHOLDER_", SoundEditorId);
-        }
+        }  
 
-        internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
-
-        static string GetDefaultIdFromFormId(string formId)
+        internal static void DoorDestinationsFormIdToNames()
         {
-            if (!formId.Contains("0000000")) return string.Empty;
-            if (formId.Equals("0000000F")) return "Gold_001\0";
-            if (formId.Equals("0000000A")) return "pick_journeyman_01\0";
-            if (formId.Equals("0000000C")) return "repair_journeyman_01\0";
-            if (formId.Equals("00000002")) return "TravelMarker\0"; 
-            if (formId.Equals("00000006")) return "TempleMarker\0";
-            if (formId.Equals("00000003")) return "NorthMarker\0";
-            if (formId.Equals("00000001")) return "DoorMarker\0";
-            if (formId.Equals("00000005")) return "DivineMarker\0";
-            if (formId.Equals("0000000E")) return "LootBag\0";
-            if (formId.Equals("00000004")) return "PrisonMarker\0";
-            return string.Empty;
+            Parallel.ForEach(DoorDestinations, formId =>
+            {
+                var reference = CellReferences
+               .FirstOrDefault(x => x.ReferenceFormId.Equals(formId.DoorName));
+
+                if (IsNull(reference)) return;
+
+                var cell = ConvertedRecords["CELL"]
+                .FirstOrDefault(x => x.OriginFormId.Equals(reference.ParentCellFormId));
+
+                if (IsNull(cell)) return;
+
+                formId.DoorName = (cell.Record as TES3Lib.Records.CELL).NAME.CellName;
+            });
         }
 
         internal static string GetBaseIdFromFormId(string formId)
@@ -117,7 +123,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return recordDisplayName;
 
             int diff = idSize - 32;
-            return recordDisplayName.Replace("\0", "").Remove(recordDisplayName.Length-diff,diff)+"\0";
+            return recordDisplayName.Replace("\0", "").Remove(recordDisplayName.Length-diff-1,diff)+"\0";
         }
 
         internal static string CellNameFormatter(string recordDisplayName)
@@ -141,6 +147,21 @@ namespace TES3Tool.TES4RecordConverter.Records
             return path;
         }
 
+        static string GetDefaultIdFromFormId(string formId)
+        {
+            if (!formId.Contains("0000000")) return string.Empty;
+            if (formId.Equals("0000000F")) return "Gold_001\0";
+            if (formId.Equals("0000000A")) return "pick_journeyman_01\0";
+            if (formId.Equals("0000000C")) return "repair_journeyman_01\0";
+            if (formId.Equals("00000002")) return "TravelMarker\0";
+            if (formId.Equals("00000006")) return "TempleMarker\0";
+            if (formId.Equals("00000003")) return "NorthMarker\0";
+            if (formId.Equals("00000001")) return "DoorMarker\0";
+            if (formId.Equals("00000005")) return "DivineMarker\0";
+            if (formId.Equals("0000000E")) return "LootBag\0";
+            if (formId.Equals("00000004")) return "PrisonMarker\0";
+            return string.Empty;
+        }
     }
 
     public class ConvertedRecordData
@@ -156,6 +177,22 @@ namespace TES3Tool.TES4RecordConverter.Records
             Type = type;
             EditorId = editorId;
             Record = record;
+        }
+    }
+
+    public class ConvertedCellReference
+    {
+        public readonly string ParentCellFormId;
+        public readonly string ReferenceFormId;
+        public readonly string Type;
+        public readonly string EditorId;
+        public readonly TES3Lib.Records.REFR Reference;
+
+        public ConvertedCellReference(string parentCellFormId, string referenceFormId, TES3Lib.Records.REFR reference)
+        {
+            ParentCellFormId = parentCellFormId;
+            ReferenceFormId = referenceFormId;
+            Reference = reference;
         }
     }
 }

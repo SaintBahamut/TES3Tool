@@ -31,7 +31,7 @@ namespace TES3Tool
 
 
             var stat = TES4Load(fileESM, new List<string> { "STAT", "CELL","SOUN",
-                "MISC","KEYM","FURN","ACTI","LIGH","CONT","FLOR" });
+                "MISC","KEYM","FURN","ACTI","LIGH","CONT","FLOR","DOOR" });
 
 
 

@@ -2,6 +2,9 @@
 
 namespace TES4Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Unknown
+    /// </summary>
     public class MODB : Subrecord
     {
 

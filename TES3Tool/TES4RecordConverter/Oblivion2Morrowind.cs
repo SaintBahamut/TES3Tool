@@ -70,7 +70,8 @@ namespace TES3Tool.TES4RecordConverter
                                                 BaseId = mwRecordFromREFR.EditorId;
                                             }
                        
-                                            mwREFR = ConvertREFR(obREFR, BaseId, refrNumber);
+                                            mwREFR = ConvertREFR(obREFR,  BaseId, refrNumber);
+                                            CellReferences.Add(new ConvertedCellReference(cellRecord.FormId, obREFR.FormId, mwREFR)); //for tracking
 
                                             convertedCell.REFR.Add(mwREFR);
                                             refrNumber++;
@@ -101,6 +102,8 @@ namespace TES3Tool.TES4RecordConverter
                 }
             }
 
+            DoorDestinationsFormIdToNames();
+
             Console.WriteLine($"INTERIOR CELL AND REFERENCED RECORDS CONVERSION DONE \n BUILDING TES3 PLUGIN/MASTER INSTANCE");
 
             var tes3 = new TES3Lib.TES3();
@@ -113,8 +116,10 @@ namespace TES3Tool.TES4RecordConverter
                 tes3.Records.InsertRange(tes3.Records.Count, ConvertedRecords[record].Select(x => x.Record));
             }
 
-            //dispose references
+            //dispose helper structures
             ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
+            CellReferences = new List<ConvertedCellReference>();
+            DoorDestinations = new List<TES3Lib.Subrecords.REFR.DNAM>();
 
             return tes3;
         }

@@ -3,16 +3,19 @@ using System.Linq;
 using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.Shared
+namespace TES4Lib.Subrecords.DOOR
 {
-    public class SNAM : Subrecord
+    /// <summary>
+    /// Close sound
+    /// </summary>
+    public class ANAM : Subrecord
     {
         /// <summary>
-        /// Sound record formId
+        /// Sound formId
         /// </summary>
         public string SoundFormId { get; set; }
 
-        public SNAM(byte[] rawData) : base(rawData)
+        public ANAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
             var baseFormIdBytes = reader.ReadBytes<byte[]>(base.Data, base.Size);

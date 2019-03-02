@@ -6,20 +6,21 @@ using Utility;
 namespace TES4Lib.Subrecords.Shared
 {
     /// <summary>
-    /// Script attached to record
+    /// Enchantment reference (formId)
     /// </summary>
-    public class SCRI : Subrecord
+    public class ENAM : Subrecord
     {
         /// <summary>
-        /// Script formId
+        /// Enchantment formId
         /// </summary>
-        public string ScriptFormId { get; set; }
+        public string EnchantmentFormId { get; set; }
 
-        public SCRI(byte[] rawData) : base(rawData)
+        public ENAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
             var baseFormIdBytes = reader.ReadBytes<byte[]>(base.Data, base.Size);
-            ScriptFormId = BitConverter.ToString(baseFormIdBytes.Reverse().ToArray()).Replace("-", "");
+            EnchantmentFormId = BitConverter.ToString(baseFormIdBytes.Reverse().ToArray()).Replace("-", "");
         }
     }
 }
+

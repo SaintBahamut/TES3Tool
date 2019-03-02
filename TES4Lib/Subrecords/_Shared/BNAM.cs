@@ -5,14 +5,17 @@ using Utility;
 
 namespace TES4Lib.Subrecords.Shared
 {
-    public class SNAM : Subrecord
+    /// <summary>
+    /// Loop sound
+    /// </summary>
+    public class BNAM : Subrecord
     {
         /// <summary>
-        /// Sound record formId
+        /// Sound formId
         /// </summary>
         public string SoundFormId { get; set; }
 
-        public SNAM(byte[] rawData) : base(rawData)
+        public BNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
             var baseFormIdBytes = reader.ReadBytes<byte[]>(base.Data, base.Size);

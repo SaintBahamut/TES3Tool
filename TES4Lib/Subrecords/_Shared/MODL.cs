@@ -4,10 +4,13 @@ using Utility;
 namespace TES4Lib.Subrecords.Shared
 {
     /// <summary>
-    /// Model path
+    /// Model of record
     /// </summary>
     public class MODL : Subrecord
     {
+        /// <summary>
+        /// Models path
+        /// </summary>
         public string ModelPath { get; set; }
 
         public MODL(byte[] rawData) : base(rawData)

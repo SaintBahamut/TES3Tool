@@ -2,6 +2,11 @@
 {
     public static class Config
     {
+        //positon shift
+        public static float mwCellSize = 8192;
+        public static int cellShiftX = 0;
+        public static int cellShiftY = 0;
+
         public static string convertedRootFolder = "SI";
 
         //path for records
