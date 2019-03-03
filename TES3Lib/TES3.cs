@@ -17,8 +17,10 @@ namespace TES3Lib
             Records = new List<Record>();
         }
 
-        public static TES3 TES3Load(string filePath)
-        {    
+        public static TES3 TES3Load(string filePath, List<string> filteredGrops = null)
+        {
+            if (filteredGrops == null) filteredGrops = new List<string>(); 
+       
             var TES3 = new TES3();
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
         
@@ -30,6 +32,12 @@ namespace TES3Lib
                 var reader = new ByteReader();
                 var name = reader.ReadBytes<string>(header, 4);
                 var size = reader.ReadBytes<int>(header);
+
+                if (filteredGrops.Count > 0 && !filteredGrops.Contains(name))
+                {
+                    fileStream.Position += +HeaderSize+size;
+                    continue;
+                }
 
                 var data = new byte[HeaderSize + size];
                 fileStream.Read(data, 0, HeaderSize + size);

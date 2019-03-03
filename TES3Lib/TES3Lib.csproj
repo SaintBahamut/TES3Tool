@@ -45,6 +45,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ArmorType.cs" />
+    <Compile Include="Enums\BodyPart.cs" />
+    <Compile Include="Enums\MagicEffect.cs" />
+    <Compile Include="Enums\Skill.cs" />
+    <Compile Include="Enums\Specialization.cs" />
+    <Compile Include="Enums\SpellSchool.cs" />
+    <Compile Include="Enums\WeaponType.cs" />
     <Compile Include="Records\ACTI.cs" />
     <Compile Include="Records\ALCH.cs" />
     <Compile Include="Records\APPA.cs" />
@@ -74,7 +81,20 @@
     <Compile Include="Subrecords\CONT\CNDT.cs" />
     <Compile Include="Subrecords\CONT\FLAG.cs" />
     <Compile Include="Subrecords\DOOR\ANAM.cs" />
+    <Compile Include="Subrecords\INGR\IRDT.cs" />
     <Compile Include="Subrecords\LIGH\LHDT.cs" />
+    <Compile Include="Subrecords\MGEF\BSND.cs" />
+    <Compile Include="Subrecords\MGEF\ASND.cs" />
+    <Compile Include="Subrecords\MGEF\AVFX.cs" />
+    <Compile Include="Subrecords\MGEF\BVFX.cs" />
+    <Compile Include="Subrecords\MGEF\CSND.cs" />
+    <Compile Include="Subrecords\MGEF\CVFX.cs" />
+    <Compile Include="Subrecords\MGEF\HSND.cs" />
+    <Compile Include="Subrecords\_Shared\DESC.cs" />
+    <Compile Include="Subrecords\MGEF\HVFX.cs" />
+    <Compile Include="Subrecords\MGEF\INDX.cs" />
+    <Compile Include="Subrecords\MGEF\MEDT.cs" />
+    <Compile Include="Subrecords\MGEF\PTEX.cs" />
     <Compile Include="Subrecords\MISC\ENAM.cs" />
     <Compile Include="Subrecords\MISC\MCDT.cs" />
     <Compile Include="Subrecords\NPC_\AIDT.cs" />
@@ -90,11 +110,7 @@
     <Compile Include="Subrecords\NPC_\DNAM.cs" />
     <Compile Include="Subrecords\NPC_\DODT.cs" />
     <Compile Include="Subrecords\NPC_\FLAG.cs" />
-    <Compile Include="Subrecords\NPC_\FNAM.cs" />
     <Compile Include="Subrecords\NPC_\KNAM.cs" />
-    <Compile Include="Subrecords\NPC_\MODL.cs" />
-    <Compile Include="Subrecords\NPC_\NAME.cs" />
-    <Compile Include="Subrecords\NPC_\NPCO.cs" />
     <Compile Include="Subrecords\NPC_\NPCS.cs" />
     <Compile Include="Subrecords\NPC_\NPDT.cs" />
     <Compile Include="Subrecords\NPC_\RNAM.cs" />

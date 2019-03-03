@@ -25,6 +25,13 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
             }
 
+            //WEAPONS
+            if (recordType.Equals("WEAP"))
+            {
+                var mwWEAP = ConvertWEAP((TES4Lib.Records.WEAP)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwWEAP.GetType().Name, mwWEAP.NAME.EditorId, mwWEAP);
+            }
+
             //FURNITURE (output is eighter static object or activator)
             if (recordType.Equals("FURN"))
             {
@@ -71,21 +78,21 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwMISC.GetType().Name, mwMISC.NAME.EditorId, mwMISC);
             }
 
-            //KEYM (outputs MISC)
+            //KEYS (outputs MISC)
             if (recordType.Equals("KEYM"))
             {
                 var mwMISC = ConvertKEYM((TES4Lib.Records.KEYM)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwMISC.GetType().Name, mwMISC.NAME.EditorId, mwMISC);
             }
 
-            //CONT
+            //CONTAINERS
             if (recordType.Equals("CONT"))
             {
                 var mwCONT = ConvertCONT((TES4Lib.Records.CONT)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwCONT.GetType().Name, mwCONT.NAME.EditorId, mwCONT);
             }
 
-            //CONT (outputs CONT for ingredient producting plant if not output is STAT
+            //FLORA (outputs CONT for ingredient producting plant if not output is STAT
             if (recordType.Equals("FLOR"))
             {
                 if (!IsNull((obRecord as TES4Lib.Records.FLOR).PFIG))
@@ -97,18 +104,103 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwSTAT.GetType().Name, mwSTAT.NAME.EditorId, mwSTAT);
             }
 
-            //CONT
+            //DOORS
             if (recordType.Equals("DOOR"))
             {
                 var mwDOOR = ConvertDOOR((TES4Lib.Records.DOOR)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwDOOR.GetType().Name, mwDOOR.NAME.EditorId, mwDOOR);
             }
 
-
             return null;
         }
 
-        private static TES3Lib.Records.DOOR ConvertDOOR(TES4Lib.Records.DOOR obDOOR)
+        static TES3Lib.Records.WEAP ConvertWEAP(TES4Lib.Records.WEAP obWEAP)
+        {
+            var mwWEAP = new TES3Lib.Records.WEAP
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obWEAP.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obWEAP.MODL.ModelPath, Config.WEAPPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obWEAP.FULL) ? obWEAP.FULL.DisplayName : string.Empty) },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obWEAP.ICON.IconFilePath, TES3Tool.Config.MISCPath) },
+                WPDT = new TES3Lib.Subrecords.WEAP.WPDT
+                {
+                    Weight = obWEAP.DATA.Weight,
+                    Value = obWEAP.DATA.Value,
+                    Type = CastWeaponTypeToMw(obWEAP),
+                    Health = (short)obWEAP.DATA.Health,
+                    Speed = obWEAP.DATA.Speed,
+                    Reach = obWEAP.DATA.Reach,
+                    EnchantmentPoints = !IsNull(obWEAP.ANAM) ? obWEAP.ANAM.EnchantmentPoints : (short)0,
+                 },
+                ENAM = null, //TODO
+                SCRI = null,
+            };
+            mwWEAP.WPDT.ChopMin = (byte)(0.5f * obWEAP.DATA.Damage);
+            mwWEAP.WPDT.ChopMax = (byte)obWEAP.DATA.Damage;
+            mwWEAP.WPDT.SlashMin = mwWEAP.WPDT.Type.Equals(TES3Lib.Enums.WeaponType.MarksmanBow) ? (byte)0 :(byte)(0.5f * obWEAP.DATA.Damage);
+            mwWEAP.WPDT.SlashMax = mwWEAP.WPDT.Type.Equals(TES3Lib.Enums.WeaponType.MarksmanBow) ? (byte)0 : (byte)(obWEAP.DATA.Damage);
+            mwWEAP.WPDT.ThrustMin = (byte)(0.5f * CalcThrust(mwWEAP.WPDT.Type, obWEAP.DATA.Damage));
+            mwWEAP.WPDT.ThrustMax = CalcThrust(mwWEAP.WPDT.Type, obWEAP.DATA.Damage);
+
+            return mwWEAP;
+        }
+
+        static byte CalcThrust(TES3Lib.Enums.WeaponType type, short damage)
+        {
+            float penalty = 0.75f;
+            switch (type)
+            {
+                case TES3Lib.Enums.WeaponType.BluntTwoClose:
+                case TES3Lib.Enums.WeaponType.BluntOneHand:
+                case TES3Lib.Enums.WeaponType.AxeOneHand:
+                case TES3Lib.Enums.WeaponType.AxeTwoHand:
+                    return (byte)(penalty * damage);
+                case TES3Lib.Enums.WeaponType.MarksmanBow:
+                    return 0;
+
+                default:
+                    return (byte)damage;
+            }
+        }
+
+        static TES3Lib.Enums.WeaponType CastWeaponTypeToMw(TES4Lib.Records.WEAP obWEAP)
+        {
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BladeOneHand))//blade one hand
+            {
+                if (obWEAP.EDID.EditorId.ToLower().Contains("dagger") || obWEAP.FULL.DisplayName.ToLower().Contains("dagger"))
+                    return TES3Lib.Enums.WeaponType.ShortBladeOneHand;
+ 
+                return TES3Lib.Enums.WeaponType.LongBladeOneHand;
+            }
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BladeTwoHand))//blade two hand
+            {
+                return TES3Lib.Enums.WeaponType.LongBladeTwoClose;
+            }
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BluntOneHand))//blunt one hand
+            {
+                if (obWEAP.EDID.EditorId.ToLower().Contains("axe") || obWEAP.FULL.DisplayName.ToLower().Contains("axe"))
+                    return TES3Lib.Enums.WeaponType.AxeOneHand;
+
+                return TES3Lib.Enums.WeaponType.BluntOneHand;
+            }
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BluntTwoHand))//blunt two hand
+            {
+                if (obWEAP.EDID.EditorId.ToLower().Contains("axe") || obWEAP.FULL.DisplayName.ToLower().Contains("axe"))
+                    return TES3Lib.Enums.WeaponType.AxeTwoHand;
+     
+                return TES3Lib.Enums.WeaponType.BluntTwoClose;
+            }
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.Staff))//staff
+            {
+                return TES3Lib.Enums.WeaponType.BluntTwoWide;
+            }
+            else
+            {
+                return TES3Lib.Enums.WeaponType.MarksmanBow;
+            }
+        }
+
+        static TES3Lib.Records.DOOR ConvertDOOR(TES4Lib.Records.DOOR obDOOR)
         {
             var mwDOOR = new TES3Lib.Records.DOOR
             {
@@ -160,7 +252,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwDOOR;
         }
 
-        private static TES3Lib.Records.STAT ConvertFLOR2STAT(TES4Lib.Records.FLOR obFLOR)
+        static TES3Lib.Records.STAT ConvertFLOR2STAT(TES4Lib.Records.FLOR obFLOR)
         {
             return new TES3Lib.Records.STAT()
             {
@@ -169,7 +261,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             };
         }
 
-        private static TES3Lib.Records.CONT ConvertFLOR2CONT(TES4Lib.Records.FLOR obFLOR)
+        static TES3Lib.Records.CONT ConvertFLOR2CONT(TES4Lib.Records.FLOR obFLOR)
         {
             var CONT = new TES3Lib.Records.CONT
             {
@@ -225,13 +317,13 @@ namespace TES3Tool.TES4RecordConverter.Records
             return CONT;
         }
 
-        private static TES3Lib.Records.CONT ConvertCONT(TES4Lib.Records.CONT obCONT)
+        static TES3Lib.Records.CONT ConvertCONT(TES4Lib.Records.CONT obCONT)
         {
             var CONT = new TES3Lib.Records.CONT
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obCONT.EDID.EditorId) },
                 MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obCONT.MODL.ModelPath, TES3Tool.Config.CONTPath) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCONT.FULL) ? obCONT.FULL.DisplayName : "" ) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCONT.FULL) ? obCONT.FULL.DisplayName : "") },
                 CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = obCONT.DATA.Weight },
                 FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 0x0008 }
             };
@@ -261,28 +353,28 @@ namespace TES3Tool.TES4RecordConverter.Records
             return CONT;
         }
 
-        static TES3Lib.Records.MISC ConvertMISC(TES4Lib.Records.MISC obRecord)
+        static TES3Lib.Records.MISC ConvertMISC(TES4Lib.Records.MISC obMISC)
         {
             return new TES3Lib.Records.MISC
             {
-                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obRecord.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obRecord.MODL.ModelPath, TES3Tool.Config.MISCPath) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obRecord.FULL.DisplayName) },
-                MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obRecord.DATA.Weight, Value = obRecord.DATA.Value, Unknown = 0 },
-                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obRecord.ICON.IconFilePath, TES3Tool.Config.MISCPath) },
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obMISC.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obMISC.MODL.ModelPath, TES3Tool.Config.MISCPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obMISC.FULL.DisplayName) },
+                MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obMISC.DATA.Weight, Value = obMISC.DATA.Value, Unknown = 0 },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obMISC.ICON.IconFilePath, TES3Tool.Config.MISCPath) },
                 SCRI = null,
             };
         }
 
-        static TES3Lib.Records.MISC ConvertKEYM(TES4Lib.Records.KEYM obRecord)
+        static TES3Lib.Records.MISC ConvertKEYM(TES4Lib.Records.KEYM obKEYM)
         {
             return new TES3Lib.Records.MISC
             {
-                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obRecord.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obRecord.MODL.ModelPath, TES3Tool.Config.MISCPath) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obRecord.FULL.DisplayName) },
-                MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obRecord.DATA.Weight, Value = obRecord.DATA.Value, Unknown = 0 },
-                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obRecord.ICON.IconFilePath, TES3Tool.Config.MISCPath) },
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obKEYM.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obKEYM.MODL.ModelPath, TES3Tool.Config.KEYMPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obKEYM.FULL.DisplayName) },
+                MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obKEYM.DATA.Weight, Value = obKEYM.DATA.Value, Unknown = 0 },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obKEYM.ICON.IconFilePath, TES3Tool.Config.KEYMPath) },
             };
         }
 
@@ -305,7 +397,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 ITEX = !IsNull(obLIGH.ICON) ? new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obLIGH.ICON.IconFilePath, Config.LIGHPath) } : null,
                 MODL = !IsNull(obLIGH.MODL) ? new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obLIGH.MODL.ModelPath, Config.LIGHPath) } : null,
             };
-           
+
             if (!IsNull(obLIGH.SNAM))//if has sound convert it as well
             {
                 var BaseId = GetBaseIdFromFormId("s" + obLIGH.SNAM.SoundFormId);
@@ -462,7 +554,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return ACTI;
         }
 
-        internal static TES3Lib.Records.CELL ConvertCELL(TES4Lib.Records.CELL obCELL)
+        public static TES3Lib.Records.CELL ConvertCELL(TES4Lib.Records.CELL obCELL)
         {
             if (GetTES4DeletedRecordFlag(obCELL.Flag) == 0x20) return null; //we dont need deleted records for conversion
 
@@ -516,7 +608,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwCELL;
         }
 
-        internal static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
+        public static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
         {
             var mwREFR = new TES3Lib.Records.REFR();
 
@@ -551,7 +643,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     float shiftX = (Config.cellShiftX * Config.mwCellSize);
                     float shiftY = (Config.cellShiftY * Config.mwCellSize);
                     mwREFR.DODT = new TES3Lib.Subrecords.REFR.DODT
-                    {                       
+                    {
                         XPos = obREFR.XTEL.DestLocX + shiftX,
                         YPos = obREFR.XTEL.DestLocY + shiftY,
                         ZPos = obREFR.XTEL.DestLocZ,
@@ -593,8 +685,8 @@ namespace TES3Tool.TES4RecordConverter.Records
                         if (!IsNull(record))
                         {
                             var mwRecordFromREFR = ConvertRecordFromREFR(obREFR.XLOC.Key);
-                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.GetType().Name)) ConvertedRecords.Add(mwRecordFromREFR.GetType().Name, new List<ConvertedRecordData>());
-                            ConvertedRecords[mwRecordFromREFR.GetType().Name].Add(mwRecordFromREFR);
+                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                            ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
                         }
                     }
                     mwREFR.KNAM = new TES3Lib.Subrecords.REFR.KNAM { DoorKeyId = BaseId };

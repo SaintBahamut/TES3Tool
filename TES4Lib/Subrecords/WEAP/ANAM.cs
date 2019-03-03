@@ -11,12 +11,12 @@ namespace TES4Lib.Subrecords.WEAP
         /// <summary>
         /// Enchantment value
         /// </summary>
-        public short Points { get; set; }
+        public short EnchantmentPoints { get; set; }
 
         public ANAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Points = reader.ReadBytes<short>(base.Data);
+            EnchantmentPoints = reader.ReadBytes<short>(base.Data);
         }
     }
 }

@@ -80,11 +80,11 @@ namespace TES3Lib.Base
             {
                 try
                 {
-                    var subrecordName = GetRecordName(readerData);
-                    var subrecordSize = GetRecordSize(readerData);
-                    var subrecordProp = this.GetType().GetProperty(subrecordName);
-                    var subrecordData = readerData.ReadBytes<byte[]>(Data, subrecordSize);
-                    var subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
+                    string subrecordName = GetRecordName(readerData);
+                    int subrecordSize = GetRecordSize(readerData);
+                    PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
+                    byte[] subrecordData = readerData.ReadBytes<byte[]>(Data, subrecordSize);
+                    object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
                     subrecordProp.SetValue(this, subrecord);
                 }
                 catch (Exception e)

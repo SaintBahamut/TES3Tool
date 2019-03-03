@@ -4,8 +4,8 @@
     {
         //positon shift
         public static float mwCellSize = 8192;
-        public static int cellShiftX = 0;
-        public static int cellShiftY = 0;
+        public static int cellShiftX = 50;
+        public static int cellShiftY = 50;
 
         public static string convertedRootFolder = "SI";
 

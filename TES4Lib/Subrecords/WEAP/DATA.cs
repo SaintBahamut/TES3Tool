@@ -1,4 +1,5 @@
 ﻿using TES4Lib.Base;
+using TES4Lib.Enums;
 using Utility;
 
 namespace TES4Lib.Subrecords.WEAP
@@ -17,7 +18,7 @@ namespace TES4Lib.Subrecords.WEAP
         /// 4 = Staff
         /// 5 = Bow
         /// </summary>
-        public int Type { get; set; }
+        public WeaponType Type { get; set; }
 
         /// <summary>
         /// Weapon speed
@@ -58,7 +59,7 @@ namespace TES4Lib.Subrecords.WEAP
         public DATA(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Type = reader.ReadBytes<int>(base.Data);
+            Type = (WeaponType)reader.ReadBytes<int>(base.Data);
             Speed = reader.ReadBytes<float>(base.Data);
             Reach = reader.ReadBytes<float>(base.Data);
             Flags = reader.ReadBytes<int>(base.Data);

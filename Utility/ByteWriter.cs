@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Utility
 {
@@ -19,8 +16,9 @@ namespace Utility
             if (type == typeof(long)) return BitConverter.GetBytes((long)data);
             if (type == typeof(ulong)) return BitConverter.GetBytes((ulong)data);
             if (type == typeof(uint)) return BitConverter.GetBytes((uint)data);
-
-            throw new Exception("Wrong input params");
+            if (type.IsEnum) return ToBytes(data, type.GetEnumUnderlyingType());
+   
+            throw new Exception($"Unsupported conversion type of type {type}");
         }
     }
 }

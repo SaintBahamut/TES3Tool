@@ -34,7 +34,7 @@ namespace TES4Lib
         /// <returns></returns>
         public static TES4 TES4Load(string filePath, List<string> filteredGrops =null)
         {
-            if (filteredGrops == null) filteredGrops = new List<string>();// {"CELL","STAT","LIGH"}; 
+            if (filteredGrops == null) filteredGrops = new List<string>(); 
           
 
             var TES4 = new TES4();
@@ -63,7 +63,7 @@ namespace TES4Lib
                 {
                     var g = new Group(data);
                     TES4.Groups.Add(g);
-                    Console.WriteLine($"group {g.Label} built total: {TES4.Groups.Count}");
+                    Console.WriteLine($"group {g.Label} built with record count: {g.Records.Count}");
                 });
                 task.Start();
                 tasks.Add(task);
