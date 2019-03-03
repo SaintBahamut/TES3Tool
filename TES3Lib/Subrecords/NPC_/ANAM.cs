@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.NPC_
     {
         public string FactionName { get; set; }
 
+        public ANAM()
+        {
+
+        }
+
         public ANAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

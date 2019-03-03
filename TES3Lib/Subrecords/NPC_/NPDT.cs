@@ -40,29 +40,52 @@ namespace TES3Lib.Subrecords.NPC_
 
         public byte Unknown1 { get; set; }
 
+        public byte Unknown2 { get; set; }
+
+        public byte Unknown3 { get; set; }
+
         public int Gold { get; set; }
+
+        public NPDT()
+        {
+
+        }
 
         public NPDT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Level = reader.ReadBytes<short>(base.Data);
-            Strength = reader.ReadBytes<byte>(base.Data);
-            Willpower = reader.ReadBytes<byte>(base.Data);
-            Agility = reader.ReadBytes<byte>(base.Data);
-            Speed = reader.ReadBytes<byte>(base.Data);
-            Endurance = reader.ReadBytes<byte>(base.Data);
-            Personality = reader.ReadBytes<byte>(base.Data);
-            Luck = reader.ReadBytes<byte>(base.Data);
-            Skills = reader.ReadBytes<byte[]>(base.Data, 27);
-            Reputation = reader.ReadBytes<byte>(base.Data);
-		    Health = reader.ReadBytes<short>(base.Data);
-            SpellPts = reader.ReadBytes<short>(base.Data);
-            Fatigue = reader.ReadBytes<short>(base.Data);
-            Disposition = reader.ReadBytes<byte>(base.Data);
-            FactionId = reader.ReadBytes<byte>(base.Data);
-            Rank = reader.ReadBytes<byte>(base.Data);
-            Unknown1 = reader.ReadBytes<byte>(base.Data);
-            Gold = reader.ReadBytes<int>(base.Data);
+            if(base.Size.Equals(52))
+            {
+                Level = reader.ReadBytes<short>(base.Data);
+                Strength = reader.ReadBytes<byte>(base.Data);
+                Willpower = reader.ReadBytes<byte>(base.Data);
+                Agility = reader.ReadBytes<byte>(base.Data);
+                Speed = reader.ReadBytes<byte>(base.Data);
+                Endurance = reader.ReadBytes<byte>(base.Data);
+                Personality = reader.ReadBytes<byte>(base.Data);
+                Luck = reader.ReadBytes<byte>(base.Data);
+                Skills = reader.ReadBytes<byte[]>(base.Data, 27);
+                Reputation = reader.ReadBytes<byte>(base.Data);
+                Health = reader.ReadBytes<short>(base.Data);
+                SpellPts = reader.ReadBytes<short>(base.Data);
+                Fatigue = reader.ReadBytes<short>(base.Data);
+                Disposition = reader.ReadBytes<byte>(base.Data);
+                FactionId = reader.ReadBytes<byte>(base.Data);
+                Rank = reader.ReadBytes<byte>(base.Data);
+                Unknown1 = reader.ReadBytes<byte>(base.Data);
+                Gold = reader.ReadBytes<int>(base.Data);
+            }
+            else //12 bytes, when stats are autocalculated?
+            {
+                Level = reader.ReadBytes<short>(base.Data);
+                Disposition = reader.ReadBytes<byte>(base.Data);
+                FactionId = reader.ReadBytes<byte>(base.Data);
+                Rank = reader.ReadBytes<byte>(base.Data);
+                Unknown1 = reader.ReadBytes<byte>(base.Data);
+                Unknown2 = reader.ReadBytes<byte>(base.Data);
+                Unknown3 = reader.ReadBytes<byte>(base.Data);
+                Gold = reader.ReadBytes<int>(base.Data);
+            }
         }
 
         public void SetNPCSkill(Skill skill, int value) => Skills[(int)skill] = (byte)value;

@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.NPC_
     {
         public string RaceName { get; set; }
 
+        public RNAM()
+        {
+
+        }
+
         public RNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

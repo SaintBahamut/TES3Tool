@@ -111,7 +111,7 @@
     <Compile Include="Subrecords\NPC_\DODT.cs" />
     <Compile Include="Subrecords\NPC_\FLAG.cs" />
     <Compile Include="Subrecords\NPC_\KNAM.cs" />
-    <Compile Include="Subrecords\NPC_\NPCS.cs" />
+    <Compile Include="Subrecords\_Shared\NPCS.cs" />
     <Compile Include="Subrecords\NPC_\NPDT.cs" />
     <Compile Include="Subrecords\NPC_\RNAM.cs" />
     <Compile Include="Subrecords\NPC_\XSCL.cs" />

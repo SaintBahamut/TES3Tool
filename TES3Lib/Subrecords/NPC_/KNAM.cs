@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.NPC_
     {
         public string HairModel { get; set; }
 
+        public KNAM()
+        {
+
+        }
+
         public KNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

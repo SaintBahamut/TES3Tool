@@ -21,26 +21,34 @@ namespace TES3Lib.Subrecords.NPC_
 
         public int Flags { get; set; }
 
+        public FLAG()
+        {
+            Flags = 0;
+        }
+
         public FLAG(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
             Flags = reader.ReadBytes<int>(base.Data);
         }
 
-        public bool IsFemale() => 0 == (Flags & 0x0001);
-        public bool IsEssential() => 0 == (Flags & 0x0002);
-        public bool IsRespawn() => 0 == (Flags & 0x0004);
-        public bool IsNone() => 0 == (Flags & 0x0008);
-        public bool IsAutoCalcStats() => 0 == (Flags | 0x0010);
-        public bool IsBloodSkel() => 0 == (Flags & 0x0400);
-        public bool IsBloodMetal() => 0 == (Flags & 0x0800);
+        #region flag handlers
+        public bool IsFemale() => 0 != (Flags & 0x0001);
+        public bool IsEssential() => 0 != (Flags & 0x0002);
+        public bool IsRespawn() => 0 != (Flags & 0x0004);
+        public bool IsNone() => 0 != (Flags & 0x0008);
+        public bool IsAutoCalcStats() => 0 != (Flags | 0x0010);
+        public bool IsBloodSkel() => 0 != (Flags & 0x0400);
+        public bool IsBloodMetal() => 0 != (Flags & 0x0800);
 
-        public void TagFemale() => Flags = Flags | 0x0001;
-        public void TagEssential() => Flags = Flags | 0x0002;
-        public void TagRespawn() => Flags = Flags | 0x0004;
-        public void TagNone() => Flags = Flags | 0x0008;
-        public void TagAutoCalcStats() => Flags = Flags | 0x0010;
-        public void TagBloodSkel() => Flags = Flags | 0x0400;
-        public void TagBloodMetal() => Flags = Flags | 0x0800;
+        //TODO: make idempotent
+        public void SetFemale() => Flags = Flags | 0x0001;
+        public void SetEssential() => Flags = Flags | 0x0002;
+        public void SetRespawn() => Flags = Flags | 0x0004;
+        public void SetNone() => Flags = Flags | 0x0008;
+        public void SetAutoCalcStats() => Flags = Flags | 0x0010;
+        public void SetBloodSkel() => Flags = Flags | 0x0400;
+        public void SetBloodMetal() => Flags = Flags | 0x0800;
+        #endregion
     }
 }

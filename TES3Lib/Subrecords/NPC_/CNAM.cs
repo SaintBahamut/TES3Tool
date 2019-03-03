@@ -7,6 +7,11 @@ namespace TES3Lib.Subrecords.NPC_
     {
         public string ClassName { get; set; }
 
+        public CNAM()
+        {
+
+        }
+
         public CNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
