@@ -2,6 +2,7 @@
 {
     public enum Skill : int
     {
+        None = -1,
         Block = 0,
         Armorer = 1,
         MediumArmor = 2,

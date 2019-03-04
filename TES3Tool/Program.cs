@@ -22,7 +22,7 @@ namespace TES3Tool
             //tes3.TES3Save("D:\\Out.esp");
 
             string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Morrowind.esm";
-            var tes3 = TES3Load(file, new List<string> { "CREA" });
+            var tes3 = TES3Load(file, new List<string> { "CLAS" });
 
 
             //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\BOBOLIONTEST.esp";

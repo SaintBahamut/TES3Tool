@@ -49,8 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ArmorType.cs" />
+    <Compile Include="Enums\Attributres.cs" />
     <Compile Include="Enums\BodyPart.cs" />
     <Compile Include="Enums\CreatureType.cs" />
+    <Compile Include="Enums\GlobalVariableType.cs" />
     <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\Skill.cs" />
     <Compile Include="Enums\Specialization.cs" />
@@ -72,6 +74,8 @@
     <Compile Include="Records\DOOR.cs" />
     <Compile Include="Records\ENCH.cs" />
     <Compile Include="Records\FACT.cs" />
+    <Compile Include="Records\GLOB.cs" />
+    <Compile Include="Records\GMST.cs" />
     <Compile Include="Records\REFR.cs" />
     <Compile Include="RecordTypes.cs" />
     <Compile Include="Subrecords\ARMO\AODT.cs" />
@@ -80,11 +84,18 @@
     <Compile Include="Subrecords\ARMO\ENAM.cs" />
     <Compile Include="Subrecords\ARMO\INDX.cs" />
     <Compile Include="Subrecords\BOOK\BKDT.cs" />
+    <Compile Include="Subrecords\BOOK\ENAM.cs" />
     <Compile Include="Subrecords\BOOK\TEXT.cs" />
     <Compile Include="Subrecords\CELL\NAME.cs" />
+    <Compile Include="Subrecords\CLAS\CLDT.cs" />
     <Compile Include="Subrecords\CONT\CNDT.cs" />
     <Compile Include="Subrecords\CONT\FLAG.cs" />
     <Compile Include="Subrecords\CREA\CNAM.cs" />
+    <Compile Include="Subrecords\GLOB\FLTV.cs" />
+    <Compile Include="Subrecords\GLOB\FNAM.cs" />
+    <Compile Include="Subrecords\GMST\FLTV.cs" />
+    <Compile Include="Subrecords\GMST\INTV.cs" />
+    <Compile Include="Subrecords\GMST\STRV.cs" />
     <Compile Include="Subrecords\_Shared\AIDT.cs" />
     <Compile Include="Subrecords\CREA\FLAG.cs" />
     <Compile Include="Subrecords\CREA\NPDT.cs" />

@@ -78,10 +78,10 @@ namespace TES3Lib.Base
             var readerData = new ByteReader();
             while (Data.Length != readerData.offset)
             {
+                string subrecordName = GetRecordName(readerData);
+                int subrecordSize = GetRecordSize(readerData);
                 try
-                {
-                    string subrecordName = GetRecordName(readerData);
-                    int subrecordSize = GetRecordSize(readerData);
+                {          
                     PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
                     byte[] subrecordData = readerData.ReadBytes<byte[]>(Data, subrecordSize);
                     object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
@@ -89,7 +89,7 @@ namespace TES3Lib.Base
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building {this.GetType().ToString()} eighter not implemented or borked {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
                     break;
                 }
             }

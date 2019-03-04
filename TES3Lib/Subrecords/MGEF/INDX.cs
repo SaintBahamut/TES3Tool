@@ -6,12 +6,12 @@ namespace TES3Lib.Subrecords.MGEF
 {
     public class INDX : Subrecord
     {
-        public MagicEffectId EffectId { get; set; }
+        public MagicEffect EffectId { get; set; }
 
         public INDX(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            EffectId = (MagicEffectId)reader.ReadBytes<int>(base.Data);
+            EffectId = (MagicEffect)reader.ReadBytes<int>(base.Data);
         }
     }
 }

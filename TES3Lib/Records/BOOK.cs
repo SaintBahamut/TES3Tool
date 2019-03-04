@@ -23,6 +23,8 @@ namespace TES3Lib.Records
 
         public TEXT TEXT { get; set; }
 
+        public ENAM ENAM { get; set; }
+
         public BOOK(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();

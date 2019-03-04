@@ -9,9 +9,9 @@ namespace TES3Lib
     public enum RecordTypes
     {
         TES3,
-        //GMST,
-        //GLOB,
-        //CLAS,
+        GMST,
+        GLOB,
+        CLAS,
         //FACT,
         //RACE,
         SOUN,
@@ -26,10 +26,13 @@ namespace TES3Lib
         ACTI,
         MISC,
         DOOR,
+        BOOK,
         //BODY,
         //ARMO,
         //CLOT,
         WEAP,
+        CREA,
+        NPC_,
         CONT,
         CELL,
     }
