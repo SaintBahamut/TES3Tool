@@ -1,12 +1,12 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.NPC_
+namespace TES3Lib.Subrecords.Shared
 {
     /// <summary>
-    /// AI Follow Package
+    /// AI Escort Package
     /// </summary>
-    public class AI_F : Subrecord
+    public class AI_E : Subrecord
     {
         public float DestinationX { get; set; }
 
@@ -23,12 +23,12 @@ namespace TES3Lib.Subrecords.NPC_
         /// </summary>
         public int Unknown { get; set; }
 
-        public AI_F()
+        public AI_E()
         {
 
         }
 
-        public AI_F(byte[] rawData) : base(rawData)
+        public AI_E(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
             DestinationX = reader.ReadBytes<float>(base.Data);

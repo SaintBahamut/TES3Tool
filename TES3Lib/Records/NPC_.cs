@@ -66,9 +66,7 @@ namespace TES3Lib.Records
 
         public AI_A AI_A { get; set; }
 
-        public DODT DODT { get; set; }
-
-        public DNAM DNAM { get; set; }
+        public List<(DODT coordinates, DNAM cell)> TravelService = new List<(DODT coordinates, DNAM cell)>();
 
         public XSCL XSCL { get; set; }
         #endregion
@@ -83,10 +81,21 @@ namespace TES3Lib.Records
             var reader = new ByteReader();
             while (Data.Length != reader.offset)
             {
+                var subrecordName = GetRecordName(reader);
+                var subrecordSize = GetRecordSize(reader);
                 try
-                {
-                    var subrecordName = GetRecordName(reader);
-                    var subrecordSize = GetRecordSize(reader);
+                {               
+                    if (subrecordName.Equals("DODT"))
+                    {
+                        TravelService.Add((new DODT(reader.ReadBytes<byte[]>(Data, subrecordSize)), null));
+                        continue;
+                    }
+
+                    if (subrecordName.Equals("DNAM"))
+                    {
+                        TravelService[TravelService.Count - 1] = (TravelService[TravelService.Count - 1].coordinates, new DNAM(reader.ReadBytes<byte[]>(Data, subrecordSize)));
+                        continue;
+                    }
 
                     if (subrecordName.Equals("NPCO"))
                     {
@@ -105,7 +114,7 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building NPC_ record something is borkeeeed {e}");
+                    Console.WriteLine($"error in building CREA subrecord {subrecordName} , something is borkeeeed {e}");
                     break;
                 }
             }
@@ -122,9 +131,11 @@ namespace TES3Lib.Records
             foreach (PropertyInfo property in properties)
             {
                 try
-                {
+                {             
                     if (property.Name == "NPCO") continue;
                     if (property.Name == "NPCS") continue;
+                    if (property.Name == "TravelService") continue;
+
                     var subrecord = (Subrecord)property.GetValue(this);
                     if (subrecord == null) continue;
 
@@ -149,12 +160,24 @@ namespace TES3Lib.Records
 
             if (NPCS.Count() > 0)
             {
-                List<byte> containerItems = new List<byte>();
+                List<byte> containerSpells = new List<byte>();
                 foreach (var npcs in NPCS)
                 {
-                    containerItems.AddRange(npcs.SerializeSubrecord());
+                    containerSpells.AddRange(npcs.SerializeSubrecord());
                 }
-                data.AddRange(containerItems.ToArray());
+                data.AddRange(containerSpells.ToArray());
+            }
+
+            if (TravelService.Count() > 0)
+            {
+                List<byte> travelDest = new List<byte>();
+                foreach (var destination in TravelService)
+                {
+                    travelDest.AddRange(destination.coordinates.SerializeSubrecord());
+                    if (destination.cell != null) travelDest.AddRange(destination.cell.SerializeSubrecord());
+
+                }
+                data.AddRange(travelDest.ToArray());
             }
 
             return Encoding.ASCII.GetBytes(this.GetType().Name)

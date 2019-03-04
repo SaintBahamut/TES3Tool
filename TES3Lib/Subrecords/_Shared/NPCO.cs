@@ -37,7 +37,7 @@ namespace TES3Lib.Subrecords.Shared
             data.AddRange(itemIdBytes);
 
             var serialized = Encoding.ASCII.GetBytes("NPCO")
-               .Concat(BitConverter.GetBytes(data.Count()))
+               .Concat(BitConverter.GetBytes(data.Count))
                .Concat(data).ToArray();
             return serialized;
         }

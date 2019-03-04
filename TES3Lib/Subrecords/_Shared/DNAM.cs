@@ -1,14 +1,14 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.NPC_
+namespace TES3Lib.Subrecords.Shared
 {
     /// <summary>
     /// Cell name for DODT record, if interior
     /// </summary>
     public class DNAM : Subrecord
     {
-        public string CellName { get; set; }
+        public string InteriorCellName { get; set; }
 
         public DNAM()
         {
@@ -18,7 +18,7 @@ namespace TES3Lib.Subrecords.NPC_
         public DNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            CellName = reader.ReadBytes<string>(base.Data, base.Size);
+            InteriorCellName = reader.ReadBytes<string>(base.Data, base.Size);
         }
     }
 }

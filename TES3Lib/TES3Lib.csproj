@@ -37,6 +37,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Enums\ArmorType.cs" />
     <Compile Include="Enums\BodyPart.cs" />
+    <Compile Include="Enums\CreatureType.cs" />
     <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\Skill.cs" />
     <Compile Include="Enums\Specialization.cs" />
@@ -80,6 +84,10 @@
     <Compile Include="Subrecords\CELL\NAME.cs" />
     <Compile Include="Subrecords\CONT\CNDT.cs" />
     <Compile Include="Subrecords\CONT\FLAG.cs" />
+    <Compile Include="Subrecords\CREA\CNAM.cs" />
+    <Compile Include="Subrecords\_Shared\AIDT.cs" />
+    <Compile Include="Subrecords\CREA\FLAG.cs" />
+    <Compile Include="Subrecords\CREA\NPDT.cs" />
     <Compile Include="Subrecords\DOOR\ANAM.cs" />
     <Compile Include="Subrecords\INGR\IRDT.cs" />
     <Compile Include="Subrecords\LIGH\LHDT.cs" />
@@ -97,24 +105,23 @@
     <Compile Include="Subrecords\MGEF\PTEX.cs" />
     <Compile Include="Subrecords\MISC\ENAM.cs" />
     <Compile Include="Subrecords\MISC\MCDT.cs" />
-    <Compile Include="Subrecords\NPC_\AIDT.cs" />
-    <Compile Include="Subrecords\NPC_\AI_A.cs" />
-    <Compile Include="Subrecords\NPC_\AI_E.cs" />
-    <Compile Include="Subrecords\NPC_\AI_F.cs" />
-    <Compile Include="Subrecords\NPC_\AI_T.cs" />
-    <Compile Include="Subrecords\NPC_\AI_W.cs" />
+    <Compile Include="Subrecords\_Shared\AI_A.cs" />
+    <Compile Include="Subrecords\_Shared\AI_E.cs" />
+    <Compile Include="Subrecords\_Shared\AI_F.cs" />
+    <Compile Include="Subrecords\_Shared\AI_T.cs" />
+    <Compile Include="Subrecords\_Shared\AI_W.cs" />
     <Compile Include="Subrecords\NPC_\ANAM.cs" />
     <Compile Include="Subrecords\NPC_\BNAM.cs" />
     <Compile Include="Subrecords\NPC_\CNAM.cs" />
     <Compile Include="Subrecords\NPC_\CNDT.cs" />
-    <Compile Include="Subrecords\NPC_\DNAM.cs" />
-    <Compile Include="Subrecords\NPC_\DODT.cs" />
+    <Compile Include="Subrecords\_Shared\DNAM.cs" />
+    <Compile Include="Subrecords\_Shared\DODT.cs" />
     <Compile Include="Subrecords\NPC_\FLAG.cs" />
     <Compile Include="Subrecords\NPC_\KNAM.cs" />
     <Compile Include="Subrecords\_Shared\NPCS.cs" />
     <Compile Include="Subrecords\NPC_\NPDT.cs" />
     <Compile Include="Subrecords\NPC_\RNAM.cs" />
-    <Compile Include="Subrecords\NPC_\XSCL.cs" />
+    <Compile Include="Subrecords\_Shared\XSCL.cs" />
     <Compile Include="Subrecords\REFR\FRMR.cs" />
     <Compile Include="Records\INFO.cs" />
     <Compile Include="Records\INGR.cs" />
@@ -191,6 +198,8 @@
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

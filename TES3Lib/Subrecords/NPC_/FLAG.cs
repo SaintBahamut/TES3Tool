@@ -9,7 +9,7 @@ namespace TES3Lib.Subrecords.NPC_
     public class FLAG : Subrecord
     {
         /// <summary>
-        /// Creature Flags (4 bytes, bit field)
+        /// NPC Flags (4 bytes, bit field)
         /// 0x0001 = Female
 		/// 0x0002 = Essential
 		/// 0x0004 = Respawn

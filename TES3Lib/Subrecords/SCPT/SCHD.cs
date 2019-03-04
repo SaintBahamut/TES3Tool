@@ -12,7 +12,7 @@ namespace TES3Lib.Subrecords.SCPT
         /// <summary>
         /// Script name (31 characters + null termnator)
         /// </summary>
-        public string Name { get; set; }
+        public new string Name { get; set; }
 
         public int NumShorts { get; set; }
 

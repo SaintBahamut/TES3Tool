@@ -1,7 +1,7 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.NPC_
+namespace TES3Lib.Subrecords.Shared
 {
     /// <summary>
     /// Scale (4 bytes, float, optional)
