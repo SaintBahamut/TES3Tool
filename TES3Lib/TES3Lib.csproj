@@ -96,6 +96,15 @@
     <Compile Include="Subrecords\GMST\FLTV.cs" />
     <Compile Include="Subrecords\GMST\INTV.cs" />
     <Compile Include="Subrecords\GMST\STRV.cs" />
+    <Compile Include="Subrecords\LAND\DATA.cs" />
+    <Compile Include="Subrecords\LAND\INTV.cs" />
+    <Compile Include="Subrecords\LAND\VCLR.cs" />
+    <Compile Include="Subrecords\LAND\VHGT.cs" />
+    <Compile Include="Subrecords\LAND\VNML.cs" />
+    <Compile Include="Subrecords\LAND\VTEX.cs" />
+    <Compile Include="Subrecords\LAND\WNAM.cs" />
+    <Compile Include="Subrecords\LTEX\INTV.cs" />
+    <Compile Include="Subrecords\LTEX\DATA.cs" />
     <Compile Include="Subrecords\_Shared\AIDT.cs" />
     <Compile Include="Subrecords\CREA\FLAG.cs" />
     <Compile Include="Subrecords\CREA\NPDT.cs" />
@@ -212,5 +221,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

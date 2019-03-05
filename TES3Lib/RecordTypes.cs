@@ -21,6 +21,7 @@ namespace TES3Lib
         //REGN,
         //BSGN,
         //LTEX,
+        CONT,
         LIGH,
         STAT,
         ACTI,
@@ -32,8 +33,7 @@ namespace TES3Lib
         //CLOT,
         WEAP,
         CREA,
-        NPC_,
-        CONT,
+        NPC_,   
         CELL,
     }
 }

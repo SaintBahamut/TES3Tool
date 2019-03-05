@@ -325,7 +325,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obCONT.MODL.ModelPath, TES3Tool.Config.CONTPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCONT.FULL) ? obCONT.FULL.DisplayName : "") },
                 CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = obCONT.DATA.Weight },
-                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 0x0008 }
+                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 8 }
             };
 
             if (obCONT.CNTO.Count > 0)
@@ -632,7 +632,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             //    mwREFR.DELE = new TES3Lib.Subrecords.REFR.DELE();
             //}
 
-            // TODO:if palling exterior support this needs to be modified, because it expects only interiors to be present, so if
+            // TODO:if planning exterior support this needs to be modified, because it expects only interiors to be present, so if
             // no cell found, door leads to exterior space
             if (!IsNull(obREFR.XTEL))
             {
@@ -673,8 +673,11 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             if (!IsNull(obREFR.XLOC))
             {
-                mwREFR.FLTV = new TES3Lib.Subrecords.REFR.FLTV { LockLevel = (int)obREFR.XLOC.LockLevel };
-
+                if(obREFR.XLOC.LockLevel>0)
+                {
+                    mwREFR.FLTV = new TES3Lib.Subrecords.REFR.FLTV { LockLevel = obREFR.XLOC.LockLevel };
+                }
+               
                 if (!obREFR.XLOC.Key.Equals("00000000"))
                 {
                     var BaseId = GetBaseIdFromFormId(obREFR.XLOC.Key);
@@ -687,6 +690,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                             var mwRecordFromREFR = ConvertRecordFromREFR(obREFR.XLOC.Key);
                             if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
                             ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
+                            BaseId = mwRecordFromREFR.EditorId;
                         }
                     }
                     mwREFR.KNAM = new TES3Lib.Subrecords.REFR.KNAM { DoorKeyId = BaseId };
@@ -705,7 +709,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             mwREFR.INTV.NumberOfUses = 1;
 
             //no one knows what this is
-            //mwREFR.NAM9 = new TES3Lib.Subrecords.REFR.NAM9();
+            mwREFR.NAM9 = new TES3Lib.Subrecords.REFR.NAM9 {Unknown = 0x00000001 };
 
             //soul data, obREFR dont have it?
             //mwREFR.XSOL = new TES3Lib.Subrecords.REFR.XSOL();
