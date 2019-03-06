@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using TES3Lib.Base;
 using Utility;
 
@@ -11,6 +14,7 @@ namespace TES3Lib
     {
         const int HeaderSize = 16;
         public List<Record> Records { get; set; }
+        public static ConcurrentDictionary<int, Record> concurent = new ConcurrentDictionary<int, Record>();
 
         public TES3()
         {
@@ -25,6 +29,7 @@ namespace TES3Lib
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
         
             var header = new byte[HeaderSize];
+            List<Task> tasks = new List<Task>();
             while (fileStream.Read(header, 0, HeaderSize) != 0)
             {
                 fileStream.Position -= HeaderSize;
@@ -42,11 +47,25 @@ namespace TES3Lib
                 var data = new byte[HeaderSize + size];
                 fileStream.Read(data, 0, HeaderSize + size);
 
-                TES3.Records.Add(BuildRecord(name, data));
+                
+                TES3.Records.Add(null);
+                int index = TES3.Records.Count - 1;
+                tasks.Add(new Task(() => build(name, data, TES3.Records, index)));
+                tasks[index].Start();
+               
+
                 Console.WriteLine(name);
             }
 
+            Task.WaitAll(tasks.ToArray());
             return TES3;
+        }
+
+        public static void build(string name, byte[] data, List<Record> records, int index)
+        {
+            var dd = Task.CurrentId.Value - 1;
+            concurent.TryAdd(dd, null);
+            records[index] = BuildRecord(name, data);
         }
 
         private static Record BuildRecord(string name, byte[] data)
