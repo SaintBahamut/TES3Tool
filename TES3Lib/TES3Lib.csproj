@@ -57,6 +57,7 @@
     <Compile Include="Enums\RaceFlags.cs" />
     <Compile Include="Enums\Skill.cs" />
     <Compile Include="Enums\Specialization.cs" />
+    <Compile Include="Enums\Spell.cs" />
     <Compile Include="Enums\SpellSchool.cs" />
     <Compile Include="Enums\WeaponType.cs" />
     <Compile Include="Records\ACTI.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="Subrecords\REGN\WEAT.cs" />
     <Compile Include="Subrecords\SKIL\SKDT.cs" />
     <Compile Include="Subrecords\SKIL\INDX.cs" />
+    <Compile Include="Subrecords\SPEL\SPDT.cs" />
+    <Compile Include="Subrecords\SPEL\ENAM.cs" />
     <Compile Include="Subrecords\_Shared\AIDT.cs" />
     <Compile Include="Subrecords\CREA\FLAG.cs" />
     <Compile Include="Subrecords\CREA\NPDT.cs" />

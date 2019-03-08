@@ -29,6 +29,7 @@
         Marksman = 23,
         Mercantile = 24,
         Speechcraft = 25,
-        HandToHand = 26
+        HandToHand = 26,
+        Unused = 255
     }
 }

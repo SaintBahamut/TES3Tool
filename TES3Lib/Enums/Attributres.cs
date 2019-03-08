@@ -11,5 +11,6 @@
         Endurance = 5,
         Personality = 6,
         Luck = 7,
+        Unused = 255,
     }
 }
