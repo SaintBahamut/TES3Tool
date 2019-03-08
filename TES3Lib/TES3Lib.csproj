@@ -87,6 +87,7 @@
     <Compile Include="Subrecords\BOOK\BKDT.cs" />
     <Compile Include="Subrecords\BOOK\ENAM.cs" />
     <Compile Include="Subrecords\BOOK\TEXT.cs" />
+    <Compile Include="Subrecords\BSGN\TNAM.cs" />
     <Compile Include="Subrecords\CELL\NAME.cs" />
     <Compile Include="Subrecords\CLAS\CLDT.cs" />
     <Compile Include="Subrecords\CONT\CNDT.cs" />
@@ -111,6 +112,12 @@
     <Compile Include="Subrecords\LTEX\INTV.cs" />
     <Compile Include="Subrecords\LTEX\DATA.cs" />
     <Compile Include="Subrecords\RACE\RADT.cs" />
+    <Compile Include="Subrecords\REGN\BNAM.cs" />
+    <Compile Include="Subrecords\REGN\CNAM.cs" />
+    <Compile Include="Subrecords\REGN\SNAM.cs" />
+    <Compile Include="Subrecords\REGN\WEAT.cs" />
+    <Compile Include="Subrecords\SKIL\SKDT.cs" />
+    <Compile Include="Subrecords\SKIL\INDX.cs" />
     <Compile Include="Subrecords\_Shared\AIDT.cs" />
     <Compile Include="Subrecords\CREA\FLAG.cs" />
     <Compile Include="Subrecords\CREA\NPDT.cs" />

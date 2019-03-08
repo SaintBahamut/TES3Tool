@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,6 +6,7 @@ using System.Text;
 using TES3Lib.Base;
 using TES3Lib.Subrecords.FACT;
 using TES3Lib.Subrecords.Shared;
+using static Utility.Common;
 using Utility;
 
 namespace TES3Lib.Records
@@ -17,11 +17,15 @@ namespace TES3Lib.Records
 
         public FNAM FNAM { get; set; }
 
-        public List<RNAM> RNAM = new List<RNAM>();
+        public List<RNAM> RNAM { get; set; }
 
         public FADT FADT { get; set; }
 
         public List<(ANAM name, INTV value)> FactionsAttitudes = new List<(ANAM name, INTV value)>();
+
+        public FACT()
+        {
+        }
 
         public FACT(byte[] rawData) : base(rawData)
         {
@@ -38,29 +42,37 @@ namespace TES3Lib.Records
           
                 try
                 {
-                    if (subrecordName.Equals("DODT"))
+                    if (subrecordName.Equals("ANAM"))
                     {
                         FactionsAttitudes.Add((new ANAM(reader.ReadBytes<byte[]>(Data, subrecordSize)), null));
                         continue;
                     }
 
-                    if (subrecordName.Equals("DNAM"))
+                    if (subrecordName.Equals("INTV"))
                     {
                         FactionsAttitudes[FactionsAttitudes.Count - 1] = (FactionsAttitudes[FactionsAttitudes.Count - 1].name, new INTV(reader.ReadBytes<byte[]>(Data, subrecordSize)));
                         continue;
                     }
 
-                    PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
-                    object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { reader.ReadBytes<byte[]>(Data, subrecordSize) });              
-
-                    if (subrecordProp is IList)
+                    //standard generic reader builder below, dont change
+                    PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);               
+                    if (subrecordProp.PropertyType.IsGenericType)
                     {
-                        var subRecordList = (List<Subrecord>)subrecordProp.GetValue(this);
-                        subRecordList.Add((Subrecord)subrecord);
-                    }
-                    else
-                        subrecordProp.SetValue(this, subrecord);
+                        var listType = subrecordProp.PropertyType.GetGenericArguments()[0];
+                        if (IsNull(subrecordProp.GetValue(this)))
+                        {
+                            var IListRef = typeof(List<>);                   
+                            Type[] IListParam = { listType };
+                            object subRecordList = Activator.CreateInstance(IListRef.MakeGenericType(IListParam));
+                            subrecordProp.SetValue(this, subRecordList);
+                        }
+                        object sub = Activator.CreateInstance(listType, new object[] { reader.ReadBytes<byte[]>(Data, subrecordSize) });
 
+                        subrecordProp.GetValue(this).GetType().GetMethod("Add").Invoke(subrecordProp.GetValue(this), new[] { sub });
+                        continue;
+                    }
+                    object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { reader.ReadBytes<byte[]>(Data, subrecordSize) });
+                    subrecordProp.SetValue(this, subrecord);
                 }
                 catch (Exception e)
                 {
@@ -92,7 +104,7 @@ namespace TES3Lib.Records
                     continue;
                 }
 
-                if (property.Name == "TravelService")
+                if (property.Name == "FactionsAttitudes")
                 {
                     if (FactionsAttitudes.Count() > 0)
                     {

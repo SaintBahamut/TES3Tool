@@ -81,6 +81,10 @@
       <Project>{53183f83-12f9-499b-afad-c28415ba2ae5}</Project>
       <Name>TES4Lib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{1bc5cbbb-e155-4d9a-bc55-6fe75109c1b9}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

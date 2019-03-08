@@ -13,7 +13,6 @@ namespace TES3Lib.Subrecords.Shared
 
         public XSCL()
         {
-
         }
 
         public XSCL(byte[] rawData) : base(rawData)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using TES3Lib.Subrecords.Shared;
+using static Utility.Common;
 using TES3Lib.Subrecords.REFR;
 using Utility;
 
@@ -81,10 +81,24 @@ namespace TES3Lib.Base
                 string subrecordName = GetRecordName(readerData);
                 int subrecordSize = GetRecordSize(readerData);
                 try
-                {          
+                {
                     PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
-                    byte[] subrecordData = readerData.ReadBytes<byte[]>(Data, subrecordSize);
-                    object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
+                    if (subrecordProp.PropertyType.IsGenericType)
+                    {
+                        var listType = subrecordProp.PropertyType.GetGenericArguments()[0];
+                        if (IsNull(subrecordProp.GetValue(this)))
+                        {
+                            var IListRef = typeof(List<>);
+                            Type[] IListParam = { listType };
+                            object subRecordList = Activator.CreateInstance(IListRef.MakeGenericType(IListParam));
+                            subrecordProp.SetValue(this, subRecordList);
+                        }
+                        object sub = Activator.CreateInstance(listType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
+
+                        subrecordProp.GetValue(this).GetType().GetMethod("Add").Invoke(subrecordProp.GetValue(this), new[] { sub });
+                        continue;
+                    }
+                    object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
                     subrecordProp.SetValue(this, subrecord);
                 }
                 catch (Exception e)
