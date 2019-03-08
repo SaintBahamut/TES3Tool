@@ -6,6 +6,7 @@ using System.Text;
 using static Utility.Common;
 using TES3Lib.Subrecords.REFR;
 using Utility;
+using System.Collections;
 
 namespace TES3Lib.Base
 {
@@ -128,10 +129,19 @@ namespace TES3Lib.Base
 
             List<byte> data = new List<byte>();
             foreach (PropertyInfo property in properties)
-            {
+            {             
+                if (property.PropertyType.IsGenericType)
+                {            
+                    var subrecordList = property.GetValue(this) as IEnumerable;
+                    if (subrecordList == null) continue;
+                    foreach (var sub in subrecordList)
+                    {
+                        data.AddRange((sub as Subrecord).SerializeSubrecord());
+                    }
+                    continue;
+                }
                 var subrecord = (Subrecord)property.GetValue(this);
                 if (subrecord == null) continue;
-
                 data.AddRange(subrecord.SerializeSubrecord());
             }
 
