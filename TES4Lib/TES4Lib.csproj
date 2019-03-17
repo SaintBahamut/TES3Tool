@@ -32,6 +32,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ResistanceType.cs" />
+    <Compile Include="Enums\SpellSchool.cs" />
     <Compile Include="Enums\WeaponType.cs" />
     <Compile Include="Records\ACHR.cs" />
     <Compile Include="Records\ACRE.cs" />
@@ -127,6 +132,16 @@
     <Compile Include="Subrecords\ENCH\EFIT.cs" />
     <Compile Include="Subrecords\ENCH\ENIT.cs" />
     <Compile Include="Subrecords\ENCH\SCIT.cs" />
+    <Compile Include="Subrecords\INGR\DATA.cs" />
+    <Compile Include="Subrecords\INGR\EFID.cs" />
+    <Compile Include="Subrecords\INGR\EFIT.cs" />
+    <Compile Include="Subrecords\INGR\ENIT.cs" />
+    <Compile Include="Subrecords\INGR\FULL.cs" />
+    <Compile Include="Subrecords\INGR\SCIT.cs" />
+    <Compile Include="Subrecords\MGEF\DATA.cs" />
+    <Compile Include="Subrecords\MGEF\ESCE.cs" />
+    <Compile Include="Subrecords\NPC_\ACBS.cs" />
+    <Compile Include="Subrecords\NPC_\SNAM.cs" />
     <Compile Include="Subrecords\WEAP\DATA.cs" />
     <Compile Include="Subrecords\_Shared\BNAM.cs" />
     <Compile Include="Subrecords\DOOR\FNAM.cs" />
@@ -135,6 +150,7 @@
     <Compile Include="Subrecords\FLOR\PFPC.cs" />
     <Compile Include="Subrecords\WEAP\ANAM.cs" />
     <Compile Include="Subrecords\_Shared\ENAM.cs" />
+    <Compile Include="Subrecords\_Shared\DESC.cs" />
     <Compile Include="Subrecords\_Shared\QNAM.cs" />
     <Compile Include="Subrecords\FURN\MNAM.cs" />
     <Compile Include="Subrecords\KEYM\DATA.cs" />
@@ -196,6 +212,9 @@
     <Folder Include="Subrecords\ACHR\" />
     <Folder Include="Subrecords\ACRE\" />
     <Folder Include="Subrecords\PGRD\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

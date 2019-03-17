@@ -47,6 +47,12 @@ namespace Utility
                 offset += sizeof(short);
                 return (T)Convert.ChangeType(converted, typeof(T));
             }
+            if (typeof(T) == typeof(ushort))
+            {
+                var converted = BitConverter.ToUInt16(data, offset);
+                offset += sizeof(ushort);
+                return (T)Convert.ChangeType(converted, typeof(T));
+            }
             if (typeof(T) == typeof(uint))
             {
                 var converted = BitConverter.ToUInt32(data, offset);

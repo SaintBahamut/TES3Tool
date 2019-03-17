@@ -37,13 +37,13 @@ namespace TES3Lib.Subrecords.SPEL
         public bool IsPCStart() => CheckIfByteSet(Flags, 0x0002);
         public bool IsAlwaysSucceed() => CheckIfByteSet(Flags, 0x0004);
 
-        public void CheckAutoCalc() => SetByte(Flags, 0x0001);
-        public void CheckPCStart() => SetByte(Flags, 0x0002);
-        public void CheckAlwaysSUcceed() => SetByte(Flags, 0x0004);
+        public void CheckAutoCalc() => Flags = SetByte(Flags, 0x0001);
+        public void CheckPCStart() => Flags = SetByte(Flags, 0x0002);
+        public void CheckAlwaysSUcceed() => Flags = SetByte(Flags, 0x0004);
 
-        public void UnCheckAutoCalc() => UnsetByte(Flags, 0x0001);
-        public void UnCheckPCStart() => UnsetByte(Flags, 0x0002);
-        public void UnCheckAlwaysSUcceed() => UnsetByte(Flags, 0x0004);
+        public void UnCheckAutoCalc() => Flags = UnsetByte(Flags, 0x0001);
+        public void UnCheckPCStart() => Flags = UnsetByte(Flags, 0x0002);
+        public void UnCheckAlwaysSUcceed() => Flags = UnsetByte(Flags, 0x0004);
         #endregion
     }
 }

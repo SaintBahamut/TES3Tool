@@ -4,7 +4,7 @@ using Utility;
 namespace TES3Lib.Subrecords.LAND
 {
     /// <summary>
-    /// Cell height data
+    /// Vertex height map data
     /// </summary>
     public class VHGT : Subrecord
     {

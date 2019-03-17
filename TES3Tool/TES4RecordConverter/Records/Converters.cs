@@ -449,9 +449,9 @@ namespace TES3Tool.TES4RecordConverter.Records
                 },
                 DATA = new TES3Lib.Subrecords.SOUN.DATA()
                 {
-                    Volume = 1,
+                    Volume = 255,
                     MinRange = obSOUND.SNDX.MinAttentuationDist,
-                    MaxRange = obSOUND.SNDX.MinAttentuationDist,
+                    MaxRange = obSOUND.SNDX.MaxAttentuationDist,
                 }
             };
         }

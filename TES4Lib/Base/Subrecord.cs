@@ -4,8 +4,10 @@ namespace TES4Lib.Base
 {
     public class Subrecord
     {
+        protected const int FORMID_LENGTH = 4;
+
         public string Name { get; set; }
-        public short Size { get; set; }
+        public ushort Size { get; set; }
         public byte[] Data { get; set; }
         public byte[] RawData { get; set; }
 
@@ -14,7 +16,7 @@ namespace TES4Lib.Base
             RawData = rawData;
             var reader = new ByteReader();
             Name = reader.ReadBytes<string>(RawData, 4);
-            Size = reader.ReadBytes<short>(RawData);
+            Size = reader.ReadBytes<ushort>(RawData);
             Data = reader.ReadBytes<byte[]>(RawData, (int)Size);
         }
     }

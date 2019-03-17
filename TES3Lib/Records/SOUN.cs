@@ -16,6 +16,7 @@ namespace TES3Lib.Records
         /// Sound Filename (relative to Sounds\ dir)
         /// </summary>
         public FNAM FNAM { get; set; }
+
         public DATA DATA { get; set; }
 
         public SOUN()

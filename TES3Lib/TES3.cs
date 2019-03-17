@@ -14,7 +14,6 @@ namespace TES3Lib
     {
         const int HeaderSize = 16;
         public List<Record> Records { get; set; }
-        public static ConcurrentDictionary<int, Record> concurent = new ConcurrentDictionary<int, Record>();
 
         public TES3()
         {
@@ -50,7 +49,7 @@ namespace TES3Lib
                 
                 TES3.Records.Add(null);
                 int index = TES3.Records.Count - 1;
-                tasks.Add(new Task(() => build(name, data, TES3.Records, index)));
+                tasks.Add(new Task(() => RecordBuildTask(name, data, TES3.Records, index)));
                 tasks[index].Start();
                
 
@@ -61,20 +60,12 @@ namespace TES3Lib
             return TES3;
         }
 
-        public static void build(string name, byte[] data, List<Record> records, int index)
-        {
-            var dd = Task.CurrentId.Value - 1;
-            concurent.TryAdd(dd, null);
-            records[index] = BuildRecord(name, data);
-        }
-
-        private static Record BuildRecord(string name, byte[] data)
+        public static void RecordBuildTask(string name, byte[] data, List<Record> records, int index)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             Record record = assembly
                 .CreateInstance($"TES3Lib.Records.{name}", false, BindingFlags.Default, null, new object[] { data }, null, null) as Record;
-            return record;
-
+            records[index] = record;
         }
 
         public void TES3Save(string filePath)

@@ -14,15 +14,14 @@ namespace TES3Lib.Subrecords.SOUN
 
         public DATA()
         {
-
         }
 
         public DATA(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Volume = reader.ReadBytes<byte[]>(base.Data,1)[0];
-            MinRange = reader.ReadBytes<byte[]>(base.Data, 1)[0];
-            MaxRange = reader.ReadBytes<byte[]>(base.Data, 1)[0];
+            Volume = reader.ReadBytes<byte>(base.Data);
+            MinRange = reader.ReadBytes<byte>(base.Data);
+            MaxRange = reader.ReadBytes<byte>(base.Data);
 
         }
     }

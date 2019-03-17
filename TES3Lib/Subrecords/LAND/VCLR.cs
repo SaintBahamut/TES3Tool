@@ -4,7 +4,7 @@ using Utility;
 namespace TES3Lib.Subrecords.LAND
 {
     /// <summary>
-    /// Vertex color array, looks like another RBG image 65x65 pixels in size.
+    /// Vertex colors
     /// </summary>
     public class VCLR : Subrecord
     {

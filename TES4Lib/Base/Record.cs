@@ -43,10 +43,10 @@ namespace TES4Lib.Base
             var readerData = new ByteReader();
             while (Data.Length != readerData.offset)
             {
+                var subrecordName = GetRecordName(readerData);
+                var subrecordSize = GetRecordSize(readerData);
                 try
-                {
-                    var subrecordName = GetRecordName(readerData);
-                    var subrecordSize = GetRecordSize(readerData);
+                {                   
                     var subrecordProp = this.GetType().GetProperty(subrecordName);
                     var subrecordData = readerData.ReadBytes<byte[]>(Data, (int)subrecordSize);    
 
@@ -55,7 +55,7 @@ namespace TES4Lib.Base
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building {this.GetType().ToString()} eighter not implemented or borked {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} ar subrecord {subrecordName} eighter not implemented or borked {e}");
                     break;
                 }
             }
@@ -68,10 +68,10 @@ namespace TES4Lib.Base
             return name;
         }
 
-        protected short GetRecordSize(ByteReader reader)
+        protected ushort GetRecordSize(ByteReader reader)
         {
             reader.ShiftForwardBy(4);
-            short size = reader.ReadBytes<short>(Data);
+            ushort size = reader.ReadBytes<ushort>(Data);
             size += 6;
             reader.ShiftBackBy(6);
             return size;

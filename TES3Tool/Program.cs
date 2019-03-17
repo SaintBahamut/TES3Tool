@@ -21,20 +21,23 @@ namespace TES3Tool
             //var tes3 = TES3Load(file);
             //tes3.TES3Save("D:\\Out.esp");
 
-            string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Morrowind.esm";
-            var tes3 = TES3Load(file, new List<string> { "SPEL" });
-            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\dd.esp");
+            //string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Morrowind.esm";
+            //var tes3 = TES3Load(file, new List<string> { "SPEL" });
+            //tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\dd.esp");
 
 
             //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\BOBOLIONTEST.esp";
             // string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\CONVERIX.ESP";
 
 
-            //string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
+            string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
             //var stat = TES4Load(fileESM, new List<string> { "STAT", "CELL","SOUN",
             //    "MISC","KEYM","FURN","ACTI","LIGH","CONT","FLOR","DOOR","WEAP" });
 
-            //var test = ConvertInteriorCells(stat);
+            var stat = TES4Load(fileESM, new List<string> { "MGEF","INGR" });
+
+
+           // var test = ConvertInteriorCells(stat);
             //test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path
 
 

@@ -58,15 +58,15 @@ namespace TES4Lib.Subrecords.SOUN
         public SNDX(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            MinAttentuationDist = reader.ReadBytes<byte[]>(base.Data, 1)[0];
-            MaxAttentuationDist = reader.ReadBytes<byte[]>(base.Data, 1)[0];
-            FrequencyAdj = reader.ReadBytes<byte[]>(base.Data, 1)[0];
-            Unknown = reader.ReadBytes<byte[]>(base.Data, 1)[0];
+            MinAttentuationDist = reader.ReadBytes<byte>(base.Data);
+            MaxAttentuationDist = reader.ReadBytes<byte>(base.Data);
+            FrequencyAdj = reader.ReadBytes<byte>(base.Data);
+            Unknown = reader.ReadBytes<byte>(base.Data);
             Flags = reader.ReadBytes<short>(base.Data);
             Unknown2 = reader.ReadBytes<short>(base.Data);
             StaticAttentuation = reader.ReadBytes<short>(base.Data);
-            StopTime = reader.ReadBytes<byte[]>(base.Data,1)[0];
-            StartTime = reader.ReadBytes<byte[]>(base.Data,1)[0];
+            StopTime = reader.ReadBytes<byte>(base.Data);
+            StartTime = reader.ReadBytes<byte>(base.Data);
         }
 
     }

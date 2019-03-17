@@ -4,6 +4,7 @@ using Utility;
 namespace TES3Lib.Subrecords.LAND
 {
     /// <summary>
+    /// Vertex normals
     /// A RGB color map 65x65 pixels in size representing the land normal vectors.
     /// The signed value of the 'color' represents the vector's component. Blue
 	/// is vertical(Z), Red the X direction and Green the Y direction.Note that

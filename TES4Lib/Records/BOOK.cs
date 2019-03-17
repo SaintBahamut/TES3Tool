@@ -1,12 +1,13 @@
 ﻿using TES4Lib.Base;
 using TES4Lib.Subrecords.Shared;
 using TES4Lib.Subrecords.BOOK;
+using DESC = TES4Lib.Subrecords.BOOK.DESC;
 
 namespace TES4Lib.Records
 {
     public class BOOK : Record
     {
-        public EDID EDIT { get; set; }
+        public EDID EDID { get; set; }
 
         public FULL FULL { get; set; }
 
