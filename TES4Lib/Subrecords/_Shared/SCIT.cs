@@ -1,7 +1,7 @@
 ﻿using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.INGR
+namespace TES4Lib.Subrecords.Shared
 {
     /// <summary>
     /// Script effect name

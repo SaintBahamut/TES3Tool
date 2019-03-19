@@ -1,5 +1,7 @@
 ﻿using TES4Lib.Base;
+using TES4Lib.Enums;
 using Utility;
+using static Utility.Common;
 
 namespace TES4Lib.Subrecords.BOOK
 {
@@ -19,7 +21,7 @@ namespace TES4Lib.Subrecords.BOOK
         /// Which skill the book teaches.
         /// Set to 0xFF if no skill is taught.
         /// </summary>
-        public byte Skill { get; set; }
+        public Skill Skill { get; set; }
 
         /// <summary>
         /// Book value
@@ -35,9 +37,14 @@ namespace TES4Lib.Subrecords.BOOK
         {
             var reader = new ByteReader();
             Flags = reader.ReadBytes<byte>(base.Data);
-            Skill = reader.ReadBytes<byte>(base.Data);
+            Skill = (Skill)reader.ReadBytes<byte>(base.Data);
             Value = reader.ReadBytes<int>(base.Data);
             Weight = reader.ReadBytes<float>(base.Data);
         }
+
+        #region flag handlers
+        public bool IsScroll() => CheckIfByteSet(Flags, 0x0001);
+        public bool IsCantBeTaken() => CheckIfByteSet(Flags, 0x0002);
+        #endregion
     }
 }

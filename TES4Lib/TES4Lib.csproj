@@ -43,8 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ActorValue.cs" />
+    <Compile Include="Enums\Attribute.cs" />
+    <Compile Include="Enums\EnchantmentType.cs" />
+    <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\ResistanceType.cs" />
+    <Compile Include="Enums\Skill.cs" />
+    <Compile Include="Enums\Specialization.cs" />
+    <Compile Include="Enums\SpellType.cs" />
+    <Compile Include="Enums\SpellLevel.cs" />
     <Compile Include="Enums\SpellSchool.cs" />
+    <Compile Include="Enums\SpellTarget.cs" />
     <Compile Include="Enums\WeaponType.cs" />
     <Compile Include="Records\ACHR.cs" />
     <Compile Include="Records\ACRE.cs" />
@@ -128,16 +137,14 @@
     <Compile Include="Subrecords\CONT\CNTO.cs" />
     <Compile Include="Subrecords\CONT\DATA.cs" />
     <Compile Include="Subrecords\DOOR\ANAM.cs" />
-    <Compile Include="Subrecords\ENCH\EFID.cs" />
-    <Compile Include="Subrecords\ENCH\EFIT.cs" />
     <Compile Include="Subrecords\ENCH\ENIT.cs" />
-    <Compile Include="Subrecords\ENCH\SCIT.cs" />
     <Compile Include="Subrecords\INGR\DATA.cs" />
-    <Compile Include="Subrecords\INGR\EFID.cs" />
-    <Compile Include="Subrecords\INGR\EFIT.cs" />
+    <Compile Include="Subrecords\SPEL\SPIT.cs" />
+    <Compile Include="Subrecords\_Shared\EFID.cs" />
+    <Compile Include="Subrecords\_Shared\EFIT.cs" />
     <Compile Include="Subrecords\INGR\ENIT.cs" />
-    <Compile Include="Subrecords\INGR\FULL.cs" />
-    <Compile Include="Subrecords\INGR\SCIT.cs" />
+    <Compile Include="Subrecords\_Shared\SULL.cs" />
+    <Compile Include="Subrecords\_Shared\SCIT.cs" />
     <Compile Include="Subrecords\MGEF\DATA.cs" />
     <Compile Include="Subrecords\MGEF\ESCE.cs" />
     <Compile Include="Subrecords\NPC_\ACBS.cs" />

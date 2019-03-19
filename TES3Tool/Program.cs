@@ -31,14 +31,26 @@ namespace TES3Tool
 
 
             string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
-            //var stat = TES4Load(fileESM, new List<string> { "STAT", "CELL","SOUN",
-            //    "MISC","KEYM","FURN","ACTI","LIGH","CONT","FLOR","DOOR","WEAP" });
+            var stat = TES4Load(fileESM, new List<string> { "STAT", "CELL","SOUN",
+                "MISC","KEYM","FURN","ACTI","LIGH","CONT","FLOR","DOOR","WEAP","INGR" });
 
-            var stat = TES4Load(fileESM, new List<string> { "MGEF","INGR" });
+            // var stat = TES4Load(fileESM, new List<string> { "BOOK" });
 
 
-           // var test = ConvertInteriorCells(stat);
-            //test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path
+            var test = ConvertInteriorCells(stat);
+            test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path
+            //foreach (var item in stat.Groups)
+            //{
+            //    foreach (TES4Lib.Records.MGEF item2 in item.Records)
+            //    {
+            //        string editorId = item2.EDID.EditorId.Replace("\0","");
+            //        string fullname = item2.FULL.DisplayName.Replace(" ", "").Replace("\0","");
+            //        //Console.WriteLine($"[StringValue(\"{editorId}\")]");
+            //        Console.WriteLine($"{editorId} = {item.Records.IndexOf(item2)+1},");
+
+            //    }
+            //}
+
 
 
             Console.WriteLine("Done");

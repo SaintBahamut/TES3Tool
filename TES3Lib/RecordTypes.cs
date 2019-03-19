@@ -26,6 +26,7 @@ namespace TES3Lib
         STAT,
         ACTI,
         MISC,
+        INGR,
         DOOR,
         BOOK,
         //BODY,

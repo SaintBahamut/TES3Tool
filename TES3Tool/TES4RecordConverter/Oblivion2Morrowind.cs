@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Utility.Common;
 using static TES3Tool.TES4RecordConverter.Records.Helpers;
 using static TES3Tool.TES4RecordConverter.Records.Converters;
 using TES3Tool.TES4RecordConverter.Records;

@@ -4,8 +4,6 @@ using TES4Lib.Subrecords.INGR;
 using TES4Lib.Subrecords.Shared;
 using Utility;
 using static Utility.Common;
-using FULL_INGR = TES4Lib.Subrecords.INGR.FULL;
-using FULL = TES4Lib.Subrecords.Shared.FULL;
 using System.Collections.Generic;
 
 namespace TES4Lib.Records
@@ -30,7 +28,7 @@ namespace TES4Lib.Records
 
         public ENIT ENIT { get; set; }
 
-        public List<(EFID EFID,EFIT EFIT,SCIT SCIT, FULL_INGR FULL)> EFFECT { get; set; }
+        public List<(EFID EFID,EFIT EFIT,SCIT SCIT, SULL FULL)> EFFECT { get; set; }
 
         public INGR(byte[] rawData) : base(rawData)
         {
@@ -40,7 +38,7 @@ namespace TES4Lib.Records
         protected override void BuildSubrecords()
         {
             var readerData = new ByteReader();
-            EFFECT = new List<(EFID, EFIT, SCIT, FULL_INGR)>();
+            EFFECT = new List<(EFID, EFIT, SCIT, SULL)>();
             while (Data.Length != readerData.offset)
             {
                 var subrecordName = GetRecordName(readerData);
@@ -69,7 +67,7 @@ namespace TES4Lib.Records
                 if (subrecordName.Equals("FULL") && !IsNull(this.FULL))
                 {
                     int index = EFFECT.Count - 1;
-                    EFFECT[index] = (EFFECT[index].EFID, EFFECT[index].EFIT, EFFECT[index].SCIT, new FULL_INGR(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)));
+                    EFFECT[index] = (EFFECT[index].EFID, EFFECT[index].EFIT, EFFECT[index].SCIT, new SULL(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)));
                     continue;
                 }
 

@@ -1,4 +1,5 @@
 ﻿using static TES3Tool.TES4RecordConverter.Records.Helpers;
+using static Utility.Common;
 using static TES3Tool.TES4RecordConverter.Oblivion2Morrowind;
 using System;
 using System.Linq;
@@ -111,7 +112,51 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwDOOR.GetType().Name, mwDOOR.NAME.EditorId, mwDOOR);
             }
 
+            //INGREDIENT
+            if (recordType.Equals("INGR"))
+            {
+                var mwINGR = ConvertINGR((TES4Lib.Records.INGR)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwINGR.GetType().Name, mwINGR.NAME.EditorId, mwINGR);
+            }
+
             return null;
+        }
+
+        private static TES3Lib.Records.INGR ConvertINGR(INGR obINGR)
+        {
+            var mwINGR = new TES3Lib.Records.INGR
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obINGR.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obINGR.MODL.ModelPath, Config.INGRPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obINGR.FULL.DisplayName) },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obINGR.ICON.IconFilePath, Config.INGRPath) },
+                IRDT = new TES3Lib.Subrecords.INGR.IRDT()
+            };
+
+            //EFFECTS
+            var IRDT = mwINGR.IRDT;
+            IRDT.Value = obINGR.ENIT.Value;
+            IRDT.Weight = obINGR.DATA.Weight;
+
+            IRDT.EffectIds = new TES3Lib.Enums.MagicEffect[4];
+            IRDT.SkillIds = new TES3Lib.Enums.Skill[4];
+            IRDT.AttributeIds = new TES3Lib.Enums.Attribute[4];
+            for (int i = 0; i < IRDT.EffectIds.Length; i++)
+            {
+                if (obINGR.EFFECT.Count > i)
+                {
+                    IRDT.EffectIds[i] = CastMagicEffectToMW(obINGR.EFFECT[i].EFIT.MagicEffect);
+                    IRDT.SkillIds[i] = CastActorValueToSkillMW(obINGR.EFFECT[i].EFIT.ActorValue, IRDT.EffectIds[i]);
+                    IRDT.AttributeIds[i] = CastActorValueToAttributeMW(obINGR.EFFECT[i].EFIT.ActorValue, IRDT.EffectIds[i]);
+                }
+                else
+                {
+                    IRDT.EffectIds[i] = TES3Lib.Enums.MagicEffect.None;
+                    IRDT.SkillIds[i] = TES3Lib.Enums.Skill.Unused;
+                    IRDT.AttributeIds[i] = TES3Lib.Enums.Attribute.Unused;
+                }
+            }
+            return mwINGR;
         }
 
         static TES3Lib.Records.WEAP ConvertWEAP(TES4Lib.Records.WEAP obWEAP)
@@ -121,7 +166,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obWEAP.EDID.EditorId) },
                 MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obWEAP.MODL.ModelPath, Config.WEAPPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obWEAP.FULL) ? obWEAP.FULL.DisplayName : string.Empty) },
-                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obWEAP.ICON.IconFilePath, TES3Tool.Config.MISCPath) },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obWEAP.ICON.IconFilePath, Config.MISCPath) },
                 WPDT = new TES3Lib.Subrecords.WEAP.WPDT
                 {
                     Weight = obWEAP.DATA.Weight,
@@ -131,13 +176,13 @@ namespace TES3Tool.TES4RecordConverter.Records
                     Speed = obWEAP.DATA.Speed,
                     Reach = obWEAP.DATA.Reach,
                     EnchantmentPoints = !IsNull(obWEAP.ANAM) ? obWEAP.ANAM.EnchantmentPoints : (short)0,
-                 },
+                },
                 ENAM = null, //TODO
                 SCRI = null,
             };
             mwWEAP.WPDT.ChopMin = (byte)(0.5f * obWEAP.DATA.Damage);
             mwWEAP.WPDT.ChopMax = (byte)obWEAP.DATA.Damage;
-            mwWEAP.WPDT.SlashMin = mwWEAP.WPDT.Type.Equals(TES3Lib.Enums.WeaponType.MarksmanBow) ? (byte)0 :(byte)(0.5f * obWEAP.DATA.Damage);
+            mwWEAP.WPDT.SlashMin = mwWEAP.WPDT.Type.Equals(TES3Lib.Enums.WeaponType.MarksmanBow) ? (byte)0 : (byte)(0.5f * obWEAP.DATA.Damage);
             mwWEAP.WPDT.SlashMax = mwWEAP.WPDT.Type.Equals(TES3Lib.Enums.WeaponType.MarksmanBow) ? (byte)0 : (byte)(obWEAP.DATA.Damage);
             mwWEAP.WPDT.ThrustMin = (byte)(0.5f * CalcThrust(mwWEAP.WPDT.Type, obWEAP.DATA.Damage));
             mwWEAP.WPDT.ThrustMax = CalcThrust(mwWEAP.WPDT.Type, obWEAP.DATA.Damage);
@@ -160,43 +205,6 @@ namespace TES3Tool.TES4RecordConverter.Records
 
                 default:
                     return (byte)damage;
-            }
-        }
-
-        static TES3Lib.Enums.WeaponType CastWeaponTypeToMw(TES4Lib.Records.WEAP obWEAP)
-        {
-            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BladeOneHand))//blade one hand
-            {
-                if (obWEAP.EDID.EditorId.ToLower().Contains("dagger") || obWEAP.FULL.DisplayName.ToLower().Contains("dagger"))
-                    return TES3Lib.Enums.WeaponType.ShortBladeOneHand;
- 
-                return TES3Lib.Enums.WeaponType.LongBladeOneHand;
-            }
-            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BladeTwoHand))//blade two hand
-            {
-                return TES3Lib.Enums.WeaponType.LongBladeTwoClose;
-            }
-            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BluntOneHand))//blunt one hand
-            {
-                if (obWEAP.EDID.EditorId.ToLower().Contains("axe") || obWEAP.FULL.DisplayName.ToLower().Contains("axe"))
-                    return TES3Lib.Enums.WeaponType.AxeOneHand;
-
-                return TES3Lib.Enums.WeaponType.BluntOneHand;
-            }
-            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BluntTwoHand))//blunt two hand
-            {
-                if (obWEAP.EDID.EditorId.ToLower().Contains("axe") || obWEAP.FULL.DisplayName.ToLower().Contains("axe"))
-                    return TES3Lib.Enums.WeaponType.AxeTwoHand;
-     
-                return TES3Lib.Enums.WeaponType.BluntTwoClose;
-            }
-            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.Staff))//staff
-            {
-                return TES3Lib.Enums.WeaponType.BluntTwoWide;
-            }
-            else
-            {
-                return TES3Lib.Enums.WeaponType.MarksmanBow;
             }
         }
 
@@ -274,44 +282,48 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             if (!IsNull(obFLOR.PFIG))
             {
+
+                var rnd = new Random((int)DateTime.Now.Ticks); //calling gods
+                var fate = rnd.Next(0, 3); //pray for a sign
+                var qnt = 2;
+                switch (fate) //interpret gods words
+                {
+                    case 0:
+                        qnt = (int)obFLOR.PFPC.SpringProd;
+                        break;
+                    case 1:
+                        qnt = (int)obFLOR.PFPC.SummerProd;
+                        break;
+                    case 2:
+                        qnt = (int)obFLOR.PFPC.FallProd;
+                        break;
+                    case 4:
+                        qnt = (int)obFLOR.PFPC.WinterProd;
+                        break;
+                }
+
+                if (qnt == 0) //if gods are cruel, fuck them
+                    qnt = 2;
+
                 var BaseId = GetBaseIdFromFormId(obFLOR.PFIG.IngredientProduced);
                 if (string.IsNullOrEmpty(BaseId))
                 {
-                    var rnd = new Random((int)DateTime.Now.Ticks); //calling gods
-                    var fate = rnd.Next(0, 3); //pray for a sign
-                    var qnt = 2;
-                    switch (fate) //interpret gods words
-                    {
-                        case 0:
-                            qnt = (int)obFLOR.PFPC.SpringProd;
-                            break;
-                        case 1:
-                            qnt = (int)obFLOR.PFPC.SummerProd;
-                            break;
-                        case 2:
-                            qnt = (int)obFLOR.PFPC.FallProd;
-                            break;
-                        case 4:
-                            qnt = (int)obFLOR.PFPC.WinterProd;
-                            break;
-                    }
-
-                    if (qnt == 0) //if gods are cruel, fuck them
-                        qnt = 2;
-
-
                     TES4Lib.Base.Record record;
                     TES4Lib.TES4.TES4RecordIndex.TryGetValue(obFLOR.PFIG.IngredientProduced, out record);
                     if (!IsNull(record))
                     {
                         CONT.NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>();
-                        var mwRecordFromREFR = ConvertRecordFromREFR(BaseId);
+                        var mwRecordFromREFR = ConvertRecordFromREFR(obFLOR.PFIG.IngredientProduced);
                         if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
                         ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
-                        CONT.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = mwRecordFromREFR.EditorId, Count = qnt });
+                        BaseId = mwRecordFromREFR.EditorId;
                     }
                 }
 
+                if (!string.IsNullOrEmpty(BaseId))
+                {
+                    CONT.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = BaseId, Count = qnt });
+                }              
             }
 
             return CONT;
@@ -322,7 +334,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             var CONT = new TES3Lib.Records.CONT
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obCONT.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obCONT.MODL.ModelPath, TES3Tool.Config.CONTPath) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obCONT.MODL.ModelPath, Config.CONTPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCONT.FULL) ? obCONT.FULL.DisplayName : "") },
                 CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = obCONT.DATA.Weight },
                 FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 8 }
@@ -344,8 +356,12 @@ namespace TES3Tool.TES4RecordConverter.Records
                             var mwRecordFromREFR = ConvertRecordFromREFR(item.ItemId);
                             if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
                             ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
-                            CONT.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = mwRecordFromREFR.EditorId, Count = item.ItemCount });
+                            BaseId = mwRecordFromREFR.EditorId;
                         }
+                    }
+                    if (!string.IsNullOrEmpty(BaseId))
+                    {
+                        CONT.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = BaseId, Count = item.ItemCount });
                     }
                 }
             }
@@ -673,11 +689,11 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             if (!IsNull(obREFR.XLOC))
             {
-                if(obREFR.XLOC.LockLevel>0)
+                if (obREFR.XLOC.LockLevel > 0)
                 {
                     mwREFR.FLTV = new TES3Lib.Subrecords.REFR.FLTV { LockLevel = obREFR.XLOC.LockLevel };
                 }
-               
+
                 if (!obREFR.XLOC.Key.Equals("00000000"))
                 {
                     var BaseId = GetBaseIdFromFormId(obREFR.XLOC.Key);
@@ -709,7 +725,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             mwREFR.INTV.NumberOfUses = 1;
 
             //no one knows what this is
-            mwREFR.NAM9 = new TES3Lib.Subrecords.REFR.NAM9 {Unknown = 0x00000001 };
+            mwREFR.NAM9 = new TES3Lib.Subrecords.REFR.NAM9 { Unknown = 0x00000001 };
 
             //soul data, obREFR dont have it?
             //mwREFR.XSOL = new TES3Lib.Subrecords.REFR.XSOL();
@@ -729,14 +745,423 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwREFR;
         }
 
-        //internal static TES3Lib.Records.REFR ConvertACHR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
-        //{
+        static TES3Lib.Enums.WeaponType CastWeaponTypeToMw(TES4Lib.Records.WEAP obWEAP)
+        {
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BladeOneHand))//blade one hand
+            {
+                if (obWEAP.EDID.EditorId.ToLower().Contains("dagger") || obWEAP.FULL.DisplayName.ToLower().Contains("dagger"))
+                    return TES3Lib.Enums.WeaponType.ShortBladeOneHand;
 
-        //}
+                return TES3Lib.Enums.WeaponType.LongBladeOneHand;
+            }
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BladeTwoHand))//blade two hand
+            {
+                return TES3Lib.Enums.WeaponType.LongBladeTwoClose;
+            }
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BluntOneHand))//blunt one hand
+            {
+                if (obWEAP.EDID.EditorId.ToLower().Contains("axe") || obWEAP.FULL.DisplayName.ToLower().Contains("axe"))
+                    return TES3Lib.Enums.WeaponType.AxeOneHand;
 
-        //internal static TES3Lib.Records.REFR ConvertACRE(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
-        //{
+                return TES3Lib.Enums.WeaponType.BluntOneHand;
+            }
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.BluntTwoHand))//blunt two hand
+            {
+                if (obWEAP.EDID.EditorId.ToLower().Contains("axe") || obWEAP.FULL.DisplayName.ToLower().Contains("axe"))
+                    return TES3Lib.Enums.WeaponType.AxeTwoHand;
 
-        //}
+                return TES3Lib.Enums.WeaponType.BluntTwoClose;
+            }
+            if (obWEAP.DATA.Type.Equals(TES4Lib.Enums.WeaponType.Staff))//staff
+            {
+                return TES3Lib.Enums.WeaponType.BluntTwoWide;
+            }
+            else
+            {
+                return TES3Lib.Enums.WeaponType.MarksmanBow;
+            }
+        }
+
+        static TES3Lib.Enums.MagicEffect CastMagicEffectToMW(TES4Lib.Enums.MagicEffect magicEffect)
+        {
+            switch (magicEffect)
+            {
+                case TES4Lib.Enums.MagicEffect.BoundPriestDagger:
+                    return TES3Lib.Enums.MagicEffect.BoundDagger;
+                case TES4Lib.Enums.MagicEffect.SummonSewnFleshAtronach:
+                    return TES3Lib.Enums.MagicEffect.SummonLeastBonewalker;
+                case TES4Lib.Enums.MagicEffect.SummonStitchedFleshAtronach:
+                    return TES3Lib.Enums.MagicEffect.SummonLeastBonewalker;
+                case TES4Lib.Enums.MagicEffect.SummonTornFleshAtronach:
+                    return TES3Lib.Enums.MagicEffect.SummonGreaterBonewalker;
+                case TES4Lib.Enums.MagicEffect.SummonMangledFleshAtronach:
+                    return TES3Lib.Enums.MagicEffect.SummonGreaterBonewalker;
+                case TES4Lib.Enums.MagicEffect.SummonHunger:
+                    return TES3Lib.Enums.MagicEffect.SummonHunger;
+                case TES4Lib.Enums.MagicEffect.BoundOrderWeapon6:
+                    return TES3Lib.Enums.MagicEffect.BoundLongsword;
+                case TES4Lib.Enums.MagicEffect.BoundOrderWeapon5:
+                    return TES3Lib.Enums.MagicEffect.BoundLongsword;
+                case TES4Lib.Enums.MagicEffect.BoundOrderWeapon4:
+                    return TES3Lib.Enums.MagicEffect.BoundLongsword;
+                case TES4Lib.Enums.MagicEffect.BoundOrderWeapon3:
+                    return TES3Lib.Enums.MagicEffect.BoundLongsword;
+                case TES4Lib.Enums.MagicEffect.BoundOrderWeapon2:
+                    return TES3Lib.Enums.MagicEffect.BoundLongsword;
+                case TES4Lib.Enums.MagicEffect.BoundOrderWeapon1:
+                    return TES3Lib.Enums.MagicEffect.BoundLongsword;
+                case TES4Lib.Enums.MagicEffect.SummonStaffofSheogorath:
+                    return TES3Lib.Enums.MagicEffect.BoundSpear;
+                case TES4Lib.Enums.MagicEffect.WabbaSummon:
+                    return TES3Lib.Enums.MagicEffect.BoundMace;
+                case TES4Lib.Enums.MagicEffect.SummonGoldenSaint:
+                    return TES3Lib.Enums.MagicEffect.SummonGoldenSaint;
+                case TES4Lib.Enums.MagicEffect.SummonVoraciousHunger:
+                    return TES3Lib.Enums.MagicEffect.SummonHunger;
+                case TES4Lib.Enums.MagicEffect.SummonRavenousHunger:
+                    return TES3Lib.Enums.MagicEffect.SummonHunger;
+                case TES4Lib.Enums.MagicEffect.SummonDarkSeducer:
+                    return TES3Lib.Enums.MagicEffect.SummonGoldenSaint;
+                case TES4Lib.Enums.MagicEffect.SummonGluttonousHunger:
+                    return TES3Lib.Enums.MagicEffect.SummonHunger;
+                case TES4Lib.Enums.MagicEffect.SummonRepleteShambles:
+                    return TES3Lib.Enums.MagicEffect.SummonSkeleton;
+                case TES4Lib.Enums.MagicEffect.SummonShambles:
+                    return TES3Lib.Enums.MagicEffect.SummonSkeleton;
+                case TES4Lib.Enums.MagicEffect.SummonDecrepitShambles:
+                    return TES3Lib.Enums.MagicEffect.SummonSkeleton;
+                case TES4Lib.Enums.MagicEffect.DONOTUSEDarkness:
+                    return TES3Lib.Enums.MagicEffect.Blind;
+                case TES4Lib.Enums.MagicEffect.Rally:
+                    return TES3Lib.Enums.MagicEffect.RallyHumanoid;
+                case TES4Lib.Enums.MagicEffect.Frenzy:
+                    return TES3Lib.Enums.MagicEffect.FrenzyHumanoid;
+                case TES4Lib.Enums.MagicEffect.Charm:
+                    return TES3Lib.Enums.MagicEffect.Charm;
+                case TES4Lib.Enums.MagicEffect.Calm:
+                    return TES3Lib.Enums.MagicEffect.CalmCreature;
+                case TES4Lib.Enums.MagicEffect.Demoralize:
+                    return TES3Lib.Enums.MagicEffect.DemoralizeHumanoid;
+                case TES4Lib.Enums.MagicEffect.SummonMythicDawnHelm:
+                    return TES3Lib.Enums.MagicEffect.BoundHelm;
+                case TES4Lib.Enums.MagicEffect.PoisonInfo:
+                    return TES3Lib.Enums.MagicEffect.Poison;
+                case TES4Lib.Enums.MagicEffect.SummonBear:
+                    return TES3Lib.Enums.MagicEffect.SummonBear;
+                case TES4Lib.Enums.MagicEffect.SummonFleshAtronach:
+                    return TES3Lib.Enums.MagicEffect.SummonGreaterBonewalker;
+                case TES4Lib.Enums.MagicEffect.SummonSpiderling:
+                    return TES3Lib.Enums.MagicEffect.SummonScamp;
+                case TES4Lib.Enums.MagicEffect.SummonAncestorGuardian:
+                    return TES3Lib.Enums.MagicEffect.SummonGhost;
+                case TES4Lib.Enums.MagicEffect.SummonRufiosGhost:
+                    return TES3Lib.Enums.MagicEffect.SummonGhost;
+                case TES4Lib.Enums.MagicEffect.Reanimate:
+                    return TES3Lib.Enums.MagicEffect.SummonGhost;
+                case TES4Lib.Enums.MagicEffect.SummonXivilai:
+                    return TES3Lib.Enums.MagicEffect.SummonDremora;
+                case TES4Lib.Enums.MagicEffect.SummonGloomWraith:
+                    return TES3Lib.Enums.MagicEffect.SummonBonelord;
+                case TES4Lib.Enums.MagicEffect.SummonSpiderDaedra:
+                    return TES3Lib.Enums.MagicEffect.SummonTwilight;
+                case TES4Lib.Enums.MagicEffect.SummonSkeletonHero:
+                    return TES3Lib.Enums.MagicEffect.SummonSkeleton;
+                case TES4Lib.Enums.MagicEffect.SummonSkeletonChampion:
+                    return TES3Lib.Enums.MagicEffect.SummonSkeleton;
+                case TES4Lib.Enums.MagicEffect.SummonSkeletonGuardian:
+                    return TES3Lib.Enums.MagicEffect.SummonSkeleton;
+                case TES4Lib.Enums.MagicEffect.SummonHeadlessZombie:
+                    return TES3Lib.Enums.MagicEffect.SummonLeastBonewalker;
+                case TES4Lib.Enums.MagicEffect.SummonDremoraLord:
+                    return TES3Lib.Enums.MagicEffect.SummonDremora;
+                case TES4Lib.Enums.MagicEffect.SummonMythicDawnArmor:
+                    return TES3Lib.Enums.MagicEffect.BoundCuirass;
+                case TES4Lib.Enums.MagicEffect.AbsorbHealth:
+                    return TES3Lib.Enums.MagicEffect.AbsorbHealth;
+                case TES4Lib.Enums.MagicEffect.AbsorbSkill:
+                    return TES3Lib.Enums.MagicEffect.AbsorbSkill;
+                case TES4Lib.Enums.MagicEffect.AbsorbMagicka:
+                    return TES3Lib.Enums.MagicEffect.AbsorbMagicka;
+                case TES4Lib.Enums.MagicEffect.AbsorbAttribute:
+                    return TES3Lib.Enums.MagicEffect.AbsorbAttribute;
+                case TES4Lib.Enums.MagicEffect.BoundBoots:
+                    return TES3Lib.Enums.MagicEffect.BoundBoots;
+                case TES4Lib.Enums.MagicEffect.AbsorbFatigue:
+                    return TES3Lib.Enums.MagicEffect.AbsorbFatigue;
+                case TES4Lib.Enums.MagicEffect.BoundCuirass:
+                    return TES3Lib.Enums.MagicEffect.BoundCuirass;
+                case TES4Lib.Enums.MagicEffect.BoundGauntlets:
+                    return TES3Lib.Enums.MagicEffect.BoundGloves;
+                case TES4Lib.Enums.MagicEffect.BoundGreaves:
+                    return TES3Lib.Enums.MagicEffect.BoundSpear;
+                case TES4Lib.Enums.MagicEffect.BoundHelmet:
+                    return TES3Lib.Enums.MagicEffect.BoundHelm;
+                case TES4Lib.Enums.MagicEffect.BoundShield:
+                    return TES3Lib.Enums.MagicEffect.BoundShield;
+                case TES4Lib.Enums.MagicEffect.Burden:
+                    return TES3Lib.Enums.MagicEffect.Burden;
+                case TES4Lib.Enums.MagicEffect.BoundAxe:
+                    return TES3Lib.Enums.MagicEffect.BoundBattleAxe;
+                case TES4Lib.Enums.MagicEffect.BoundBow:
+                    return TES3Lib.Enums.MagicEffect.BoundLongbow;
+                case TES4Lib.Enums.MagicEffect.BoundDagger:
+                    return TES3Lib.Enums.MagicEffect.BoundDagger;
+                case TES4Lib.Enums.MagicEffect.BoundMace:
+                    return TES3Lib.Enums.MagicEffect.BoundMace;
+                case TES4Lib.Enums.MagicEffect.BoundSword:
+                    return TES3Lib.Enums.MagicEffect.BoundLongsword;
+                case TES4Lib.Enums.MagicEffect.Chameleon:
+                    return TES3Lib.Enums.MagicEffect.Chameleon;
+                case TES4Lib.Enums.MagicEffect.CommandCreature:
+                    return TES3Lib.Enums.MagicEffect.CommandCreature;
+                case TES4Lib.Enums.MagicEffect.CommandHumanoid:
+                    return TES3Lib.Enums.MagicEffect.CommandHumanoid;
+                case TES4Lib.Enums.MagicEffect.CureDisease:
+                    return TES3Lib.Enums.MagicEffect.CureCommonDisease;
+                case TES4Lib.Enums.MagicEffect.CureParalysis:
+                    return TES3Lib.Enums.MagicEffect.CureParalyzation;
+                case TES4Lib.Enums.MagicEffect.CurePoison:
+                    return TES3Lib.Enums.MagicEffect.CurePoison;
+                case TES4Lib.Enums.MagicEffect.DamageAttribute:
+                    return TES3Lib.Enums.MagicEffect.DamageAttribute;
+                case TES4Lib.Enums.MagicEffect.DamageFatigue:
+                    return TES3Lib.Enums.MagicEffect.DamageFatigue;
+                case TES4Lib.Enums.MagicEffect.DamageHealth:
+                    return TES3Lib.Enums.MagicEffect.DamageHealth;
+                case TES4Lib.Enums.MagicEffect.DamageMagicka:
+                    return TES3Lib.Enums.MagicEffect.DamageMagicka;
+                case TES4Lib.Enums.MagicEffect.DisintegrateArmor:
+                    return TES3Lib.Enums.MagicEffect.DisintegrateArmor;
+                case TES4Lib.Enums.MagicEffect.DisintegrateWeapon:
+                    return TES3Lib.Enums.MagicEffect.DisintegrateWeapon;
+                case TES4Lib.Enums.MagicEffect.DrainAttribute:
+                    return TES3Lib.Enums.MagicEffect.DrainAttribute;
+                case TES4Lib.Enums.MagicEffect.DrainFatigue:
+                    return TES3Lib.Enums.MagicEffect.DrainFatigue;
+                case TES4Lib.Enums.MagicEffect.DrainHealth:
+                    return TES3Lib.Enums.MagicEffect.DrainHealth;
+                case TES4Lib.Enums.MagicEffect.DrainSkill:
+                    return TES3Lib.Enums.MagicEffect.DrainSkill;
+                case TES4Lib.Enums.MagicEffect.DrainMagicka:
+                    return TES3Lib.Enums.MagicEffect.DrainMagicka;
+                case TES4Lib.Enums.MagicEffect.Dispel:
+                    return TES3Lib.Enums.MagicEffect.Dispel;
+                case TES4Lib.Enums.MagicEffect.DetectLife:
+                    return TES3Lib.Enums.MagicEffect.DetectAnimal;
+                case TES4Lib.Enums.MagicEffect.FireDamage:
+                    return TES3Lib.Enums.MagicEffect.FireDamage;
+                case TES4Lib.Enums.MagicEffect.FireShield:
+                    return TES3Lib.Enums.MagicEffect.FireShield;
+                case TES4Lib.Enums.MagicEffect.FortifyAttribute:
+                    return TES3Lib.Enums.MagicEffect.FortifyAttribute;
+                case TES4Lib.Enums.MagicEffect.FortifyFatigue:
+                    return TES3Lib.Enums.MagicEffect.FortifyFatigue;
+                case TES4Lib.Enums.MagicEffect.FortifyHealth:
+                    return TES3Lib.Enums.MagicEffect.FortifyHealth;
+                case TES4Lib.Enums.MagicEffect.FortifyMagickaMultiplier:
+                    return TES3Lib.Enums.MagicEffect.FortifyMagickaMultiplier;
+                case TES4Lib.Enums.MagicEffect.FortifySkill:
+                    return TES3Lib.Enums.MagicEffect.FortifySkill;
+                case TES4Lib.Enums.MagicEffect.FortifyMagicka:
+                    return TES3Lib.Enums.MagicEffect.FortifyMagicka;
+                case TES4Lib.Enums.MagicEffect.FrostDamage:
+                    return TES3Lib.Enums.MagicEffect.FortifyAttackBonus;
+                case TES4Lib.Enums.MagicEffect.FrostShield:
+                    return TES3Lib.Enums.MagicEffect.FrostShield;
+                case TES4Lib.Enums.MagicEffect.Feather:
+                    return TES3Lib.Enums.MagicEffect.Feather;
+                case TES4Lib.Enums.MagicEffect.Invisibility:
+                    return TES3Lib.Enums.MagicEffect.Invisibility;
+                case TES4Lib.Enums.MagicEffect.Light:
+                    return TES3Lib.Enums.MagicEffect.Light;
+                case TES4Lib.Enums.MagicEffect.ShockShield:
+                    return TES3Lib.Enums.MagicEffect.LightningShield;
+                case TES4Lib.Enums.MagicEffect.DONOTUSELock:
+                    return TES3Lib.Enums.MagicEffect.Lock;
+                case TES4Lib.Enums.MagicEffect.NightEye:
+                    return TES3Lib.Enums.MagicEffect.NightEye;
+                case TES4Lib.Enums.MagicEffect.Open:
+                    return TES3Lib.Enums.MagicEffect.Open;
+                case TES4Lib.Enums.MagicEffect.Paralyze:
+                    return TES3Lib.Enums.MagicEffect.Paralyze;
+                case TES4Lib.Enums.MagicEffect.RestoreAttribute:
+                    return TES3Lib.Enums.MagicEffect.RestoreAttribute;
+                case TES4Lib.Enums.MagicEffect.ReflectDamage:
+                    return TES3Lib.Enums.MagicEffect.Reflect;
+                case TES4Lib.Enums.MagicEffect.RestoreFatigue:
+                    return TES3Lib.Enums.MagicEffect.RestoreFatigue;
+                case TES4Lib.Enums.MagicEffect.RestoreHealth:
+                    return TES3Lib.Enums.MagicEffect.RestoreHealth;
+                case TES4Lib.Enums.MagicEffect.RestoreMagicka:
+                    return TES3Lib.Enums.MagicEffect.RestoreMagicka;
+                case TES4Lib.Enums.MagicEffect.ReflectSpell:
+                    return TES3Lib.Enums.MagicEffect.Reflect;
+                case TES4Lib.Enums.MagicEffect.ResistDisease:
+                    return TES3Lib.Enums.MagicEffect.ResistCommonDisease;
+                case TES4Lib.Enums.MagicEffect.ResistFire:
+                    return TES3Lib.Enums.MagicEffect.ResistFire;
+                case TES4Lib.Enums.MagicEffect.ResistFrost:
+                    return TES3Lib.Enums.MagicEffect.ResistFrost;
+                case TES4Lib.Enums.MagicEffect.ResistMagic:
+                    return TES3Lib.Enums.MagicEffect.ResistMagicka;
+                case TES4Lib.Enums.MagicEffect.ResistNormalWeapons:
+                    return TES3Lib.Enums.MagicEffect.ResistNormalWeapons;
+                case TES4Lib.Enums.MagicEffect.ResistParalysis:
+                    return TES3Lib.Enums.MagicEffect.ResistParalysis;
+                case TES4Lib.Enums.MagicEffect.ResistPoison:
+                    return TES3Lib.Enums.MagicEffect.ResistPoison;
+                case TES4Lib.Enums.MagicEffect.ResistShock:
+                    return TES3Lib.Enums.MagicEffect.ResistShock;
+                case TES4Lib.Enums.MagicEffect.SpellAbsorption:
+                    return TES3Lib.Enums.MagicEffect.SpellAbsorption;
+                case TES4Lib.Enums.MagicEffect.ScriptEffect:
+                    return TES3Lib.Enums.MagicEffect.None;
+                case TES4Lib.Enums.MagicEffect.ShockDamage:
+                    return TES3Lib.Enums.MagicEffect.ShockDamage;
+                case TES4Lib.Enums.MagicEffect.Shield:
+                    return TES3Lib.Enums.MagicEffect.Shield;
+                case TES4Lib.Enums.MagicEffect.Silence:
+                    return TES3Lib.Enums.MagicEffect.Silence;
+                case TES4Lib.Enums.MagicEffect.StuntedMagicka:
+                    return TES3Lib.Enums.MagicEffect.StuntedMagicka;
+                case TES4Lib.Enums.MagicEffect.SoulTrap:
+                    return TES3Lib.Enums.MagicEffect.SoulTrap;
+                case TES4Lib.Enums.MagicEffect.SunDamage:
+                    return TES3Lib.Enums.MagicEffect.SunDamage;
+                case TES4Lib.Enums.MagicEffect.Telekinesis:
+                    return TES3Lib.Enums.MagicEffect.Telekinesis;
+                case TES4Lib.Enums.MagicEffect.TurnUndead:
+                    return TES3Lib.Enums.MagicEffect.TurnUndead;
+                case TES4Lib.Enums.MagicEffect.Vampirism:
+                    return TES3Lib.Enums.MagicEffect.Vampirism;
+                case TES4Lib.Enums.MagicEffect.WaterBreathing:
+                    return TES3Lib.Enums.MagicEffect.WaterBreathing;
+                case TES4Lib.Enums.MagicEffect.WaterWalking:
+                    return TES3Lib.Enums.MagicEffect.WaterWalking;
+                case TES4Lib.Enums.MagicEffect.WeaknesstoDisease:
+                    return TES3Lib.Enums.MagicEffect.WeaknessToCommonDisease;
+                case TES4Lib.Enums.MagicEffect.WeaknesstoFire:
+                    return TES3Lib.Enums.MagicEffect.WeaknessToFire;
+                case TES4Lib.Enums.MagicEffect.WeaknesstoFrost:
+                    return TES3Lib.Enums.MagicEffect.WeaknessToFrost;
+                case TES4Lib.Enums.MagicEffect.WeaknesstoMagic:
+                    return TES3Lib.Enums.MagicEffect.WeaknessToMagicka;
+                case TES4Lib.Enums.MagicEffect.WeaknesstoNormalWeapons:
+                    return TES3Lib.Enums.MagicEffect.WeaknessToNormalWeapons;
+                case TES4Lib.Enums.MagicEffect.WeaknesstoPoison:
+                    return TES3Lib.Enums.MagicEffect.WeaknessToPoison;
+                case TES4Lib.Enums.MagicEffect.WeaknesstoShock:
+                    return TES3Lib.Enums.MagicEffect.WeaknessToShock;
+                case TES4Lib.Enums.MagicEffect.SummonClannfear:
+                    return TES3Lib.Enums.MagicEffect.SummonClannfear;
+                case TES4Lib.Enums.MagicEffect.SummonDaedroth:
+                    return TES3Lib.Enums.MagicEffect.SummonDaedroth;
+                case TES4Lib.Enums.MagicEffect.SummonDremora:
+                    return TES3Lib.Enums.MagicEffect.SummonDremora;
+                case TES4Lib.Enums.MagicEffect.SummonFlameAtronach:
+                    return TES3Lib.Enums.MagicEffect.SummonFlameAtronach;
+                case TES4Lib.Enums.MagicEffect.SummonFrostAtronach:
+                    return TES3Lib.Enums.MagicEffect.SummonFrostAtronach;
+                case TES4Lib.Enums.MagicEffect.SummonGhost:
+                    return TES3Lib.Enums.MagicEffect.SummonGhost;
+                case TES4Lib.Enums.MagicEffect.SummonLich:
+                    return TES3Lib.Enums.MagicEffect.SummonBonelord;
+                case TES4Lib.Enums.MagicEffect.SummonScamp:
+                    return TES3Lib.Enums.MagicEffect.SummonScamp;
+                case TES4Lib.Enums.MagicEffect.SummonSkeleton:
+                    return TES3Lib.Enums.MagicEffect.SummonSkeleton;
+                case TES4Lib.Enums.MagicEffect.SummonStormAtronach:
+                    return TES3Lib.Enums.MagicEffect.SummonStormAtronach;
+                case TES4Lib.Enums.MagicEffect.SummonFadedWraith:
+                    return TES3Lib.Enums.MagicEffect.SummonGhost;
+                case TES4Lib.Enums.MagicEffect.SummonZombie:
+                    return TES3Lib.Enums.MagicEffect.SummonLeastBonewalker;
+                default:
+                    return TES3Lib.Enums.MagicEffect.None;
+            }
+
+            //internal static TES3Lib.Records.REFR ConvertACHR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
+            //{
+
+            //}
+
+            //internal static TES3Lib.Records.REFR ConvertACRE(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
+            //{
+
+            //}
+        }
+
+        static TES3Lib.Enums.Attribute CastActorValueToAttributeMW(TES4Lib.Enums.ActorValue actorValue, TES3Lib.Enums.MagicEffect magicEffect)
+        {
+            bool isAttributeEffect =
+                magicEffect.Equals(TES3Lib.Enums.MagicEffect.AbsorbAttribute) ||
+                magicEffect.Equals(TES3Lib.Enums.MagicEffect.DamageAttribute) ||
+                magicEffect.Equals(TES3Lib.Enums.MagicEffect.DrainAttribute) ||
+                magicEffect.Equals(TES3Lib.Enums.MagicEffect.FortifyAttribute) ||
+                magicEffect.Equals(TES3Lib.Enums.MagicEffect.RestoreAttribute);
+            if (!isAttributeEffect) return TES3Lib.Enums.Attribute.Unused;
+
+            return (TES3Lib.Enums.Attribute)Enum.Parse(typeof(TES3Lib.Enums.Attribute), actorValue.ToString());
+        }
+
+        static TES3Lib.Enums.Skill CastActorValueToSkillMW(TES4Lib.Enums.ActorValue actorValue, TES3Lib.Enums.MagicEffect magicEffect)
+        {
+            bool isSkillEffect =
+               magicEffect.Equals(TES3Lib.Enums.MagicEffect.AbsorbSkill) ||
+               magicEffect.Equals(TES3Lib.Enums.MagicEffect.DamageSkill) ||
+               magicEffect.Equals(TES3Lib.Enums.MagicEffect.DrainSkill) ||
+               magicEffect.Equals(TES3Lib.Enums.MagicEffect.FortifySkill) ||
+               magicEffect.Equals(TES3Lib.Enums.MagicEffect.RestoreSkill);
+            if (!isSkillEffect) return TES3Lib.Enums.Skill.Unused;
+
+            var rnd = new Random(DateTime.Now.Millisecond).Next(0, 2);
+            switch (actorValue)
+            {
+                case TES4Lib.Enums.ActorValue.Armorer:
+                    return TES3Lib.Enums.Skill.Armorer;
+                case TES4Lib.Enums.ActorValue.Athletics:
+                    return TES3Lib.Enums.Skill.Athletics;
+                case TES4Lib.Enums.ActorValue.Blade:
+                    return rnd.Equals(0) ? TES3Lib.Enums.Skill.ShortBlade : TES3Lib.Enums.Skill.LongBlade;
+                case TES4Lib.Enums.ActorValue.Block:
+                    return TES3Lib.Enums.Skill.Block;
+                case TES4Lib.Enums.ActorValue.Blunt:
+                    return rnd.Equals(0) ? TES3Lib.Enums.Skill.BluntWeapon : TES3Lib.Enums.Skill.Axe;
+                case TES4Lib.Enums.ActorValue.HandToHand:
+                    return TES3Lib.Enums.Skill.HandToHand;
+                case TES4Lib.Enums.ActorValue.HeavyArmor:
+                    return rnd.Equals(0) ? TES3Lib.Enums.Skill.HeavyArmor : TES3Lib.Enums.Skill.MediumArmor;
+                case TES4Lib.Enums.ActorValue.Alchemy:
+                    return TES3Lib.Enums.Skill.Alchemy;
+                case TES4Lib.Enums.ActorValue.Alteration:
+                    return TES3Lib.Enums.Skill.Alteration;
+                case TES4Lib.Enums.ActorValue.Conjuration:
+                    return TES3Lib.Enums.Skill.Conjuration;
+                case TES4Lib.Enums.ActorValue.Destruction:
+                    return TES3Lib.Enums.Skill.Destruction;
+                case TES4Lib.Enums.ActorValue.Illusion:
+                    return TES3Lib.Enums.Skill.Illusion;
+                case TES4Lib.Enums.ActorValue.Mysticism:
+                    return TES3Lib.Enums.Skill.Mysticism;
+                case TES4Lib.Enums.ActorValue.Restoration:
+                    return TES3Lib.Enums.Skill.Restoration;
+                case TES4Lib.Enums.ActorValue.Acrobatics:
+                    return TES3Lib.Enums.Skill.Acrobatics;
+                case TES4Lib.Enums.ActorValue.LightArmor:
+                    return rnd.Equals(0) ? TES3Lib.Enums.Skill.LightArmor : TES3Lib.Enums.Skill.MediumArmor;
+                case TES4Lib.Enums.ActorValue.Marksman:
+                    return TES3Lib.Enums.Skill.Marksman;
+                case TES4Lib.Enums.ActorValue.Mercantile:
+                    return TES3Lib.Enums.Skill.Mercantile;
+                case TES4Lib.Enums.ActorValue.Security:
+                    return TES3Lib.Enums.Skill.Security;
+                case TES4Lib.Enums.ActorValue.Sneak:
+                    return TES3Lib.Enums.Skill.Sneak;
+                case TES4Lib.Enums.ActorValue.Speechcraft:
+                    return TES3Lib.Enums.Skill.Speechcraft;
+            }
+
+            return TES3Lib.Enums.Skill.Unused;
+        }
     }
 }

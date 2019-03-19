@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Utility.Common;
 
 namespace TES3Tool.TES4RecordConverter.Records
 {
@@ -87,8 +88,6 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             return recordFlags & 0x80;
         }
-
-        internal static bool IsNull(object tested) => tested == null ? true : false;
 
         internal static string PathFormater(string sourcePath, string containingFolder)
         {

@@ -18,6 +18,10 @@ namespace TES3Lib.Records
 
         public SCRI SCRI { get; set; }
 
+        public INGR()
+        {
+        }
+
         public INGR(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
