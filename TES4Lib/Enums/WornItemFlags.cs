@@ -1,6 +1,6 @@
 ﻿namespace TES4Lib.Enums
 {
-    public enum ArmorFlags : short
+    public enum WornItemFlags : short
     {
         HideRings = 0x0001,
         NonPlayable = 0x0040,

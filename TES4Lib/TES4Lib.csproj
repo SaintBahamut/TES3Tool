@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\ArmorFlags.cs" />
+    <Compile Include="Enums\WornItemFlags.cs" />
     <Compile Include="Enums\BodySlot.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Attribute.cs" />
@@ -64,13 +64,13 @@
     <Compile Include="Records\AMMO.cs" />
     <Compile Include="Records\ANIO.cs" />
     <Compile Include="Records\APPA.cs" />
+    <Compile Include="Records\CLOT.cs" />
     <Compile Include="Records\ARMO.cs" />
     <Compile Include="Records\BGSN.cs" />
     <Compile Include="Records\BOOK.cs" />
     <Compile Include="Records\CELL.cs" />
     <Compile Include="Records\CLAS.cs" />
     <Compile Include="Records\CLMT.cs" />
-    <Compile Include="Records\CLOT.cs" />
     <Compile Include="Records\CONT.cs" />
     <Compile Include="Records\CREA.cs" />
     <Compile Include="Records\CSTY.cs" />
@@ -139,6 +139,9 @@
     <Compile Include="Subrecords\CELL\XGLB.cs" />
     <Compile Include="Subrecords\CELL\XOWN.cs" />
     <Compile Include="Subrecords\CELL\XRNK.cs" />
+    <Compile Include="Subrecords\CLOT\ANAM.cs" />
+    <Compile Include="Subrecords\CLOT\BMDT.cs" />
+    <Compile Include="Subrecords\CLOT\DATA.cs" />
     <Compile Include="Subrecords\CONT\CNTO.cs" />
     <Compile Include="Subrecords\CONT\DATA.cs" />
     <Compile Include="Subrecords\DOOR\ANAM.cs" />

@@ -4,7 +4,7 @@ using TES4Lib.Base;
 using TES4Lib.Enums;
 using Utility;
 
-namespace TES4Lib.Subrecords.ARMO
+namespace TES4Lib.Subrecords.CLOT
 {
     /// <summary>
     /// Armor flags and body slot info
