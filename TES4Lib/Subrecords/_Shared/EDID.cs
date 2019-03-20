@@ -1,4 +1,5 @@
-﻿using TES4Lib.Base;
+﻿using System.Diagnostics;
+using TES4Lib.Base;
 using Utility;
 
 namespace TES4Lib.Subrecords.Shared
@@ -6,6 +7,7 @@ namespace TES4Lib.Subrecords.Shared
     /// <summary>
     /// Base editor id
     /// </summary>
+    [DebuggerDisplay("{EditorId}")]
     public class EDID : Subrecord
     {
         /// <summary>

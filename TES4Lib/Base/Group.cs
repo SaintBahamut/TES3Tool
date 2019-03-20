@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -7,6 +8,7 @@ using Utility;
 
 namespace TES4Lib.Base
 {
+    [DebuggerDisplay("{Label}")]
     public class Group
     {
         readonly public string Name;
