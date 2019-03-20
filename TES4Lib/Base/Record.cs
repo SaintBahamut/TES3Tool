@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Utility;
+using static Utility.Common;
 
 namespace TES4Lib.Base
 {
@@ -40,22 +43,55 @@ namespace TES4Lib.Base
         {
             if (!IsImplemented) return;
 
+            //var readerData = new ByteReader();
+            //while (Data.Length != readerData.offset)
+            //{
+            //    var subrecordName = GetRecordName(readerData);
+            //    var subrecordSize = GetRecordSize(readerData);
+            //    try
+            //    {                   
+            //        var subrecordProp = this.GetType().GetProperty(subrecordName);
+            //        var subrecordData = readerData.ReadBytes<byte[]>(Data, (int)subrecordSize);    
+
+            //        var subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
+            //        subrecordProp.SetValue(this, subrecord);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Console.WriteLine($"error in building {this.GetType().ToString()} ar subrecord {subrecordName} eighter not implemented or borked {e}");
+            //        break;
+            //    }
+            //}
+
             var readerData = new ByteReader();
             while (Data.Length != readerData.offset)
             {
-                var subrecordName = GetRecordName(readerData);
-                var subrecordSize = GetRecordSize(readerData);
+                string subrecordName = GetRecordName(readerData);
+                int subrecordSize = GetRecordSize(readerData);
                 try
-                {                   
-                    var subrecordProp = this.GetType().GetProperty(subrecordName);
-                    var subrecordData = readerData.ReadBytes<byte[]>(Data, (int)subrecordSize);    
+                {
+                    PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
+                    if (subrecordProp.PropertyType.IsGenericType)
+                    {
+                        var listType = subrecordProp.PropertyType.GetGenericArguments()[0];
+                        if (IsNull(subrecordProp.GetValue(this)))
+                        {
+                            var IListRef = typeof(List<>);
+                            Type[] IListParam = { listType };
+                            object subRecordList = Activator.CreateInstance(IListRef.MakeGenericType(IListParam));
+                            subrecordProp.SetValue(this, subRecordList);
+                        }
+                        object sub = Activator.CreateInstance(listType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
 
-                    var subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
+                        subrecordProp.GetValue(this).GetType().GetMethod("Add").Invoke(subrecordProp.GetValue(this), new[] { sub });
+                        continue;
+                    }
+                    object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
                     subrecordProp.SetValue(this, subrecord);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building {this.GetType().ToString()} ar subrecord {subrecordName} eighter not implemented or borked {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
                     break;
                 }
             }

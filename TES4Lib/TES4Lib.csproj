@@ -139,6 +139,10 @@
     <Compile Include="Subrecords\DOOR\ANAM.cs" />
     <Compile Include="Subrecords\ENCH\ENIT.cs" />
     <Compile Include="Subrecords\INGR\DATA.cs" />
+    <Compile Include="Subrecords\LVLI\LVLF.cs" />
+    <Compile Include="Subrecords\LVLI\LVLD.cs" />
+    <Compile Include="Subrecords\LVLI\DATA.cs" />
+    <Compile Include="Subrecords\LVLI\LVLO.cs" />
     <Compile Include="Subrecords\SPEL\SPIT.cs" />
     <Compile Include="Subrecords\_Shared\EFID.cs" />
     <Compile Include="Subrecords\_Shared\EFIT.cs" />

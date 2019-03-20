@@ -16,7 +16,7 @@ namespace TES4Lib.Subrecords.INGR
         /// <summary> 
         /// 0x00000001 = Manual Value(Auto-Calc Off)
         /// 0x00000002 = Food Item
-        ///0xCDCDCD00 = Default Value
+        /// 0xCDCDCD00 = Default Value
         /// </summary>
         public int Flags { get; set; }
 
