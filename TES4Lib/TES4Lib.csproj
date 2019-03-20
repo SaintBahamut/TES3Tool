@@ -118,6 +118,9 @@
     <Compile Include="Records\WEAP.cs" />
     <Compile Include="Records\WRLD.cs" />
     <Compile Include="Records\WTHR.cs" />
+    <Compile Include="Subrecords\ARMO\ANAM.cs" />
+    <Compile Include="Subrecords\ARMO\BMDT.cs" />
+    <Compile Include="Subrecords\ARMO\DATA.cs" />
     <Compile Include="Subrecords\BOOK\ANAM.cs" />
     <Compile Include="Subrecords\BOOK\DATA.cs" />
     <Compile Include="Subrecords\BOOK\DESC.cs" />
@@ -147,6 +150,16 @@
     <Compile Include="Subrecords\_Shared\EFID.cs" />
     <Compile Include="Subrecords\_Shared\EFIT.cs" />
     <Compile Include="Subrecords\INGR\ENIT.cs" />
+    <Compile Include="Subrecords\_Shared\ICO2.cs" />
+    <Compile Include="Subrecords\_Shared\MO3T.cs" />
+    <Compile Include="Subrecords\_Shared\MO4T.cs" />
+    <Compile Include="Subrecords\_Shared\MO4B.cs" />
+    <Compile Include="Subrecords\_Shared\MO3B.cs" />
+    <Compile Include="Subrecords\_Shared\MOD4.cs" />
+    <Compile Include="Subrecords\_Shared\MOD3.cs" />
+    <Compile Include="Subrecords\_Shared\MOD2.cs" />
+    <Compile Include="Subrecords\_Shared\MO2B.cs" />
+    <Compile Include="Subrecords\_Shared\MO2T.cs" />
     <Compile Include="Subrecords\_Shared\SULL.cs" />
     <Compile Include="Subrecords\_Shared\SCIT.cs" />
     <Compile Include="Subrecords\MGEF\DATA.cs" />
