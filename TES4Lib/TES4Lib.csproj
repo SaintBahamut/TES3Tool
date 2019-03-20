@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ArmorFlags.cs" />
+    <Compile Include="Enums\BodySlot.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Attribute.cs" />
     <Compile Include="Enums\EnchantmentType.cs" />
