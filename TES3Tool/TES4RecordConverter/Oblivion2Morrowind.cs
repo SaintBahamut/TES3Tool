@@ -32,7 +32,7 @@ namespace TES3Tool.TES4RecordConverter
                     foreach (TES4Lib.Records.CELL cellRecord in cellSubBlock.Records)
                     {
 
-                        if (GetTES4DeletedRecordFlag(cellRecord.Flag) != 0) continue;
+                        if (cellRecord.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
 
                         //hack for now to get SI only
                         if ((cellRecord.EDID.CellEditorId.Contains("SE") || cellRecord.EDID.CellEditorId.Contains("XP")) && cellRecord.FULL != null)
@@ -49,7 +49,7 @@ namespace TES3Tool.TES4RecordConverter
                                 int refrNumber = 1;
                                 foreach (var obRef in childrenType.Records)
                                 {
-                                    if (GetTES4DeletedRecordFlag(obRef.Flag) != 0) continue;
+                                    if (obRef.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
 
                                     TES3Lib.Records.REFR mwREFR;
                                     switch (obRef.GetType().Name)

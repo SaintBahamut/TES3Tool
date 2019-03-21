@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Utility
@@ -79,6 +81,43 @@ namespace Utility
             }
 
             throw new Exception("Wrong input params");
+        }
+
+        public HashSet<T> ReadBytes<T>(byte[] data) where T : Enum
+        {
+            Type enumType = typeof(T);
+            Type enumValueType = Enum.GetUnderlyingType(enumType);
+            int enumValueSize = Marshal.SizeOf(enumValueType);  
+
+            uint converted = 0;
+            switch (enumValueSize)
+            {
+                case sizeof(uint):
+                    converted = BitConverter.ToUInt32(data, offset);
+                    break;
+                case sizeof(ushort):
+                    converted = BitConverter.ToUInt16(data, offset);
+                    break;
+                case sizeof(byte):
+                    converted = data.Skip(offset).Take(1).ToArray()[0];
+                    break;
+            }
+            offset += enumValueSize;
+
+            if (converted.Equals(0)) return new HashSet<T>();
+
+            var setOfEnum = new HashSet<T>();
+
+            var enumValues = Enum.GetValues(typeof(T));
+            foreach (var enumVal in enumValues)
+            {
+                if ((converted & Convert.ToUInt32(enumVal)) != 0)
+                {
+                    setOfEnum.Add((T)Enum.ToObject(enumType, enumVal));
+                }
+            }
+            return setOfEnum;
+
         }
 
         public void SetOffset(int newOffset)

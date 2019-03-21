@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using TES4Lib.Base;
+using TES4Lib.Enums.Flags;
 using Utility;
 
 namespace TES4Lib.Subrecords.LIGH
@@ -35,7 +37,7 @@ namespace TES4Lib.Subrecords.LIGH
         /// 0x00000200 = Spot Light
         /// 0x00000400 = Spot Shadow
         /// </summary>
-        public int Flags { get; set; }
+        public HashSet<LightFlag> Flags { get; set; }
         public float Falloff { get; set; }
         public float FOV { get; set; }
         public int Value { get; set; }
@@ -48,7 +50,7 @@ namespace TES4Lib.Subrecords.LIGH
             Time = reader.ReadBytes<int>(base.Data);
             Radius = reader.ReadBytes<int>(base.Data);
             Color = reader.ReadBytes<int>(base.Data);
-            Flags = reader.ReadBytes<int>(base.Data);
+            Flags = reader.ReadBytes<LightFlag>(base.Data);
 
             if (base.Size == 32)
             {
