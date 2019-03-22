@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ApparatusType.cs" />
     <Compile Include="Enums\Flags\AlchemyFlag.cs" />
     <Compile Include="Enums\Flags\CellFlag.cs" />
     <Compile Include="Enums\Flags\EquipmentFlag.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Subrecords\ACRE\XOWN.cs" />
     <Compile Include="Subrecords\ALCH\DATA.cs" />
     <Compile Include="Subrecords\ALCH\ENIT.cs" />
+    <Compile Include="Subrecords\APPA\DATA.cs" />
     <Compile Include="Subrecords\_Shared\XRGD.cs" />
     <Compile Include="Subrecords\ACRE\XRNK.cs" />
     <Compile Include="Subrecords\ARMO\ANAM.cs" />
