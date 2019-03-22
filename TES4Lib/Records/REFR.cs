@@ -1,5 +1,6 @@
 ﻿using TES4Lib.Base;
 using TES4Lib.Subrecords.REFR;
+using TES4Lib.Subrecords.Shared;
 
 namespace TES4Lib.Records
 {

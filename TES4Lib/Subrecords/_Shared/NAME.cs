@@ -3,7 +3,7 @@ using System.Linq;
 using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.REFR
+namespace TES4Lib.Subrecords.Shared
 {
     public class NAME : Subrecord
     {
