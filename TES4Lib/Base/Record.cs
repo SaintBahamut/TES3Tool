@@ -31,7 +31,7 @@ namespace TES4Lib.Base
             var reader = new ByteReader();
             Name = reader.ReadBytes<string>(RawData, 4);
             Size = reader.ReadBytes<int>(RawData);
-            Flag = reader.ReadBytes<RecordFlag>(RawData);
+            Flag = reader.ReadFlagBytes<RecordFlag>(RawData);
             FormId = BitConverter.ToString(reader.ReadBytes<byte[]>(RawData, 4).Reverse().ToArray()).Replace("-", "");
             VersionControlInfo = reader.ReadBytes<int>(RawData, 4);
             Data = reader.ReadBytes<byte[]>(RawData, Size);

@@ -43,7 +43,7 @@ namespace TES3Lib.Subrecords.LIGH
             Time = reader.ReadBytes<int>(base.Data);
             Radius = reader.ReadBytes<int>(base.Data);
             Color = reader.ReadBytes<int>(base.Data);
-            Flags = reader.ReadBytes<LightFlag>(base.Data);
+            Flags = reader.ReadFlagBytes<LightFlag>(base.Data);
         }
     }
 }

@@ -126,7 +126,6 @@
     <Compile Include="Records\WRLD.cs" />
     <Compile Include="Records\WTHR.cs" />
     <Compile Include="Subrecords\ARMO\ANAM.cs" />
-    <Compile Include="Subrecords\ARMO\BMDT.cs" />
     <Compile Include="Subrecords\ARMO\DATA.cs" />
     <Compile Include="Subrecords\BOOK\ANAM.cs" />
     <Compile Include="Subrecords\BOOK\DATA.cs" />
@@ -145,7 +144,6 @@
     <Compile Include="Subrecords\CELL\XOWN.cs" />
     <Compile Include="Subrecords\CELL\XRNK.cs" />
     <Compile Include="Subrecords\CLOT\ANAM.cs" />
-    <Compile Include="Subrecords\CLOT\BMDT.cs" />
     <Compile Include="Subrecords\CLOT\DATA.cs" />
     <Compile Include="Subrecords\CONT\CNTO.cs" />
     <Compile Include="Subrecords\CONT\DATA.cs" />
@@ -176,6 +174,7 @@
     <Compile Include="Subrecords\LVLI\DATA.cs" />
     <Compile Include="Subrecords\LVLI\LVLO.cs" />
     <Compile Include="Subrecords\SPEL\SPIT.cs" />
+    <Compile Include="Subrecords\_Shared\BMDT.cs" />
     <Compile Include="Subrecords\_Shared\EFID.cs" />
     <Compile Include="Subrecords\_Shared\EFIT.cs" />
     <Compile Include="Subrecords\INGR\ENIT.cs" />

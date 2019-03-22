@@ -4,7 +4,7 @@ using TES4Lib.Enums;
 using TES4Lib.Enums.Flags;
 using Utility;
 
-namespace TES4Lib.Subrecords.ARMO
+namespace TES4Lib.Subrecords.Shared
 {
     /// <summary>
     /// Armor flags and body slot info
@@ -18,8 +18,8 @@ namespace TES4Lib.Subrecords.ARMO
         public BMDT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            BodySlots = reader.ReadBytes<BodySlot>(base.Data);
-            Flags = reader.ReadBytes<EquipmentFlag>(base.Data);
+            BodySlots = reader.ReadFlagBytes<BodySlot>(base.Data);
+            Flags = reader.ReadFlagBytes<EquipmentFlag>(base.Data);
         }
     }
 }

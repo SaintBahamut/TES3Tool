@@ -53,6 +53,7 @@
     <Compile Include="Enums\ArmorType.cs" />
     <Compile Include="Enums\Attributre.cs" />
     <Compile Include="Enums\BodyPart.cs" />
+    <Compile Include="Enums\ClothingType.cs" />
     <Compile Include="Enums\CreatureType.cs" />
     <Compile Include="Enums\Flags\CellFlag.cs" />
     <Compile Include="Enums\Flags\LightFlag.cs" />
@@ -95,6 +96,11 @@
     <Compile Include="Subrecords\BSGN\TNAM.cs" />
     <Compile Include="Subrecords\CELL\NAME.cs" />
     <Compile Include="Subrecords\CLAS\CLDT.cs" />
+    <Compile Include="Subrecords\CLOT\BNAM.cs" />
+    <Compile Include="Subrecords\CLOT\CNAM.cs" />
+    <Compile Include="Subrecords\CLOT\CTDT.cs" />
+    <Compile Include="Subrecords\CLOT\ENAM.cs" />
+    <Compile Include="Subrecords\CLOT\INDX.cs" />
     <Compile Include="Subrecords\CONT\CNDT.cs" />
     <Compile Include="Subrecords\CONT\FLAG.cs" />
     <Compile Include="Subrecords\CREA\CNAM.cs" />

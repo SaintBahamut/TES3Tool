@@ -79,11 +79,42 @@ namespace Utility
                 offset += sizeof(byte);
                 return (T)(object)converted;
             }
+            if (typeof(T).IsEnum)
+            {
+                Type enumType = typeof(T);
+                Type enumValueType = Enum.GetUnderlyingType(enumType);
+                int enumValueSize = Marshal.SizeOf(enumValueType);
+
+                switch (enumValueSize)
+                {
+                    case sizeof(uint):
+                        var int32 = BitConverter.ToUInt32(data, offset);
+                        offset += enumValueSize;
+                        return (T)Enum.ToObject(enumType, int32);
+                    case sizeof(ushort):
+                        var int16 = BitConverter.ToUInt16(data, offset);
+                        offset += enumValueSize;
+                        return (T)Enum.ToObject(enumType, int16);
+                    case sizeof(byte):
+                        var byt = data.Skip(offset).Take(1).ToArray()[0];
+                        offset += enumValueSize;
+                        return (T)Enum.ToObject(enumType, byt);
+                    default:
+                        throw new Exception("From params to read enumerable");
+                }
+               
+            }
 
             throw new Exception("Wrong input params");
         }
 
-        public HashSet<T> ReadBytes<T>(byte[] data) where T : Enum
+        /// <summary>
+        /// Outputs set of flags from byte array
+        /// </summary>
+        /// <typeparam name="T">Flags Definition as Enum</typeparam>
+        /// <param name="data">byte array</param>
+        /// <returns></returns>
+        public HashSet<T> ReadFlagBytes<T>(byte[] data) where T : Enum
         {
             Type enumType = typeof(T);
             Type enumValueType = Enum.GetUnderlyingType(enumType);
