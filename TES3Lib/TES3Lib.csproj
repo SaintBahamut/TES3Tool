@@ -65,6 +65,8 @@
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Spell.cs" />
     <Compile Include="Enums\SpellSchool.cs" />
+    <Compile Include="Enums\EnchantmentType.cs" />
+    <Compile Include="Enums\SpellRange.cs" />
     <Compile Include="Enums\WeaponType.cs" />
     <Compile Include="Records\ACTI.cs" />
     <Compile Include="Records\ALCH.cs" />
@@ -108,6 +110,8 @@
     <Compile Include="Subrecords\CONT\CNDT.cs" />
     <Compile Include="Subrecords\CONT\FLAG.cs" />
     <Compile Include="Subrecords\CREA\CNAM.cs" />
+    <Compile Include="Subrecords\ENCH\ENDT.cs" />
+    <Compile Include="Subrecords\ENCH\ENAM.cs" />
     <Compile Include="Subrecords\FACT\INTV.cs" />
     <Compile Include="Subrecords\FACT\FADT.cs" />
     <Compile Include="Subrecords\FACT\ANAM.cs" />

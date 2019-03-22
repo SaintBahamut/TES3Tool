@@ -1,8 +1,7 @@
 ﻿namespace TES3Lib.Enums
 {
-    public enum Skill : int
+    public enum Skill : byte
     {
-        None = -1,
         Block = 0,
         Armorer = 1,
         MediumArmor = 2,

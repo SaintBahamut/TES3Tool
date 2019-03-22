@@ -62,7 +62,7 @@
     <Compile Include="Enums\SpellType.cs" />
     <Compile Include="Enums\SpellLevel.cs" />
     <Compile Include="Enums\SpellSchool.cs" />
-    <Compile Include="Enums\SpellTarget.cs" />
+    <Compile Include="Enums\SpellRange.cs" />
     <Compile Include="Enums\WeaponType.cs" />
     <Compile Include="Records\ACHR.cs" />
     <Compile Include="Records\ACRE.cs" />

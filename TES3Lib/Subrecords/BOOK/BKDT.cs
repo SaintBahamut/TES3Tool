@@ -1,4 +1,9 @@
-﻿using TES3Lib.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TES3Lib.Base;
+using TES3Lib.Enums;
 using Utility;
 
 namespace TES3Lib.Subrecords.BOOK
@@ -17,7 +22,7 @@ namespace TES3Lib.Subrecords.BOOK
         /// <summary>
         /// SkillId of skill that book raises (-1 is no skill)
         /// </summary>
-        public int SkillId { get; set; }
+        public Skill Skill { get; set; }
 
         public int EnchantPoints { get; set; }
 
@@ -32,8 +37,24 @@ namespace TES3Lib.Subrecords.BOOK
             Weight = reader.ReadBytes<float>(base.Data);
             Value = reader.ReadBytes<int>(base.Data);
             Flag = reader.ReadBytes<int>(base.Data);
-            SkillId = reader.ReadBytes<int>(base.Data);
+            Skill = (Skill)reader.ReadBytes<int>(base.Data);
             EnchantPoints = reader.ReadBytes<int>(base.Data);
+        }
+
+        public override byte[] SerializeSubrecord()
+        {
+            List<byte> data = new List<byte>();
+
+            data.AddRange(ByteWriter.ToBytes(Weight, typeof(float)));
+            data.AddRange(ByteWriter.ToBytes(Value, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Flag, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes((int)Skill, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(EnchantPoints, typeof(int)));
+
+            var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
+               .Concat(BitConverter.GetBytes(data.Count()))
+               .Concat(data).ToArray();
+            return serialized;
         }
     }
 }

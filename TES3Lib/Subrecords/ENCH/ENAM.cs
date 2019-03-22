@@ -7,7 +7,7 @@ using TES3Lib.Enums;
 using Utility;
 using Attribute = TES3Lib.Enums.Attribute;
 
-namespace TES3Lib.Subrecords.SPEL
+namespace TES3Lib.Subrecords.ENCH
 {
     /// <summary>
     /// Spell data
@@ -53,17 +53,19 @@ namespace TES3Lib.Subrecords.SPEL
             MaxMagnitude = reader.ReadBytes<int>(base.Data);
         }
 
+        //just in case...
         //public override byte[] SerializeSubrecord()
         //{
         //    List<byte> data = new List<byte>();
 
-        //    data.AddRange(ByteWriter.ToBytes((short)Effect, typeof(short)));
-        //    data.Add((byte)Skill);
-        //    data.Add((byte)Effect);
-        //    data.AddRange(ByteWriter.ToBytes(Range, typeof(int)));
+        //    data.AddRange(ByteWriter.ToBytes((short)MagicEffect, typeof(short)));
+        //    data.AddRange(ByteWriter.ToBytes((byte)Skill, typeof(byte)));
+        //    data.AddRange(ByteWriter.ToBytes((byte)Attribute, typeof(byte)));
+        //    data.AddRange(ByteWriter.ToBytes(Unknown1, typeof(int)));
+        //    data.AddRange(ByteWriter.ToBytes(Unknown2, typeof(int)));
         //    data.AddRange(ByteWriter.ToBytes(Duration, typeof(int)));
-        //    data.AddRange(ByteWriter.ToBytes(MagnitudeMin, typeof(int)));
-        //    data.AddRange(ByteWriter.ToBytes(MagnitudeMax, typeof(int)));
+        //    data.AddRange(ByteWriter.ToBytes(Magnitude, typeof(int)));
+        //    data.AddRange(ByteWriter.ToBytes(Unknown3, typeof(int)));
 
         //    var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
         //       .Concat(BitConverter.GetBytes(data.Count()))

@@ -7,7 +7,7 @@ namespace TES3Lib.Enums
     /// Source MWSE
     /// https://github.com/MWSE/MWSE/blob/master/MWSE/TES3MagicEffect.h
     /// </summary>
-    public enum MagicEffect : int
+    public enum MagicEffect : short
     {
         None = -1,
         WaterBreathing = 0,

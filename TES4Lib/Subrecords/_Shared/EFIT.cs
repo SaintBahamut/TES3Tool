@@ -17,7 +17,7 @@ namespace TES4Lib.Subrecords.Shared
 
         public int Duration { get; set; }
 
-        public SpellTarget Type { get; set; }
+        public SpellRange Type { get; set; }
 
         public ActorValue ActorValue { get; set; }
 
@@ -29,7 +29,7 @@ namespace TES4Lib.Subrecords.Shared
             Magnitude = reader.ReadBytes<int>(base.Data);
             Area = reader.ReadBytes<int>(base.Data);
             Duration = reader.ReadBytes<int>(base.Data);
-            Type = (SpellTarget)reader.ReadBytes<int>(base.Data);
+            Type = (SpellRange)reader.ReadBytes<int>(base.Data);
             ActorValue = (ActorValue)reader.ReadBytes<int>(base.Data);
         }
     }

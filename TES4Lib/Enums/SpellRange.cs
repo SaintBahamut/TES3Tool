@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TES4Lib.Enums
 {
-    public enum SpellTarget : int
+    public enum SpellRange : int
     {
         Self = 0,
         Touch = 1,

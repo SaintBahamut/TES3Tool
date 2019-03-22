@@ -74,17 +74,17 @@ namespace TES3Lib.Subrecords.INGR
 
             for (int i = 0; i < EffectIds.Length; i++)
             {
-                data.AddRange(ByteWriter.ToBytes(EffectIds[i], typeof(MagicEffect)));
+                data.AddRange(ByteWriter.ToBytes(Convert.ToInt32(EffectIds[i]), typeof(int)));
             }
 
             for (int i = 0; i < SkillIds.Length; i++)
             {
-                data.AddRange(ByteWriter.ToBytes(SkillIds[i], typeof(Skill)));
+                data.AddRange(ByteWriter.ToBytes(Convert.ToInt32(EffectIds[i]), typeof(int)));
             }
 
             for (int i = 0; i < AttributeIds.Length; i++)
             {
-                data.AddRange(ByteWriter.ToBytes(AttributeIds[i], typeof(Attribute)));
+                data.AddRange(ByteWriter.ToBytes(Convert.ToInt32(EffectIds[i]), typeof(int)));
             }
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
