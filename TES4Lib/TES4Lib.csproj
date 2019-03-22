@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ApparatusType.cs" />
+    <Compile Include="Enums\Flags\AlchemyFlag.cs" />
     <Compile Include="Enums\Flags\CellFlag.cs" />
     <Compile Include="Enums\Flags\EquipmentFlag.cs" />
     <Compile Include="Enums\BodySlot.cs" />
@@ -125,6 +127,17 @@
     <Compile Include="Records\WEAP.cs" />
     <Compile Include="Records\WRLD.cs" />
     <Compile Include="Records\WTHR.cs" />
+    <Compile Include="Subrecords\ACHR\DATA.cs" />
+    <Compile Include="Subrecords\ACHR\XMRC.cs" />
+    <Compile Include="Subrecords\ACRE\DATA.cs" />
+    <Compile Include="Subrecords\ACHR\XHRS.cs" />
+    <Compile Include="Subrecords\ACRE\XGLB.cs" />
+    <Compile Include="Subrecords\ACRE\XOWN.cs" />
+    <Compile Include="Subrecords\ALCH\DATA.cs" />
+    <Compile Include="Subrecords\ALCH\ENIT.cs" />
+    <Compile Include="Subrecords\APPA\DATA.cs" />
+    <Compile Include="Subrecords\_Shared\XRGD.cs" />
+    <Compile Include="Subrecords\ACRE\XRNK.cs" />
     <Compile Include="Subrecords\ARMO\ANAM.cs" />
     <Compile Include="Subrecords\ARMO\DATA.cs" />
     <Compile Include="Subrecords\BOOK\ANAM.cs" />
@@ -210,15 +223,13 @@
     <Compile Include="Subrecords\LIGH\FNAM.cs" />
     <Compile Include="Subrecords\MISC\DATA.cs" />
     <Compile Include="Subrecords\REFR\DATA.cs" />
-    <Compile Include="Subrecords\REFR\EDID.cs" />
     <Compile Include="Subrecords\REFR\FNAM.cs" />
-    <Compile Include="Subrecords\REFR\FULL.cs" />
-    <Compile Include="Subrecords\REFR\NAME.cs" />
+    <Compile Include="Subrecords\_Shared\NAME.cs" />
     <Compile Include="Subrecords\REFR\ONAM.cs" />
     <Compile Include="Subrecords\REFR\TNAM.cs" />
     <Compile Include="Subrecords\REFR\XACT.cs" />
     <Compile Include="Subrecords\REFR\XCNT.cs" />
-    <Compile Include="Subrecords\REFR\XESP.cs" />
+    <Compile Include="Subrecords\_Shared\XESP.cs" />
     <Compile Include="Subrecords\REFR\XGLB.cs" />
     <Compile Include="Subrecords\REFR\XLCM.cs" />
     <Compile Include="Subrecords\REFR\XLOC.cs" />
@@ -228,7 +239,7 @@
     <Compile Include="Subrecords\REFR\XPCI.cs" />
     <Compile Include="Subrecords\REFR\XRNK.cs" />
     <Compile Include="Subrecords\REFR\XRTM.cs" />
-    <Compile Include="Subrecords\REFR\XSCL.cs" />
+    <Compile Include="Subrecords\_Shared\XSCL.cs" />
     <Compile Include="Subrecords\REFR\XSED.cs" />
     <Compile Include="Subrecords\REFR\XTEL.cs" />
     <Compile Include="Subrecords\REFR\XTRG.cs" />
@@ -261,8 +272,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Subrecords\ACHR\" />
-    <Folder Include="Subrecords\ACRE\" />
     <Folder Include="Subrecords\PGRD\" />
   </ItemGroup>
   <ItemGroup>
