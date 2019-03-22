@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -35,26 +36,33 @@ namespace TES3Lib.Base
             if (!IsImplemented) return RawData;
 
             var properties = this.GetType()
-                .GetProperties(System.Reflection.BindingFlags.Public |
-                               System.Reflection.BindingFlags.Instance |
-                               System.Reflection.BindingFlags.DeclaredOnly)
+                .GetProperties(BindingFlags.Public |
+                               BindingFlags.Instance |
+                               BindingFlags.DeclaredOnly)
                                .OrderBy(x => x.MetadataToken)
                                .ToList();
 
             List<byte> data = new List<byte>();
             foreach (PropertyInfo property in properties)
             {
-                var value = property.GetValue(this);
-                try
-                {
-                    data.AddRange(ByteWriter.ToBytes(value, property.PropertyType));
-                }
-                catch (Exception)
-                {
+                object value = property.GetValue(this);
 
-                    throw;
+                //used for flags in subrecords
+                if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(HashSet<>))
+                {
+                    Type enumType = property.PropertyType.GetGenericArguments()[0];
+                    Type enumValueType = Enum.GetUnderlyingType(enumType);
+
+                    uint flag = 0;
+                    foreach (Enum flagElement in value as IEnumerable)
+                    {
+                        flag = flag | Convert.ToUInt32(flagElement);
+                    }
+                    data.AddRange(ByteWriter.ToBytes(flag, enumValueType));
+                    continue;
                 }
-              
+           
+                data.AddRange(ByteWriter.ToBytes(value, property.PropertyType));          
             }
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)

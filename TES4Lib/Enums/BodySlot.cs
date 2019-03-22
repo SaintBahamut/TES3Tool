@@ -1,22 +1,22 @@
 ﻿namespace TES4Lib.Enums
 {
-    public enum BodySlot : int
+    public enum BodySlot : ushort
     {
-        Head = 0x00000001,
-        Hair = 0x00000002,
-        UpperBody = 0x00000003,
-        LowerBody = 0x00000004,
-        Hand = 0x00000010,
-        Foot = 0x00000020,
-        RightRing = 0x00000040,
-        LeftRing = 0x00000080,
-        Amulet = 0x00000100,
-        Weapon = 0x00000200,
-        BackWeapon = 0x00000400,
-        SideWeapon = 0x00000800,
-        Quiver = 0x00001000,
-        Shield = 0x00002000,
-        Torch = 0x00004000,
-        Tail = 0x00008000,
+        Head = 0x0001,
+        Hair = 0x0002,
+        UpperBody = 0x0004,
+        LowerBody = 0x0008,
+        Hand = 0x0010,
+        Foot = 0x0020,
+        RightRing = 0x0040,
+        LeftRing = 0x0080,
+        Amulet = 0x0100,
+        Weapon = 0x0200,
+        BackWeapon = 0x0400,
+        SideWeapon = 0x0800,
+        Quiver = 0x1000,
+        Shield = 0x2000,
+        Torch = 0x4000,
+        Tail = 0x8000,
     }
 }

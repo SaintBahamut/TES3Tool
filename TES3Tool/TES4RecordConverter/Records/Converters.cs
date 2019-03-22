@@ -407,7 +407,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     Color = obLIGH.DATA.Color,
                     Time = obLIGH.DATA.Time,
                     Radius = obLIGH.DATA.Radius,
-                    Flags = ConvertLIGHFlags(obLIGH.DATA.Flags)
+                    Flags = CastLightFlagsToMW(obLIGH.DATA.Flags)
                 },
                 SCPT = null,
                 ITEX = !IsNull(obLIGH.ICON) ? new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obLIGH.ICON.IconFilePath, Config.LIGHPath) } : null,
@@ -435,20 +435,6 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             return LIGH;
-        }
-
-        static int ConvertLIGHFlags(int flags)
-        {
-            int output = 0;
-            output = output | (flags & 0x00000001);
-            output = output | (flags & 0x00000002);
-            output = output | (flags & 0x00000004);
-            output = output | (flags & 0x00000008);
-            output = output | (flags & 0x00000020);
-            output = output | (flags & 0x00000040);
-            output = output | (flags & 0x00000080);
-            output = output | (flags & 0x00000100);
-            return output;
         }
 
         static TES3Lib.Records.SOUN ConvertSOUN(TES4Lib.Records.SOUN obSOUND)
@@ -572,7 +558,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
         public static TES3Lib.Records.CELL ConvertCELL(TES4Lib.Records.CELL obCELL)
         {
-            if (GetTES4DeletedRecordFlag(obCELL.Flag) == 0x20) return null; //we dont need deleted records for conversion
+            if (obCELL.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) return null; //we dont need deleted records for conversion
 
             var mwCELL = new TES3Lib.Records.CELL();
             mwCELL.NAME = new TES3Lib.Subrecords.CELL.NAME();
@@ -580,12 +566,25 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             mwCELL.DATA = new TES3Lib.Subrecords.CELL.DATA();
 
-            int interior = 0x01;
-            int hasWater = 0x02 & obCELL.Flag;
-            int illegalToSleep = 0x20 & obCELL.Flag;
-            int behaveLikeEx = 0x80 & obCELL.Flag;
-            mwCELL.DATA.Flag = 0 | interior | hasWater | (illegalToSleep == 0 ? 0 : 0x04) | behaveLikeEx;
-
+            mwCELL.DATA.Flags = new HashSet<TES3Lib.Enums.Flags.CellFlag>();
+            foreach (var flag in obCELL.DATA.Flags)
+            {
+                switch (flag)
+                {
+                    case TES4Lib.Enums.Flags.CellFlag.IsInteriorCell:
+                        mwCELL.DATA.Flags.Add(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell);
+                        break;
+                    case TES4Lib.Enums.Flags.CellFlag.HasWater:
+                        mwCELL.DATA.Flags.Add(TES3Lib.Enums.Flags.CellFlag.HasWater);
+                        break;
+                    case TES4Lib.Enums.Flags.CellFlag.PublicPlace:
+                        mwCELL.DATA.Flags.Add(TES3Lib.Enums.Flags.CellFlag.IllegalToSleep);
+                        break;
+                    case TES4Lib.Enums.Flags.CellFlag.BehaveLikeExterior:
+                        mwCELL.DATA.Flags.Add(TES3Lib.Enums.Flags.CellFlag.BehaveLikeExterior);
+                        break;
+                }
+            }
 
             if (obCELL.XCLC != null) //exterior only
             {
@@ -1162,6 +1161,43 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             return TES3Lib.Enums.Skill.Unused;
+        }
+
+        static HashSet<TES3Lib.Enums.Flags.LightFlag> CastLightFlagsToMW(HashSet<TES4Lib.Enums.Flags.LightFlag> obFlags)
+        {
+            var mwFlags = new HashSet<TES3Lib.Enums.Flags.LightFlag>();
+            foreach (var flag in obFlags)
+            {
+                switch (flag)
+                {
+                    case TES4Lib.Enums.Flags.LightFlag.Dynamic:
+                        mwFlags.Add(TES3Lib.Enums.Flags.LightFlag.Dynamic);
+                        break;
+                    case TES4Lib.Enums.Flags.LightFlag.CanBeCarried:
+                        mwFlags.Add(TES3Lib.Enums.Flags.LightFlag.CanCarry);
+                        break;
+                    case TES4Lib.Enums.Flags.LightFlag.Negative:
+                        mwFlags.Add(TES3Lib.Enums.Flags.LightFlag.Negative);
+                        break;
+                    case TES4Lib.Enums.Flags.LightFlag.Flicker:
+                        mwFlags.Add(TES3Lib.Enums.Flags.LightFlag.Flicker);
+                        break;
+                    case TES4Lib.Enums.Flags.LightFlag.OffByDefault:
+                        mwFlags.Add(TES3Lib.Enums.Flags.LightFlag.OffDefault);
+                        break;
+                    case TES4Lib.Enums.Flags.LightFlag.FlickerSlow:
+                        mwFlags.Add(TES3Lib.Enums.Flags.LightFlag.FlickerSlow);
+                        break;
+                    case TES4Lib.Enums.Flags.LightFlag.Pulse:
+                        mwFlags.Add(TES3Lib.Enums.Flags.LightFlag.Pulse);
+                        break;
+                    case TES4Lib.Enums.Flags.LightFlag.PulseSlow:
+                        mwFlags.Add(TES3Lib.Enums.Flags.LightFlag.PulseSlow);
+                        break;
+                }
+            }
+
+            return mwFlags;
         }
     }
 }

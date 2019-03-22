@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using TES4Lib.Enums.Flags;
 using Utility;
 using static Utility.Common;
 
@@ -12,7 +13,7 @@ namespace TES4Lib.Base
         #region Fields
         public string Name { get; set; }
         public int Size { get; set; }
-        public int Flag { get; set; }
+        public HashSet<RecordFlag> Flag { get; set; }
         public string FormId { get; set; }
         public int VersionControlInfo { get; set; }
         public byte[] Data { get; set; }
@@ -30,7 +31,7 @@ namespace TES4Lib.Base
             var reader = new ByteReader();
             Name = reader.ReadBytes<string>(RawData, 4);
             Size = reader.ReadBytes<int>(RawData);
-            Flag = reader.ReadBytes<int>(RawData, 4);
+            Flag = reader.ReadBytes<RecordFlag>(RawData);
             FormId = BitConverter.ToString(reader.ReadBytes<byte[]>(RawData, 4).Reverse().ToArray()).Replace("-", "");
             VersionControlInfo = reader.ReadBytes<int>(RawData, 4);
             Data = reader.ReadBytes<byte[]>(RawData, Size);
@@ -42,26 +43,6 @@ namespace TES4Lib.Base
         protected virtual void BuildSubrecords()
         {
             if (!IsImplemented) return;
-
-            //var readerData = new ByteReader();
-            //while (Data.Length != readerData.offset)
-            //{
-            //    var subrecordName = GetRecordName(readerData);
-            //    var subrecordSize = GetRecordSize(readerData);
-            //    try
-            //    {                   
-            //        var subrecordProp = this.GetType().GetProperty(subrecordName);
-            //        var subrecordData = readerData.ReadBytes<byte[]>(Data, (int)subrecordSize);    
-
-            //        var subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { subrecordData });
-            //        subrecordProp.SetValue(this, subrecord);
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Console.WriteLine($"error in building {this.GetType().ToString()} ar subrecord {subrecordName} eighter not implemented or borked {e}");
-            //        break;
-            //    }
-            //}
 
             var readerData = new ByteReader();
             while (Data.Length != readerData.offset)

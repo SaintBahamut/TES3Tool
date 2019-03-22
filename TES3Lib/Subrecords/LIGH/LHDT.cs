@@ -1,4 +1,6 @@
-﻿using TES3Lib.Base;
+﻿using System.Collections.Generic;
+using TES3Lib.Base;
+using TES3Lib.Enums.Flags;
 using Utility;
 
 namespace TES3Lib.Subrecords.LIGH
@@ -26,7 +28,7 @@ namespace TES3Lib.Subrecords.LIGH
 		///	0x0080 = Pulse
 		///	0x0100 = Pulse Slow
         /// </summary>
-        public int Flags { get; set; }
+        public HashSet<LightFlag> Flags { get; set; }
 
         public LHDT()
         {
@@ -41,7 +43,7 @@ namespace TES3Lib.Subrecords.LIGH
             Time = reader.ReadBytes<int>(base.Data);
             Radius = reader.ReadBytes<int>(base.Data);
             Color = reader.ReadBytes<int>(base.Data);
-            Flags = reader.ReadBytes<int>(base.Data);
+            Flags = reader.ReadBytes<LightFlag>(base.Data);
         }
     }
 }

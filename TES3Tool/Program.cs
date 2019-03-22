@@ -34,7 +34,7 @@ namespace TES3Tool
             var stat = TES4Load(fileESM, new List<string> { "STAT", "CELL","SOUN",
                 "MISC","KEYM","FURN","ACTI","LIGH","CONT","FLOR","DOOR","WEAP","INGR" });
 
-            // var stat = TES4Load(fileESM, new List<string> { "BOOK" });
+            //var stat = TES4Load(fileESM, new List<string> { "ARMO" });
 
 
             var test = ConvertInteriorCells(stat);
