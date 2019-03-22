@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using TES3Lib.Base;
 using TES3Lib.Subrecords.REFR;
 using Utility;
@@ -61,9 +60,9 @@ namespace TES3Lib.Records
         public byte[] SerializeRecord()
         {
             var properties = this.GetType()
-                .GetProperties(System.Reflection.BindingFlags.Public |
-                               System.Reflection.BindingFlags.Instance |
-                               System.Reflection.BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
+                .GetProperties(BindingFlags.Public |
+                               BindingFlags.Instance |
+                               BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
 
 
             List<byte> data = new List<byte>();

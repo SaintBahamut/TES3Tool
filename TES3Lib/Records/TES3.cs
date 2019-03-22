@@ -13,11 +13,6 @@ namespace TES3Lib.Records
 
         public TES3()
         {
-            base.Flags = 0;
-            base.Header = 0;
-            HEDR = new HEDR();
-            MAST = new MAST();
-            DATA = new DATA();
         }
 
         public TES3(byte[] rawData) : base(rawData)

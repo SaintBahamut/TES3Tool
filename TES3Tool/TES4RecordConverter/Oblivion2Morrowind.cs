@@ -23,7 +23,7 @@ namespace TES3Tool.TES4RecordConverter
             }
             ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
 
-       
+
             //this is soooo bad
             foreach (var cellBlock in cellGroupsTop.Groups)
             {
@@ -60,7 +60,7 @@ namespace TES3Tool.TES4RecordConverter
                                             if (IsNull(obREFR.NAME)) continue;
 
                                             var BaseId = GetBaseIdFromFormId(obREFR.NAME.BaseFormId);
-                                            if(string.IsNullOrEmpty(BaseId))
+                                            if (string.IsNullOrEmpty(BaseId))
                                             {
                                                 var mwRecordFromREFR = ConvertRecordFromREFR(obREFR.NAME.BaseFormId);
                                                 if (IsNull(mwRecordFromREFR)) continue;
@@ -70,8 +70,8 @@ namespace TES3Tool.TES4RecordConverter
 
                                                 BaseId = mwRecordFromREFR.EditorId;
                                             }
-                       
-                                            mwREFR = ConvertREFR(obREFR,  BaseId, refrNumber);
+
+                                            mwREFR = ConvertREFR(obREFR, BaseId, refrNumber);
                                             CellReferences.Add(new ConvertedCellReference(cellRecord.FormId, obREFR.FormId, mwREFR)); //for tracking
 
                                             convertedCell.REFR.Add(mwREFR);
@@ -90,12 +90,12 @@ namespace TES3Tool.TES4RecordConverter
                                 bool cellWithSameNameExists = (item.Record as TES3Lib.Records.CELL).NAME.CellName.Equals(convertedCell.NAME.CellName);
                                 if (cellWithSameNameExists)
                                 {
-                                    convertedCell.NAME.CellName = CellNameFormatter($"{convertedCell.NAME.CellName.Replace("\0"," ")}{cellRecord.EDID.CellEditorId}");
+                                    convertedCell.NAME.CellName = CellNameFormatter($"{convertedCell.NAME.CellName.Replace("\0", " ")}{cellRecord.EDID.CellEditorId}");
                                     break;
-                                }  
-                            }                         
-                                        
-                            ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId,"CELL", cellRecord.EDID.CellEditorId, convertedCell));
+                                }
+                            }
+
+                            ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId, "CELL", cellRecord.EDID.CellEditorId, convertedCell));
 
                             Console.WriteLine($"DONE CONVERTING \"{convertedCell.NAME.CellName}\" CELL");
                         }
@@ -127,14 +127,25 @@ namespace TES3Tool.TES4RecordConverter
 
         private static TES3Lib.Records.TES3 createTES3HEader()
         {
-            var header = new TES3Lib.Records.TES3();
-            header.HEDR.CompanyName = "TES3Tool\0";
-            header.HEDR.Description = "\0";
-            header.HEDR.NumRecords = 666;
-            header.HEDR.ESMFlag = 0;
-            header.HEDR.Version = 1.3f;
-            header.MAST.Filename = "Morrowind.esm\0";
-            header.DATA.MasterDataSize = 6666; //should not break but fix that later
+            var header = new TES3Lib.Records.TES3
+            {
+                HEDR = new TES3Lib.Subrecords.TES3.HEDR
+                {
+                    CompanyName = "TES3Tool\0",
+                    Description = "\0",
+                    NumRecords = 666,
+                    ESMFlag = 0,
+                    Version = 1.3f,
+                },
+                MAST = new TES3Lib.Subrecords.TES3.MAST
+                {
+                    Filename = "Morrowind.esm\0",
+                },
+                DATA = new TES3Lib.Subrecords.TES3.DATA
+                {
+                    MasterDataSize = 6666 //should not break but fix that later
+                }
+            };
             return header;
         }
 
@@ -142,7 +153,7 @@ namespace TES3Tool.TES4RecordConverter
         {
             TES4Lib.Base.Record record;
             TES4Lib.TES4.TES4RecordIndex.TryGetValue(BaseFormId, out record);
-            if (IsNull(record)) return null ;
+            if (IsNull(record)) return null;
 
             var mwRecordFromREFR = ConvertRecord(record);
 

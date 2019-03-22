@@ -7,6 +7,7 @@ using System.Linq;
 using System;
 using System.Text;
 using Utility;
+using TES3Lib.Enums.Flags;
 
 namespace TES3Lib.Records
 {
@@ -159,10 +160,16 @@ namespace TES3Lib.Records
                 data.AddRange(travelDest.ToArray());
             }
 
+            uint flagSerialized = 0;
+            foreach (RecordFlag flagElement in Flags)
+            {
+                flagSerialized = flagSerialized | (uint)flagElement;
+            }
+
             return Encoding.ASCII.GetBytes(this.GetType().Name)
                 .Concat(BitConverter.GetBytes(data.Count()))
                 .Concat(BitConverter.GetBytes(Header))
-                .Concat(BitConverter.GetBytes(Flags))
+                .Concat(BitConverter.GetBytes(flagSerialized))
                 .Concat(data).ToArray();
         }
     }

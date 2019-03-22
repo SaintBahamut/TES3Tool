@@ -57,6 +57,7 @@
     <Compile Include="Enums\CreatureType.cs" />
     <Compile Include="Enums\Flags\CellFlag.cs" />
     <Compile Include="Enums\Flags\LightFlag.cs" />
+    <Compile Include="Enums\Flags\RecordFlag.cs" />
     <Compile Include="Enums\GlobalVariableType.cs" />
     <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\RaceFlags.cs" />
@@ -85,6 +86,9 @@
     <Compile Include="Records\GMST.cs" />
     <Compile Include="Records\REFR.cs" />
     <Compile Include="RecordTypes.cs" />
+    <Compile Include="Subrecords\ALCH\ENAM.cs" />
+    <Compile Include="Subrecords\ALCH\ALDT.cs" />
+    <Compile Include="Subrecords\ALCH\TEXT.cs" />
     <Compile Include="Subrecords\ARMO\AODT.cs" />
     <Compile Include="Subrecords\ARMO\BNAM.cs" />
     <Compile Include="Subrecords\ARMO\CNAM.cs" />

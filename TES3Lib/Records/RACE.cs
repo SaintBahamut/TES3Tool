@@ -56,47 +56,47 @@ namespace TES3Lib.Records
             }
         }
 
-        public override byte[] SerializeRecord()
-        {
-            var properties = this.GetType()
-                .GetProperties(System.Reflection.BindingFlags.Public |
-                               System.Reflection.BindingFlags.Instance |
-                               System.Reflection.BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
+        //public override byte[] SerializeRecord()
+        //{
+        //    var properties = this.GetType()
+        //        .GetProperties(System.Reflection.BindingFlags.Public |
+        //                       System.Reflection.BindingFlags.Instance |
+        //                       System.Reflection.BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
 
-            List<byte> data = new List<byte>();
-            foreach (PropertyInfo property in properties)
-            {
-                try
-                { 
-                    if (property.Name == "NPCS") continue;
+        //    List<byte> data = new List<byte>();
+        //    foreach (PropertyInfo property in properties)
+        //    {
+        //        try
+        //        { 
+        //            if (property.Name == "NPCS") continue;
                     
-                    var subrecord = (Subrecord)property.GetValue(this);
-                    if (subrecord == null) continue;
+        //            var subrecord = (Subrecord)property.GetValue(this);
+        //            if (subrecord == null) continue;
 
-                    data.AddRange(subrecord.SerializeSubrecord());
-                }
-                catch (Exception)
-                {
+        //            data.AddRange(subrecord.SerializeSubrecord());
+        //        }
+        //        catch (Exception)
+        //        {
 
-                    throw;
-                }
-            }
+        //            throw;
+        //        }
+        //    }
 
-            if (NPCS.Count() > 0)
-            {
-                List<byte> containerSpells = new List<byte>();
-                foreach (var npcs in NPCS)
-                {
-                    containerSpells.AddRange(npcs.SerializeSubrecord());
-                }
-                data.AddRange(containerSpells.ToArray());
-            }
+        //    if (NPCS.Count() > 0)
+        //    {
+        //        List<byte> containerSpells = new List<byte>();
+        //        foreach (var npcs in NPCS)
+        //        {
+        //            containerSpells.AddRange(npcs.SerializeSubrecord());
+        //        }
+        //        data.AddRange(containerSpells.ToArray());
+        //    }
 
-            return Encoding.ASCII.GetBytes(this.GetType().Name)
-                .Concat(BitConverter.GetBytes(data.Count()))
-                .Concat(BitConverter.GetBytes(Header))
-                .Concat(BitConverter.GetBytes(Flags))
-                .Concat(data).ToArray();
-        }
+        //    return Encoding.ASCII.GetBytes(this.GetType().Name)
+        //        .Concat(BitConverter.GetBytes(data.Count()))
+        //        .Concat(BitConverter.GetBytes(Header))
+        //        .Concat(BitConverter.GetBytes(Flags))
+        //        .Concat(data).ToArray();
+        //}
     }
 }

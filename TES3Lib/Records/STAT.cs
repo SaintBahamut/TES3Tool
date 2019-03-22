@@ -10,8 +10,6 @@ namespace TES3Lib.Records
 
         public STAT()
         {
-            Flags = 0;
-            Header = 0;
         }
 
         public STAT(byte[] rawData) : base(rawData)
