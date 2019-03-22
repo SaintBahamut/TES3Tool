@@ -18,7 +18,7 @@ namespace TES4Lib.Subrecords.ALCH
         public ENIT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Flags = reader.ReadBytes<AlchemyFlag>(base.Data);
+            Flags = reader.ReadFlagBytes<AlchemyFlag>(base.Data);
             Unknown = reader.ReadBytes<byte[]>(base.Data,3);
         }
     }

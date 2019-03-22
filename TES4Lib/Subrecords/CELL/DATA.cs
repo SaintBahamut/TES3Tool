@@ -20,7 +20,7 @@ namespace TES4Lib.Subrecords.CELL
         public DATA(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Flags = reader.ReadFlagBytes<CellFlag,HashSet<CellFlag>>(base.Data);
+            Flags = reader.ReadFlagBytes<CellFlag>(base.Data);
         }
     }
 }

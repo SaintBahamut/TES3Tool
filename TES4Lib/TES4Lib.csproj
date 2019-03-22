@@ -235,7 +235,6 @@
     <Compile Include="Subrecords\REFR\XLOC.cs" />
     <Compile Include="Subrecords\REFR\XLOD.cs" />
     <Compile Include="Subrecords\REFR\XMRK.cs" />
-    <Compile Include="Subrecords\REFR\XOWN.cs" />
     <Compile Include="Subrecords\REFR\XPCI.cs" />
     <Compile Include="Subrecords\REFR\XRNK.cs" />
     <Compile Include="Subrecords\REFR\XRTM.cs" />
