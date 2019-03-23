@@ -5,7 +5,6 @@ using static Utility.Common;
 using static TES3Tool.TES4RecordConverter.Records.Helpers;
 using static TES3Tool.TES4RecordConverter.Records.Converters;
 using TES3Tool.TES4RecordConverter.Records;
-using System.Threading.Tasks;
 
 namespace TES3Tool.TES4RecordConverter
 {
@@ -62,7 +61,7 @@ namespace TES3Tool.TES4RecordConverter
                                             var BaseId = GetBaseIdFromFormId(obREFR.NAME.BaseFormId);
                                             if (string.IsNullOrEmpty(BaseId))
                                             {
-                                                var mwRecordFromREFR = ConvertRecordFromREFR(obREFR.NAME.BaseFormId);
+                                                var mwRecordFromREFR = ConvertRecordFromFormId(obREFR.NAME.BaseFormId);
                                                 if (IsNull(mwRecordFromREFR)) continue;
 
                                                 if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
@@ -149,7 +148,7 @@ namespace TES3Tool.TES4RecordConverter
             return header;
         }
 
-        public static ConvertedRecordData ConvertRecordFromREFR(string BaseFormId)
+        public static ConvertedRecordData ConvertRecordFromFormId(string BaseFormId)
         {
             TES4Lib.Base.Record record;
             TES4Lib.TES4.TES4RecordIndex.TryGetValue(BaseFormId, out record);

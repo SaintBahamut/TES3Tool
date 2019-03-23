@@ -119,10 +119,89 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwINGR.GetType().Name, mwINGR.NAME.EditorId, mwINGR);
             }
 
+            //BOOKS
+            if (recordType.Equals("BOOK"))
+            {
+                var mwINGR = ConvertBOOK((TES4Lib.Records.BOOK)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwINGR.GetType().Name, mwINGR.NAME.EditorId, mwINGR);
+            }
+            //ENCHANTMENTS
+            if (recordType.Equals("ENCH"))
+            {
+                var mwENCH = ConvertENCH((TES4Lib.Records.ENCH)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwENCH.GetType().Name, mwENCH.NAME.EditorId, mwENCH);
+            }
+
             return null;
         }
 
-        private static TES3Lib.Records.INGR ConvertINGR(INGR obINGR)
+        static TES3Lib.Records.ENCH ConvertENCH(TES4Lib.Records.ENCH obENCH)
+        {
+            var mwENCH = new TES3Lib.Records.ENCH
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obENCH.EDID.EditorId) },
+                ENDT = new TES3Lib.Subrecords.ENCH.ENDT
+                {
+                    Type = CastEnchantmentTypeToMW(obENCH.ENIT.EnchantmentType),
+                    AutoCalc = (int)obENCH.ENIT.Flags,
+                    Charge = obENCH.ENIT.Charge,
+                    EnchantCost = obENCH.ENIT.EnchantCost,
+                }
+            };
+
+            mwENCH.ENAM = new List<TES3Lib.Subrecords.ENCH.ENAM>();
+            foreach (var effect in obENCH.EFCT)
+            {
+                var enam = new TES3Lib.Subrecords.ENCH.ENAM
+                {
+                    MagicEffect = CastMagicEffectToMW(effect.EFIT.MagicEffect),
+                    Area = effect.EFIT.Area,
+                    Duration = effect.EFIT.Duration,
+                    SpellRange = (TES3Lib.Enums.SpellRange)((int)effect.EFIT.SpellRange),
+                    MinMagnitude = effect.EFIT.Magnitude / 2,
+                    MaxMagnitude = effect.EFIT.Magnitude
+                };
+                enam.Skill = CastActorValueToSkillMW(effect.EFIT.ActorValue, enam.MagicEffect);
+                enam.Attribute = CastActorValueToAttributeMW(effect.EFIT.ActorValue, enam.MagicEffect);
+                mwENCH.ENAM.Add(enam);
+            }
+
+            return mwENCH;
+        }
+
+        static TES3Lib.Records.BOOK ConvertBOOK(TES4Lib.Records.BOOK obBOOK)
+        {
+            var mwBOOK = new TES3Lib.Records.BOOK
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = BookEditorIdFormater(obBOOK.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obBOOK.MODL.ModelPath, Config.BOOKPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obBOOK.FULL.DisplayName) },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obBOOK.ICON.IconFilePath, Config.BOOKPath) },
+                TEXT = new TES3Lib.Subrecords.BOOK.TEXT { BookText = obBOOK.DESC.Text },
+                BKDT = new TES3Lib.Subrecords.BOOK.BKDT
+                {
+                    Weight = obBOOK.DATA.Weight,
+                    Value = obBOOK.DATA.Value,
+                    Skill = CastSkillToMW(obBOOK.DATA.Skill),
+                    EnchantPoints = !IsNull(obBOOK.ANAM) ? obBOOK.ANAM.Points : 0,
+                    Flag = obBOOK.DATA.Flags.Contains(TES4Lib.Enums.Flags.BookFlag.Scroll) ? TES3Lib.Enums.Flags.BookFlag.Scroll : TES3Lib.Enums.Flags.BookFlag.Book
+                }
+            };
+
+            if (!IsNull(obBOOK.ENAM)) //convert enchamtments here
+            {
+                var BaseId = GetBaseId(obBOOK.ENAM.EnchantmentFormId);
+
+                if (!string.IsNullOrEmpty(BaseId))
+                {
+                    mwBOOK.ENAM = new TES3Lib.Subrecords.BOOK.ENAM { EnchantmentId = BaseId };
+                }
+            }
+
+            return mwBOOK;
+        }
+
+        static TES3Lib.Records.INGR ConvertINGR(TES4Lib.Records.INGR obINGR)
         {
             var mwINGR = new TES3Lib.Records.INGR
             {
@@ -177,9 +256,19 @@ namespace TES3Tool.TES4RecordConverter.Records
                     Reach = obWEAP.DATA.Reach,
                     EnchantmentPoints = !IsNull(obWEAP.ANAM) ? obWEAP.ANAM.EnchantmentPoints : (short)0,
                 },
-                ENAM = null, //TODO
-                SCRI = null,
+
             };
+
+            if (!IsNull(obWEAP.ENAM)) //convert enchamtments here
+            {
+                var BaseId = GetBaseId(obWEAP.ENAM.EnchantmentFormId);
+
+                if (!string.IsNullOrEmpty(BaseId))
+                {
+                    mwWEAP.ENAM = new TES3Lib.Subrecords.WEAP.ENAM { EnchantmentId = BaseId };
+                }
+            }
+        
             mwWEAP.WPDT.ChopMin = (byte)(0.5f * obWEAP.DATA.Damage);
             mwWEAP.WPDT.ChopMax = (byte)obWEAP.DATA.Damage;
             mwWEAP.WPDT.SlashMin = mwWEAP.WPDT.Type.Equals(TES3Lib.Enums.WeaponType.MarksmanBow) ? (byte)0 : (byte)(0.5f * obWEAP.DATA.Damage);
@@ -188,24 +277,6 @@ namespace TES3Tool.TES4RecordConverter.Records
             mwWEAP.WPDT.ThrustMax = CalcThrust(mwWEAP.WPDT.Type, obWEAP.DATA.Damage);
 
             return mwWEAP;
-        }
-
-        static byte CalcThrust(TES3Lib.Enums.WeaponType type, short damage)
-        {
-            float penalty = 0.75f;
-            switch (type)
-            {
-                case TES3Lib.Enums.WeaponType.BluntTwoClose:
-                case TES3Lib.Enums.WeaponType.BluntOneHand:
-                case TES3Lib.Enums.WeaponType.AxeOneHand:
-                case TES3Lib.Enums.WeaponType.AxeTwoHand:
-                    return (byte)(penalty * damage);
-                case TES3Lib.Enums.WeaponType.MarksmanBow:
-                    return 0;
-
-                default:
-                    return (byte)damage;
-            }
         }
 
         static TES3Lib.Records.DOOR ConvertDOOR(TES4Lib.Records.DOOR obDOOR)
@@ -313,7 +384,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     if (!IsNull(record))
                     {
                         CONT.NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>();
-                        var mwRecordFromREFR = ConvertRecordFromREFR(obFLOR.PFIG.IngredientProduced);
+                        var mwRecordFromREFR = ConvertRecordFromFormId(obFLOR.PFIG.IngredientProduced);
                         if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
                         ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
                         BaseId = mwRecordFromREFR.EditorId;
@@ -323,7 +394,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 if (!string.IsNullOrEmpty(BaseId))
                 {
                     CONT.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = BaseId, Count = qnt });
-                }              
+                }
             }
 
             return CONT;
@@ -353,7 +424,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                         TES4Lib.TES4.TES4RecordIndex.TryGetValue(item.ItemId, out record);
                         if (!IsNull(record))
                         {
-                            var mwRecordFromREFR = ConvertRecordFromREFR(item.ItemId);
+                            var mwRecordFromREFR = ConvertRecordFromFormId(item.ItemId);
                             if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
                             ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
                             BaseId = mwRecordFromREFR.EditorId;
@@ -702,7 +773,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                         TES4Lib.TES4.TES4RecordIndex.TryGetValue(obREFR.XLOC.Key, out record);
                         if (!IsNull(record))
                         {
-                            var mwRecordFromREFR = ConvertRecordFromREFR(obREFR.XLOC.Key);
+                            var mwRecordFromREFR = ConvertRecordFromFormId(obREFR.XLOC.Key);
                             if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
                             ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
                             BaseId = mwRecordFromREFR.EditorId;
@@ -742,6 +813,24 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             return mwREFR;
+        }
+
+        static byte CalcThrust(TES3Lib.Enums.WeaponType type, short damage)
+        {
+            float penalty = 0.75f;
+            switch (type)
+            {
+                case TES3Lib.Enums.WeaponType.BluntTwoClose:
+                case TES3Lib.Enums.WeaponType.BluntOneHand:
+                case TES3Lib.Enums.WeaponType.AxeOneHand:
+                case TES3Lib.Enums.WeaponType.AxeTwoHand:
+                    return (byte)(penalty * damage);
+                case TES3Lib.Enums.WeaponType.MarksmanBow:
+                    return 0;
+
+                default:
+                    return (byte)damage;
+            }
         }
 
         static TES3Lib.Enums.WeaponType CastWeaponTypeToMw(TES4Lib.Records.WEAP obWEAP)
@@ -1158,9 +1247,78 @@ namespace TES3Tool.TES4RecordConverter.Records
                     return TES3Lib.Enums.Skill.Sneak;
                 case TES4Lib.Enums.ActorValue.Speechcraft:
                     return TES3Lib.Enums.Skill.Speechcraft;
+                default:
+                    return TES3Lib.Enums.Skill.Unused;
             }
+        }
 
-            return TES3Lib.Enums.Skill.Unused;
+        static TES3Lib.Enums.Skill CastSkillToMW(TES4Lib.Enums.Skill skill)
+        {
+            var rnd = new Random(DateTime.Now.Millisecond).Next(0, 2);
+            switch (skill)
+            {
+                case TES4Lib.Enums.Skill.Armorer:
+                    return TES3Lib.Enums.Skill.Armorer;
+                case TES4Lib.Enums.Skill.Athletics:
+                    return TES3Lib.Enums.Skill.Athletics;
+                case TES4Lib.Enums.Skill.Blade:
+                    return rnd.Equals(0) ? TES3Lib.Enums.Skill.ShortBlade : TES3Lib.Enums.Skill.LongBlade;
+                case TES4Lib.Enums.Skill.Block:
+                    return TES3Lib.Enums.Skill.Block;
+                case TES4Lib.Enums.Skill.Blunt:
+                    return rnd.Equals(0) ? TES3Lib.Enums.Skill.BluntWeapon : TES3Lib.Enums.Skill.Axe;
+                case TES4Lib.Enums.Skill.HandToHand:
+                    return TES3Lib.Enums.Skill.HandToHand;
+                case TES4Lib.Enums.Skill.HeavyArmor:
+                    return rnd.Equals(0) ? TES3Lib.Enums.Skill.HeavyArmor : TES3Lib.Enums.Skill.MediumArmor;
+                case TES4Lib.Enums.Skill.Alchemy:
+                    return TES3Lib.Enums.Skill.Alchemy;
+                case TES4Lib.Enums.Skill.Alteration:
+                    return TES3Lib.Enums.Skill.Alteration;
+                case TES4Lib.Enums.Skill.Conjuration:
+                    return TES3Lib.Enums.Skill.Conjuration;
+                case TES4Lib.Enums.Skill.Destruction:
+                    return TES3Lib.Enums.Skill.Destruction;
+                case TES4Lib.Enums.Skill.Illusion:
+                    return TES3Lib.Enums.Skill.Illusion;
+                case TES4Lib.Enums.Skill.Mysticism:
+                    return TES3Lib.Enums.Skill.Mysticism;
+                case TES4Lib.Enums.Skill.Restoration:
+                    return TES3Lib.Enums.Skill.Restoration;
+                case TES4Lib.Enums.Skill.Acrobatics:
+                    return TES3Lib.Enums.Skill.Acrobatics;
+                case TES4Lib.Enums.Skill.LightArmor:
+                    return rnd.Equals(0) ? TES3Lib.Enums.Skill.LightArmor : TES3Lib.Enums.Skill.MediumArmor;
+                case TES4Lib.Enums.Skill.Marksman:
+                    return TES3Lib.Enums.Skill.Marksman;
+                case TES4Lib.Enums.Skill.Mercantile:
+                    return TES3Lib.Enums.Skill.Mercantile;
+                case TES4Lib.Enums.Skill.Security:
+                    return TES3Lib.Enums.Skill.Security;
+                case TES4Lib.Enums.Skill.Sneak:
+                    return TES3Lib.Enums.Skill.Sneak;
+                case TES4Lib.Enums.Skill.Speechcraft:
+                    return TES3Lib.Enums.Skill.Speechcraft;
+                default:
+                    return TES3Lib.Enums.Skill.Unused;
+            }
+        }
+
+        static TES3Lib.Enums.EnchantmentType CastEnchantmentTypeToMW(TES4Lib.Enums.EnchantmentType enchantmentType)
+        {
+            switch (enchantmentType)
+            {
+                case TES4Lib.Enums.EnchantmentType.Scroll:
+                    return TES3Lib.Enums.EnchantmentType.CastOnce;
+                case TES4Lib.Enums.EnchantmentType.Staff:
+                    return TES3Lib.Enums.EnchantmentType.CastOnStrike;
+                case TES4Lib.Enums.EnchantmentType.Weapon:
+                    return TES3Lib.Enums.EnchantmentType.CastOnStrike;
+                case TES4Lib.Enums.EnchantmentType.Apparel:
+                    return TES3Lib.Enums.EnchantmentType.ConstantEffect;
+                default:
+                    return TES3Lib.Enums.EnchantmentType.CastWhenUsed;
+            }
         }
 
         static HashSet<TES3Lib.Enums.Flags.LightFlag> CastLightFlagsToMW(HashSet<TES4Lib.Enums.Flags.LightFlag> obFlags)
@@ -1198,6 +1356,30 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             return mwFlags;
+        }
+
+
+        /// <summary>
+        /// Gets EditorId for FormId, if referenced record is not converted, then it converts it as well
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        private static string GetBaseId(string formId)
+        {
+            var BaseId = GetBaseIdFromFormId(formId);
+            if (string.IsNullOrEmpty(BaseId))
+            {
+                TES4Lib.Base.Record record;
+                TES4Lib.TES4.TES4RecordIndex.TryGetValue(formId, out record);
+                if (!IsNull(record))
+                {
+                    var mwRecordFromREFR = ConvertRecordFromFormId(formId);
+                    if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                    ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
+                    BaseId = mwRecordFromREFR.EditorId;
+                }
+            }
+            return BaseId;
         }
     }
 }

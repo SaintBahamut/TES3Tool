@@ -25,6 +25,10 @@ namespace TES3Lib.Records
 
         public ENAM ENAM { get; set; }
 
+        public BOOK()
+        {
+        }
+
         public BOOK(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();

@@ -1,6 +1,6 @@
 ﻿namespace TES4Lib.Enums
 {
-    public enum Skill : int
+    public enum Skill : byte
     {
         Armorer = 0x0C,
         Athletics = 0x0D,

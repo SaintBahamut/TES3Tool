@@ -15,7 +15,7 @@ namespace TES4Lib.Subrecords.ENCH
         /// <summary>
         /// The manual charge value used if AutoCalc is off.
         /// </summary>
-        public int ChargeAmmount { get; set; }
+        public int Charge { get; set; }
 
         /// <summary>
         /// The manual enchantment cost used if AutoCalc is off.
@@ -31,8 +31,8 @@ namespace TES4Lib.Subrecords.ENCH
         public ENIT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            EnchantmentType = (EnchantmentType)reader.ReadBytes<int>(base.Data);
-            ChargeAmmount = reader.ReadBytes<int>(base.Data);
+            EnchantmentType = reader.ReadBytes<EnchantmentType>(base.Data);
+            Charge = reader.ReadBytes<int>(base.Data);
             EnchantCost = reader.ReadBytes<int>(base.Data);
             Flags = reader.ReadBytes<int>(base.Data);
         }

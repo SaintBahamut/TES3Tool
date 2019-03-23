@@ -54,40 +54,40 @@ namespace TES3Tool.TES4RecordConverter.Records
             return BaseId;
         }
 
-        internal static int GetTES4DeletedRecordFlag(int recordFlags)
-        {
-            return recordFlags & 0x00000020;
-        }
+        //internal static int GetTES4DeletedRecordFlag(int recordFlags)
+        //{
+        //    return recordFlags & 0x00000020;
+        //}
 
-        internal static int GetTES4CantWaitRecordFlag(int recordFlags)
-        {
-            return recordFlags & 0x080000;
-        }
+        //internal static int GetTES4CantWaitRecordFlag(int recordFlags)
+        //{
+        //    return recordFlags & 0x080000;
+        //}
 
-        internal static int GetTES4IgnoredRecordFlag(int recordFlags)
-        {
-            return recordFlags & 0x01000;
-        }
+        //internal static int GetTES4IgnoredRecordFlag(int recordFlags)
+        //{
+        //    return recordFlags & 0x01000;
+        //}
 
-        /// <summary>
-        /// For TES4.Records.CELL.Flag
-        /// </summary>
-        /// <param name="recordFlags"></param>
-        /// <returns></returns>
-        internal static int GetTES4HasWaterCellFlag(int recordFlags)
-        {
-            return recordFlags & 0x02;
-        }
+        ///// <summary>
+        ///// For TES4.Records.CELL.Flag
+        ///// </summary>
+        ///// <param name="recordFlags"></param>
+        ///// <returns></returns>
+        //internal static int GetTES4HasWaterCellFlag(int recordFlags)
+        //{
+        //    return recordFlags & 0x02;
+        //}
 
-        /// <summary>
-        /// For TES4.Records.CELL.Flag
-        /// </summary>
-        /// <param name="recordFlags"></param>
-        /// <returns></returns>
-        internal static int GetTES4BehavesLikeExteriorCellFlag(int recordFlags)
-        {
-            return recordFlags & 0x80;
-        }
+        ///// <summary>
+        ///// For TES4.Records.CELL.Flag
+        ///// </summary>
+        ///// <param name="recordFlags"></param>
+        ///// <returns></returns>
+        //internal static int GetTES4BehavesLikeExteriorCellFlag(int recordFlags)
+        //{
+        //    return recordFlags & 0x80;
+        //}
 
         internal static string PathFormater(string sourcePath, string containingFolder)
         {
@@ -112,7 +112,29 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return sourceEditorId;
 
             int diff = idSize - 32;
+
             return sourceEditorId.Remove(0, diff);
+        }
+
+        internal static string BookEditorIdFormater(string sourceEditorId)
+        {
+            int idSize = sourceEditorId.Count();
+            if (idSize <= 32)
+                return sourceEditorId;
+
+            int diff = idSize - 32;
+
+            var result = sourceEditorId.Remove(0, diff);
+
+            //i feel very lazy
+            if (result.Equals("StandardWaterWalking2Journeyman\0") || result.Equals("andardFireDamageArea3Journeyman\0") || result.Equals("estoreAttribIntelligence1Novice\0"))
+            {
+                result = result.Replace("andard", "Sc");
+                result = result.Replace("Sandard", "Sc");
+                result = result.Replace("estore", "Sc");
+            }
+
+            return result;
         }
 
         internal static string NameFormater(string recordDisplayName)

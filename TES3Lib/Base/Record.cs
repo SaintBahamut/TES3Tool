@@ -59,6 +59,7 @@ namespace TES3Lib.Base
         public Record()
         {
             Header = 0;
+            Flags = new HashSet<RecordFlag>();
         }
 
         public Record(byte[] rawData)
@@ -113,14 +114,14 @@ namespace TES3Lib.Base
         public virtual byte[] SerializeRecord()
         {
             if (!IsImplemented) return RawData;
-         
+
             var properties = this.GetType()
                 .GetProperties(BindingFlags.Public |
                                BindingFlags.Instance |
                                BindingFlags.DeclaredOnly)
                                .OrderBy(x => x.MetadataToken)
                                .ToList();
-           
+
             if (properties.Any(x => x.Name.Equals("NAME")))
             {
                 var index = properties.FindIndex(x => x.Name.Equals("NAME"));
@@ -129,9 +130,9 @@ namespace TES3Lib.Base
 
             List<byte> data = new List<byte>();
             foreach (PropertyInfo property in properties)
-            {             
+            {
                 if (property.PropertyType.IsGenericType)
-                {            
+                {
                     var subrecordList = property.GetValue(this) as IEnumerable;
                     if (subrecordList == null) continue;
                     foreach (var sub in subrecordList)
@@ -146,10 +147,12 @@ namespace TES3Lib.Base
             }
 
             uint flagSerialized = 0;
+
             foreach (RecordFlag flagElement in Flags)
             {
                 flagSerialized = flagSerialized | (uint)flagElement;
             }
+
 
             return Encoding.ASCII.GetBytes(this.GetType().Name)
                 .Concat(BitConverter.GetBytes(data.Count()))

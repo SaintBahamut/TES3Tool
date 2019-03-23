@@ -24,6 +24,7 @@ namespace TES4Lib.Records
 
         public ACHR(byte[] rawData) : base(rawData)
         {
+            IsImplemented = false;
             BuildSubrecords();
         }
     }

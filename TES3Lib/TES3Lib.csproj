@@ -55,7 +55,9 @@
     <Compile Include="Enums\BodyPart.cs" />
     <Compile Include="Enums\ClothingType.cs" />
     <Compile Include="Enums\CreatureType.cs" />
+    <Compile Include="Enums\Flags\BookFlag.cs" />
     <Compile Include="Enums\Flags\CellFlag.cs" />
+    <Compile Include="Enums\Flags\EnchantmentFlag.cs" />
     <Compile Include="Enums\Flags\LightFlag.cs" />
     <Compile Include="Enums\Flags\RecordFlag.cs" />
     <Compile Include="Enums\GlobalVariableType.cs" />

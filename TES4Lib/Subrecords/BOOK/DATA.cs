@@ -1,5 +1,7 @@
-﻿using TES4Lib.Base;
+﻿using System.Collections.Generic;
+using TES4Lib.Base;
 using TES4Lib.Enums;
+using TES4Lib.Enums.Flags;
 using Utility;
 using static Utility.Common;
 
@@ -15,7 +17,7 @@ namespace TES4Lib.Subrecords.BOOK
         // 0x0001 = Scroll
         // 0x0002 = Can't be taken 
         /// </summary>
-        public byte Flags { get; set; }
+        public HashSet<BookFlag> Flags { get; set; }
 
         /// <summary>
         /// Which skill the book teaches.
@@ -36,15 +38,10 @@ namespace TES4Lib.Subrecords.BOOK
         public DATA(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Flags = reader.ReadBytes<byte>(base.Data);
-            Skill = (Skill)reader.ReadBytes<byte>(base.Data);
+            Flags = reader.ReadFlagBytes<BookFlag>(base.Data);
+            Skill = reader.ReadBytes<Skill>(base.Data);
             Value = reader.ReadBytes<int>(base.Data);
             Weight = reader.ReadBytes<float>(base.Data);
         }
-
-        #region flag handlers
-        public bool IsScroll() => CheckIfByteSet(Flags, 0x0001);
-        public bool IsCantBeTaken() => CheckIfByteSet(Flags, 0x0002);
-        #endregion
     }
 }
