@@ -1,4 +1,5 @@
 ﻿using TES3Lib.Base;
+using TES3Lib.Enums;
 using Utility;
 
 namespace TES3Lib.Subrecords.ARMO
@@ -21,7 +22,7 @@ namespace TES3Lib.Subrecords.ARMO
 		///	9 = L.Bracer
 		///	10 = R.Bracer
         /// </summary>
-        public int Type { get; set; }
+        public ArmorType Type { get; set; }
 
         public float Weight { get; set; }
 
@@ -41,7 +42,7 @@ namespace TES3Lib.Subrecords.ARMO
         public AODT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Type = reader.ReadBytes<int>(base.Data);
+            Type = reader.ReadBytes<ArmorType>(base.Data);
             Weight = reader.ReadBytes<float>(base.Data);
             Value = reader.ReadBytes<int>(base.Data);
             Health = reader.ReadBytes<int>(base.Data);

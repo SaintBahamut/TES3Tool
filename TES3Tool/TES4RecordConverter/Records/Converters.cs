@@ -154,7 +154,49 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwAPPA.GetType().Name, mwAPPA.NAME.EditorId, mwAPPA);
             }
 
+            //ARMOR
+            if (recordType.Equals("ARMO"))
+            {
+                var mwARMO = ConvertARMO((TES4Lib.Records.ARMO)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwARMO.GetType().Name, mwARMO.NAME.EditorId, mwARMO);
+            }
+
             return null;
+        }
+
+        static TES3Lib.Records.ARMO ConvertARMO(TES4Lib.Records.ARMO obARMO)
+        {
+            var mwARMO = new TES3Lib.Records.ARMO
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obARMO.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obARMO.MODL.ModelPath, Config.ARMOPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obARMO.FULL) ? obARMO.FULL.DisplayName : string.Empty) },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obARMO.ICON.IconFilePath, Config.ARMOPath) },
+                AODT = new TES3Lib.Subrecords.ARMO.AODT
+                {
+                    Type = CastArmorTypeToMW(obARMO.BMDT.BodySlots),
+                    Weight = obARMO.DATA.Weight,
+                    Value = (int)obARMO.DATA.Weight,
+                    Health = obARMO.DATA.Health,
+                    EnchancmentPoints = 10,
+                    ArmorRating = obARMO.DATA.ArmorRating/100,
+                }
+                
+ 
+                //todo: mabye auto define armor weight?
+                
+            };
+
+            if (!IsNull(obARMO.ENAM))
+            {
+                var BaseId = GetBaseId(obARMO.ENAM.EnchantmentFormId);
+                if (!string.IsNullOrEmpty(BaseId))
+                {
+                    mwARMO.ENAM = new TES3Lib.Subrecords.ARMO.ENAM { EnchantmentId = BaseId };
+                }
+            }
+
+            return mwARMO;
         }
 
         static TES3Lib.Records.APPA ConvertAPPA(TES4Lib.Records.APPA obAPPA)
@@ -946,6 +988,24 @@ namespace TES3Tool.TES4RecordConverter.Records
                 default:
                     return (byte)damage;
             }
+        }
+
+        static TES3Lib.Enums.ArmorType CastArmorTypeToMW(HashSet<TES4Lib.Enums.BodySlot> bipedObjectFlags)
+        {
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.UpperBody)) return TES3Lib.Enums.ArmorType.Cuirass;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Foot)) return TES3Lib.Enums.ArmorType.Boots;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Hand)) return TES3Lib.Enums.ArmorType.LGauntlet;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Head) || bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Hair))
+                return TES3Lib.Enums.ArmorType.Helmet;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.LowerBody)) return TES3Lib.Enums.ArmorType.Greaves;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Shield)) return TES3Lib.Enums.ArmorType.Shield;
+
+            return TES3Lib.Enums.ArmorType.Cuirass;
         }
 
         static TES3Lib.Enums.WeaponType CastWeaponTypeToMw(TES4Lib.Records.WEAP obWEAP)

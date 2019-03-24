@@ -23,11 +23,16 @@ namespace TES3Lib.Records
 
         public ITEX ITEX { get; set; }
 
-        public List<(ITEX ITEX, BNAM BNAM, CNAM CNAM)> BPSL { get; set; }
+        public List<(INDX INDX, BNAM BNAM, CNAM CNAM)> BPSL { get; set; }
 
         public SCRI SCRI { get; set; }
 
         public ENAM ENAM { get; set; }
+
+        public ARMO()
+        {
+            BPSL = new List<(INDX INDX, BNAM BNAM, CNAM CNAM)>();
+        }
 
         public ARMO(byte[] rawData) : base(rawData)
         {
@@ -37,6 +42,7 @@ namespace TES3Lib.Records
         public override void BuildSubrecords()
         {
             var reader = new ByteReader();
+            BPSL = new List<(INDX INDX, BNAM BNAM, CNAM CNAM)>();
             while (Data.Length != reader.offset)
             {
                 try
@@ -45,23 +51,23 @@ namespace TES3Lib.Records
                     var subrecordSize = GetRecordSize(reader);
 
 
-                    if (subrecordName.Equals("ITEX"))
+                    if (subrecordName.Equals("INDX"))
                     {
-                        BPSL.Add((new ITEX(reader.ReadBytes<byte[]>(Data, subrecordSize)), null, null));
+                        BPSL.Add((new INDX(reader.ReadBytes<byte[]>(Data, subrecordSize)), null, null));
                         continue;
                     }
 
                     if (subrecordName.Equals("BNAM"))
                     {
                         int index = BPSL.Count - 1;
-                        BPSL[index] = (BPSL[index].ITEX, new BNAM(reader.ReadBytes<byte[]>(Data, subrecordSize)), BPSL[index].CNAM);
+                        BPSL[index] = (BPSL[index].INDX, new BNAM(reader.ReadBytes<byte[]>(Data, subrecordSize)), BPSL[index].CNAM);
                         continue;
                     }
 
                     if (subrecordName.Equals("CNAM"))
                     {
                         int index = BPSL.Count - 1;
-                        BPSL[index] = (BPSL[index].ITEX, BPSL[index].BNAM, new CNAM(reader.ReadBytes<byte[]>(Data, subrecordSize)));
+                        BPSL[index] = (BPSL[index].INDX, BPSL[index].BNAM, new CNAM(reader.ReadBytes<byte[]>(Data, subrecordSize)));
                         continue;
                     }
 
@@ -95,12 +101,13 @@ namespace TES3Lib.Records
                         List<byte> containerItems = new List<byte>();
                         foreach (var bpsl in BPSL)
                         {
-                            containerItems.AddRange(bpsl.ITEX.SerializeSubrecord());
+                            containerItems.AddRange(bpsl.INDX.SerializeSubrecord());
                             if (bpsl.BNAM != null) containerItems.AddRange(bpsl.BNAM.SerializeSubrecord());
                             if (bpsl.CNAM != null) containerItems.AddRange(bpsl.CNAM.SerializeSubrecord());
                         }
-                        data.AddRange(containerItems.ToArray());
+                        data.AddRange(containerItems.ToArray());                   
                     }
+                    continue;
                 }
                 var subrecord = (Subrecord)property.GetValue(this);
                 if (subrecord == null) continue;

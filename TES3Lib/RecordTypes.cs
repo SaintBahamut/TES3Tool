@@ -27,7 +27,7 @@
         DOOR,
         BOOK,
         //BODY,
-        //ARMO,
+        ARMO,
         //CLOT,
         WEAP,
         CREA,
