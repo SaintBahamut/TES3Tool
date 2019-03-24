@@ -53,7 +53,10 @@
     <Compile Include="Enums\ArmorType.cs" />
     <Compile Include="Enums\Attributre.cs" />
     <Compile Include="Enums\BodyPart.cs" />
+    <Compile Include="Enums\BodyPartType.cs" />
     <Compile Include="Enums\ClothingType.cs" />
+    <Compile Include="Enums\Flags\BodyPartFlag.cs" />
+    <Compile Include="Enums\Flags\CreatureFlag.cs" />
     <Compile Include="Enums\CreatureType.cs" />
     <Compile Include="Enums\Flags\AlchemyFlag.cs" />
     <Compile Include="Enums\ApparatusType.cs" />
@@ -61,7 +64,10 @@
     <Compile Include="Enums\Flags\CellFlag.cs" />
     <Compile Include="Enums\Flags\EnchantmentFlag.cs" />
     <Compile Include="Enums\Flags\LightFlag.cs" />
+    <Compile Include="Enums\Flags\NPCFlag.cs" />
     <Compile Include="Enums\Flags\RecordFlag.cs" />
+    <Compile Include="Enums\Flags\ServicesFlag.cs" />
+    <Compile Include="Enums\Flags\SpellFlag.cs" />
     <Compile Include="Enums\GlobalVariableType.cs" />
     <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\RaceFlags.cs" />
@@ -101,6 +107,7 @@
     <Compile Include="Subrecords\ARMO\CNAM.cs" />
     <Compile Include="Subrecords\ARMO\ENAM.cs" />
     <Compile Include="Subrecords\ARMO\INDX.cs" />
+    <Compile Include="Subrecords\BODY\BYDT.cs" />
     <Compile Include="Subrecords\BOOK\BKDT.cs" />
     <Compile Include="Subrecords\BOOK\ENAM.cs" />
     <Compile Include="Subrecords\BOOK\TEXT.cs" />
@@ -140,6 +147,7 @@
     <Compile Include="Subrecords\REGN\CNAM.cs" />
     <Compile Include="Subrecords\REGN\SNAM.cs" />
     <Compile Include="Subrecords\REGN\WEAT.cs" />
+    <Compile Include="Subrecords\REPA\RIDT.cs" />
     <Compile Include="Subrecords\SKIL\SKDT.cs" />
     <Compile Include="Subrecords\SKIL\INDX.cs" />
     <Compile Include="Subrecords\SPEL\SPDT.cs" />

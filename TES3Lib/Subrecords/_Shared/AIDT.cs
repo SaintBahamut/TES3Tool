@@ -1,4 +1,6 @@
-﻿using TES3Lib.Base;
+﻿using System.Collections.Generic;
+using TES3Lib.Base;
+using TES3Lib.Enums.Flags;
 using Utility;
 
 namespace TES3Lib.Subrecords.Shared
@@ -45,11 +47,10 @@ namespace TES3Lib.Subrecords.Shared
 		///	0x10000 = Enchanting
 		///	0x20000 = Repair Item
         /// </summary>
-        public int Flags { get; set; }
+        public HashSet<ServicesFlag> Flags { get; set; }
 
         public AIDT()
         {
-
         }
 
         public AIDT(byte[] rawData) : base(rawData)
@@ -63,49 +64,7 @@ namespace TES3Lib.Subrecords.Shared
             Unknown2 = reader.ReadBytes<byte>(base.Data);
             Unknown3 = reader.ReadBytes<byte>(base.Data);
             Unknown4 = reader.ReadBytes<byte>(base.Data);
-            Flags = reader.ReadBytes<int>(base.Data);
+            Flags = reader.ReadFlagBytes<ServicesFlag>(base.Data);
         }
-
-        #region flags handling
-        //flag checkers
-        public bool IsDealingWeapons() => 0 != (Flags & 0x00001);
-        public bool IsDealingArmor() => 0 != (Flags & 0x00002);
-        public bool IsDealingClothing() => 0 != (Flags & 0x00004);
-        public bool IsDealingBooks() => 0 != (Flags & 0x00008);
-        public bool IsDealingIngredients() => 0 != (Flags & 0x00010);
-        public bool IsDealingPicks() => 0 != (Flags & 0x00020);
-        public bool IsDealingProbes() => 0 != (Flags & 0x00040);
-        public bool IsDealingLights() => 0 != (Flags & 0x00080);
-        public bool IsDealingApparatus() => 0 != (Flags & 0x00100);
-        public bool IsDealingRepair() => 0 != (Flags & 0x00200);
-        public bool IsDealingMisc() => 0 != (Flags & 0x00400);
-        public bool IsDealingSpells() => 0 != (Flags & 0x00800);
-        public bool IsDealingMagicItems() => 0 != (Flags & 0x01000);
-        public bool IsDealingPotions() => 0 != (Flags & 0x02000);
-        public bool IsTrainer() => 0 != (Flags & 0x04000);
-        public bool IsSpellmaker() => 0 != (Flags & 0x08000);
-        public bool IsEnchanter() => 0 != (Flags & 0x10000);
-        public bool IsRepairer() => 0 != (Flags & 0x20000);
-
-        //flag setters TODO: make idempotent
-        public void SetDealingWeapons() => Flags = (Flags & 0x00001);
-        public void SetDealingArmor() => Flags = (Flags & 0x00002);
-        public void SetDealingClothing() => Flags = (Flags & 0x00004);
-        public void SetDealingBooks() => Flags = (Flags & 0x00008);
-        public void SetDealingIngredients() => Flags = (Flags & 0x00010);
-        public void SetDealingPicks() => Flags = (Flags & 0x00020);
-        public void SetDealingProbes() => Flags = (Flags & 0x00040);
-        public void SetDealingLights() => Flags = (Flags & 0x00080);
-        public void SetDealingApparatus() => Flags = (Flags & 0x00100);
-        public void SetDealingRepair() => Flags = (Flags & 0x00200);
-        public void SetDealingMisc() =>  Flags = (Flags & 0x00400);
-        public void SetDealingSpells() => Flags = (Flags & 0x00800);
-        public void SetDealingMagicItems() => Flags = (Flags & 0x01000);
-        public void SetDealingPotions() => Flags = (Flags & 0x02000);
-        public void SetTrainer() => Flags = (Flags & 0x04000);
-        public void SetSpellmaker() => Flags = (Flags & 0x08000);
-        public void SetEnchanter() => Flags = (Flags & 0x10000);
-        public void SetRepairer() => Flags = (Flags & 0x20000);
-        #endregion
     }
 }

@@ -1,4 +1,6 @@
-﻿using TES3Lib.Base;
+﻿using System.Collections.Generic;
+using TES3Lib.Base;
+using TES3Lib.Enums.Flags;
 using Utility;
 
 namespace TES3Lib.Subrecords.NPC_
@@ -18,37 +20,17 @@ namespace TES3Lib.Subrecords.NPC_
 		/// 0x0400 = Blood Skel
 		/// 0x0800 = Blood Metal
         /// </summary>
-
-        public int Flags { get; set; }
+        public HashSet<NPCFlag> Flags { get; set; }
 
         public FLAG()
         {
-            Flags = 0;
+            Flags = new HashSet<NPCFlag>();
         }
 
         public FLAG(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Flags = reader.ReadBytes<int>(base.Data);
+            Flags = reader.ReadFlagBytes<NPCFlag>(base.Data);
         }
-
-        #region flag handlers
-        public bool IsFemale() => 0 != (Flags & 0x0001);
-        public bool IsEssential() => 0 != (Flags & 0x0002);
-        public bool IsRespawn() => 0 != (Flags & 0x0004);
-        public bool IsNone() => 0 != (Flags & 0x0008);
-        public bool IsAutoCalcStats() => 0 != (Flags | 0x0010);
-        public bool IsBloodSkel() => 0 != (Flags & 0x0400);
-        public bool IsBloodMetal() => 0 != (Flags & 0x0800);
-
-        //TODO: make idempotent
-        public void SetFemale() => Flags = Flags | 0x0001;
-        public void SetEssential() => Flags = Flags | 0x0002;
-        public void SetRespawn() => Flags = Flags | 0x0004;
-        public void SetNone() => Flags = Flags | 0x0008;
-        public void SetAutoCalcStats() => Flags = Flags | 0x0010;
-        public void SetBloodSkel() => Flags = Flags | 0x0400;
-        public void SetBloodMetal() => Flags = Flags | 0x0800;
-        #endregion
     }
 }
