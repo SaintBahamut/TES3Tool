@@ -10,6 +10,7 @@
         //FACT,
         //RACE,
         SOUN,
+        ALCH,
         //SKIL,
         //MGEF,
         SCPT,

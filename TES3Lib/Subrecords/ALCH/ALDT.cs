@@ -1,4 +1,5 @@
 ﻿using TES3Lib.Base;
+using TES3Lib.Enums.Flags;
 using Utility;
 
 namespace TES3Lib.Subrecords.ALCH
@@ -15,7 +16,7 @@ namespace TES3Lib.Subrecords.ALCH
         /// <summary>
         /// Possible values 0 or 1
         /// </summary>
-        public int AutoCalc { get; set; } //?
+        public AlchemyFlag Flags { get; set; } //?
 
         public ALDT()
         {
@@ -26,7 +27,7 @@ namespace TES3Lib.Subrecords.ALCH
             var reader = new ByteReader();
             Weight = reader.ReadBytes<float>(base.Data);
             Value = reader.ReadBytes<int>(base.Data);
-            AutoCalc = reader.ReadBytes<int>(base.Data);
+            Flags = reader.ReadBytes<AlchemyFlag>(base.Data);
         }
     }
 }

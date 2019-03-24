@@ -28,7 +28,7 @@ namespace TES4Lib.Records
 
         public ENIT ENIT { get; set; }
 
-        public List<(EFID EFID, EFIT EFIT, SCIT SCIT, SULL FULL)> EFFECT { get; set; }
+        public List<(EFID EFID, EFIT EFIT, SCIT SCIT, SULL FULL)> EFCT { get; set; }
 
         public ALCH(byte[] rawData) : base(rawData)
         {
@@ -38,7 +38,7 @@ namespace TES4Lib.Records
         protected override void BuildSubrecords()
         {
             var readerData = new ByteReader();
-            EFFECT = new List<(EFID, EFIT, SCIT, SULL)>();
+            EFCT = new List<(EFID, EFIT, SCIT, SULL)>();
             while (Data.Length != readerData.offset)
             {
                 var subrecordName = GetRecordName(readerData);
@@ -46,28 +46,28 @@ namespace TES4Lib.Records
 
                 if (subrecordName.Equals("EFID"))
                 {
-                    EFFECT.Add((new EFID(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)), null, null, null));
+                    EFCT.Add((new EFID(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)), null, null, null));
                     continue;
                 }
 
                 if (subrecordName.Equals("EFIT"))
                 {
-                    int index = EFFECT.Count - 1;
-                    EFFECT[index] = (EFFECT[index].EFID, new EFIT(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)), EFFECT[index].SCIT, EFFECT[index].FULL);
+                    int index = EFCT.Count - 1;
+                    EFCT[index] = (EFCT[index].EFID, new EFIT(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)), EFCT[index].SCIT, EFCT[index].FULL);
                     continue;
                 }
 
                 if (subrecordName.Equals("SCIT"))
                 {
-                    int index = EFFECT.Count - 1;
-                    EFFECT[index] = (EFFECT[index].EFID, EFFECT[index].EFIT, new SCIT(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)), EFFECT[index].FULL);
+                    int index = EFCT.Count - 1;
+                    EFCT[index] = (EFCT[index].EFID, EFCT[index].EFIT, new SCIT(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)), EFCT[index].FULL);
                     continue;
                 }
 
                 if (subrecordName.Equals("FULL") && !IsNull(this.FULL))
                 {
-                    int index = EFFECT.Count - 1;
-                    EFFECT[index] = (EFFECT[index].EFID, EFFECT[index].EFIT, EFFECT[index].SCIT, new SULL(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)));
+                    int index = EFCT.Count - 1;
+                    EFCT[index] = (EFCT[index].EFID, EFCT[index].EFIT, EFCT[index].SCIT, new SULL(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)));
                     continue;
                 }
 

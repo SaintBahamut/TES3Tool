@@ -32,9 +32,9 @@ namespace TES3Lib.Subrecords.ALCH
 
         public int Duration { get; set; }
 
-        public int Magnitude { get; set; }
-
         public int Unknown3 { get; set; }
+
+        public int Magnitude { get; set; }
 
         public ENAM()
         {
@@ -43,33 +43,33 @@ namespace TES3Lib.Subrecords.ALCH
         public ENAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            MagicEffect = (MagicEffect)reader.ReadBytes<short>(base.Data);
-            Skill = (Skill)reader.ReadBytes<byte>(base.Data);
-            Attribute = (Attribute)reader.ReadBytes<byte>(base.Data);
+            MagicEffect = reader.ReadBytes<MagicEffect>(base.Data);
+            Skill = reader.ReadBytes<Skill>(base.Data);
+            Attribute = reader.ReadBytes<Attribute>(base.Data);
             Unknown1 = reader.ReadBytes<int>(base.Data);
             Unknown2 = reader.ReadBytes<int>(base.Data);
-            Duration = reader.ReadBytes<int>(base.Data);
-            Magnitude = reader.ReadBytes<int>(base.Data);
+            Duration = reader.ReadBytes<int>(base.Data);     
             Unknown3 = reader.ReadBytes<int>(base.Data);
+            Magnitude = reader.ReadBytes<int>(base.Data);
         }
 
-        public override byte[] SerializeSubrecord()
-        {
-            List<byte> data = new List<byte>();
+        //public override byte[] SerializeSubrecord()
+        //{
+        //    List<byte> data = new List<byte>();
 
-            data.AddRange(ByteWriter.ToBytes((short)MagicEffect, typeof(short)));
-            data.AddRange(ByteWriter.ToBytes((byte)Skill, typeof(byte)));
-            data.AddRange(ByteWriter.ToBytes((byte)Attribute, typeof(byte)));
-            data.AddRange(ByteWriter.ToBytes(Unknown1, typeof(int)));
-            data.AddRange(ByteWriter.ToBytes(Unknown2, typeof(int)));
-            data.AddRange(ByteWriter.ToBytes(Duration, typeof(int)));
-            data.AddRange(ByteWriter.ToBytes(Magnitude, typeof(int)));
-            data.AddRange(ByteWriter.ToBytes(Unknown3, typeof(int)));
+        //    data.AddRange(ByteWriter.ToBytes((short)MagicEffect, typeof(short)));
+        //    data.AddRange(ByteWriter.ToBytes((byte)Skill, typeof(byte)));
+        //    data.AddRange(ByteWriter.ToBytes((byte)Attribute, typeof(byte)));
+        //    data.AddRange(ByteWriter.ToBytes(Unknown1, typeof(int)));
+        //    data.AddRange(ByteWriter.ToBytes(Unknown2, typeof(int)));
+        //    data.AddRange(ByteWriter.ToBytes(Duration, typeof(int)));
+        //    data.AddRange(ByteWriter.ToBytes(Magnitude, typeof(int)));
+        //    data.AddRange(ByteWriter.ToBytes(Unknown3, typeof(int)));
 
-            var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
-               .Concat(BitConverter.GetBytes(data.Count()))
-               .Concat(data).ToArray();
-            return serialized;
-        }
+        //    var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
+        //       .Concat(BitConverter.GetBytes(data.Count()))
+        //       .Concat(data).ToArray();
+        //    return serialized;
+        //}
     }
 }

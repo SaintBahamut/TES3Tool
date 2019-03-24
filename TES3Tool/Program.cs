@@ -32,7 +32,7 @@ namespace TES3Tool
 
             string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
             var stat = TES4Load(fileESM, new List<string> { "STAT", "CELL","SOUN",
-                "MISC","KEYM","FURN","ACTI","LIGH","CONT","FLOR","DOOR","WEAP","INGR","BOOK","ENCH" });
+                "MISC","KEYM","FURN","ACTI","LIGH","CONT","FLOR","DOOR","WEAP","INGR","BOOK","ENCH","ALCH" });
 
             //var stat = TES4Load(fileESM, new List<string> { "ARMO" });
 

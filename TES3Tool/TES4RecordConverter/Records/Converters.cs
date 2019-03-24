@@ -125,6 +125,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 var mwINGR = ConvertBOOK((TES4Lib.Records.BOOK)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwINGR.GetType().Name, mwINGR.NAME.EditorId, mwINGR);
             }
+
             //ENCHANTMENTS
             if (recordType.Equals("ENCH"))
             {
@@ -132,7 +133,49 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwENCH.GetType().Name, mwENCH.NAME.EditorId, mwENCH);
             }
 
+            //ALCHEMY
+            if (recordType.Equals("ALCH"))
+            {
+                var mwALCH = ConvertALCH((TES4Lib.Records.ALCH)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwALCH.GetType().Name, mwALCH.NAME.EditorId, mwALCH);
+            }
+
             return null;
+        }
+
+        private static TES3Lib.Records.ALCH ConvertALCH(TES4Lib.Records.ALCH obALCH)
+        {
+            var mwALCH = new TES3Lib.Records.ALCH
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obALCH.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obALCH.MODL.ModelPath, Config.ALCHPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obALCH.FULL.DisplayName) },
+                TEXT = new TES3Lib.Subrecords.ALCH.TEXT { IconPath = PathFormater(obALCH.ICON.IconFilePath, Config.ALCHPath) },
+                ALDT = new TES3Lib.Subrecords.ALCH.ALDT
+                {
+                    Flags = obALCH.ENIT.Flags.Equals(TES4Lib.Enums.Flags.AlchemyFlag.NoAutoCalculate) ? TES3Lib.Enums.Flags.AlchemyFlag.AutoCalculate : TES3Lib.Enums.Flags.AlchemyFlag.AutoCalculate,
+                    Weight = obALCH.DATA.Weight,
+                    Value = obALCH.ENIT.Value
+                }
+            };
+
+            mwALCH.ENAM = new List<TES3Lib.Subrecords.ALCH.ENAM>();
+            foreach (var effect in obALCH.EFCT)
+            {
+                var enam = new TES3Lib.Subrecords.ALCH.ENAM
+                {
+                    MagicEffect = CastMagicEffectToMW(effect.EFIT.MagicEffect),
+                    Duration = effect.EFIT.Duration,
+                    Magnitude = effect.EFIT.Magnitude,
+                    Unknown1 = 1,                  
+                    Unknown2 = 2,
+                    Unknown3 = 3,                                 
+                };
+                enam.Skill = CastActorValueToSkillMW(effect.EFIT.ActorValue, enam.MagicEffect);
+                enam.Attribute = CastActorValueToAttributeMW(effect.EFIT.ActorValue, enam.MagicEffect);
+                mwALCH.ENAM.Add(enam);
+            }
+            return mwALCH;
         }
 
         static TES3Lib.Records.ENCH ConvertENCH(TES4Lib.Records.ENCH obENCH)
@@ -268,7 +311,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     mwWEAP.ENAM = new TES3Lib.Subrecords.WEAP.ENAM { EnchantmentId = BaseId };
                 }
             }
-        
+
             mwWEAP.WPDT.ChopMin = (byte)(0.5f * obWEAP.DATA.Damage);
             mwWEAP.WPDT.ChopMax = (byte)obWEAP.DATA.Damage;
             mwWEAP.WPDT.SlashMin = mwWEAP.WPDT.Type.Equals(TES3Lib.Enums.WeaponType.MarksmanBow) ? (byte)0 : (byte)(0.5f * obWEAP.DATA.Damage);

@@ -12,7 +12,6 @@ namespace TES3Lib.Subrecords.ALCH
 
         public TEXT()
         {
-
         }
 
         public TEXT(byte[] rawData) : base(rawData)

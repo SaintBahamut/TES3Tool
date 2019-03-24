@@ -25,5 +25,6 @@
         public static string FLORPath = "f";
         public static string INGRPath = "i";
         public static string BOOKPath = "p";
+        public static string ALCHPath = "h";
     }
 }

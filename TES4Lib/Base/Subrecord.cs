@@ -6,10 +6,10 @@ namespace TES4Lib.Base
     {
         protected const int FORMID_LENGTH = 4;
 
-        public string Name { get; set; }
-        public ushort Size { get; set; }
-        public byte[] Data { get; set; }
-        public byte[] RawData { get; set; }
+        protected string Name { get; set; }
+        protected ushort Size { get; set; }
+        protected byte[] Data { get; set; }
+        protected byte[] RawData { get; set; }
 
         public Subrecord(byte[] rawData)
         {
