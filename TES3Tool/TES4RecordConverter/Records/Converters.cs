@@ -5,6 +5,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using TES4Lib.Records;
+using TES3Lib.Enums;
+using TES4Lib.Enums;
 
 namespace TES3Tool.TES4RecordConverter.Records
 {
@@ -161,7 +163,43 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwARMO.GetType().Name, mwARMO.NAME.EditorId, mwARMO);
             }
 
+            //CLOTHING
+            if (recordType.Equals("CLOT"))
+            {
+                var mwCLOT = ConvertCLOT((TES4Lib.Records.CLOT)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwCLOT.GetType().Name, mwCLOT.NAME.EditorId, mwCLOT);
+            }
+
             return null;
+        }
+
+        static TES3Lib.Records.CLOT ConvertCLOT(TES4Lib.Records.CLOT obCLOT)
+        {
+            var mwCLOT = new TES3Lib.Records.CLOT
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obCLOT.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obCLOT.MODL.ModelPath, Config.CLOTPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCLOT.FULL) ? obCLOT.FULL.DisplayName : string.Empty) },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obCLOT.ICON.IconFilePath, Config.CLOTPath) },
+                CTDT = new TES3Lib.Subrecords.CLOT.CTDT
+                {
+                    Type = CastClothingTypeToMW(obCLOT.BMDT.BodySlots),
+                    Weight = obCLOT.DATA.Weight,
+                    Value = (short)obCLOT.DATA.Value,
+                    EnchancmentPoints = 10,
+                }
+            };
+
+            if (!IsNull(obCLOT.ENAM))
+            {
+                var BaseId = GetBaseId(obCLOT.ENAM.EnchantmentFormId);
+                if (!string.IsNullOrEmpty(BaseId))
+                {
+                    mwCLOT.ENAM = new TES3Lib.Subrecords.CLOT.ENAM { EnchantmentId = BaseId };
+                }
+            }
+
+            return mwCLOT;
         }
 
         static TES3Lib.Records.ARMO ConvertARMO(TES4Lib.Records.ARMO obARMO)
@@ -181,10 +219,6 @@ namespace TES3Tool.TES4RecordConverter.Records
                     EnchancmentPoints = 10,
                     ArmorRating = obARMO.DATA.ArmorRating/100,
                 }
-                
- 
-                //todo: mabye auto define armor weight?
-                
             };
 
             if (!IsNull(obARMO.ENAM))
@@ -1006,6 +1040,26 @@ namespace TES3Tool.TES4RecordConverter.Records
             if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Shield)) return TES3Lib.Enums.ArmorType.Shield;
 
             return TES3Lib.Enums.ArmorType.Cuirass;
+        }
+
+        static TES3Lib.Enums.ClothingType CastClothingTypeToMW(HashSet<TES4Lib.Enums.BodySlot> bipedObjectFlags)
+        {
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.UpperBody))
+                return TES3Lib.Enums.ClothingType.Skirt;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Foot))
+                return TES3Lib.Enums.ClothingType.Shoes;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Hand))
+                return TES3Lib.Enums.ClothingType.LeftGlove;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Head) || bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Hair))
+                return TES3Lib.Enums.ClothingType.Belt;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.LowerBody))
+                return TES3Lib.Enums.ClothingType.Pants;
+           
+            return TES3Lib.Enums.ClothingType.Robe;
         }
 
         static TES3Lib.Enums.WeaponType CastWeaponTypeToMw(TES4Lib.Records.WEAP obWEAP)
