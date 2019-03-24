@@ -1,7 +1,7 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.LEVI
+namespace TES3Lib.Subrecords.Shared
 {
     public class NNAM : Subrecord
     {

@@ -88,10 +88,10 @@ namespace TES3Lib.Records
                     if (ITEM.Count() > 0)
                     {
                         List<byte> containerItems = new List<byte>();
-                        foreach (var bpsl in ITEM)
+                        foreach (var item in ITEM)
                         {
-                            containerItems.AddRange(bpsl.INAM.SerializeSubrecord());
-                            containerItems.AddRange(bpsl.INTV.SerializeSubrecord());
+                            containerItems.AddRange(item.INAM.SerializeSubrecord());
+                            containerItems.AddRange(item.INTV.SerializeSubrecord());
 
                         }
                         data.AddRange(containerItems.ToArray());
