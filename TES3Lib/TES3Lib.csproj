@@ -63,6 +63,7 @@
     <Compile Include="Enums\Flags\BookFlag.cs" />
     <Compile Include="Enums\Flags\CellFlag.cs" />
     <Compile Include="Enums\Flags\EnchantmentFlag.cs" />
+    <Compile Include="Enums\Flags\LeveledItemFlag.cs" />
     <Compile Include="Enums\Flags\LightFlag.cs" />
     <Compile Include="Enums\Flags\NPCFlag.cs" />
     <Compile Include="Enums\Flags\RecordFlag.cs" />
@@ -140,8 +141,15 @@
     <Compile Include="Subrecords\LAND\VNML.cs" />
     <Compile Include="Subrecords\LAND\VTEX.cs" />
     <Compile Include="Subrecords\LAND\WNAM.cs" />
+    <Compile Include="Subrecords\LEVI\DATA.cs" />
+    <Compile Include="Subrecords\LEVI\INAM.cs" />
+    <Compile Include="Subrecords\LEVI\INDX.cs" />
+    <Compile Include="Subrecords\LEVI\INTV.cs" />
+    <Compile Include="Subrecords\LEVI\NNAM.cs" />
+    <Compile Include="Subrecords\LOCK\LKDT.cs" />
     <Compile Include="Subrecords\LTEX\INTV.cs" />
     <Compile Include="Subrecords\LTEX\DATA.cs" />
+    <Compile Include="Subrecords\PROB\PBDT.cs" />
     <Compile Include="Subrecords\RACE\RADT.cs" />
     <Compile Include="Subrecords\REGN\BNAM.cs" />
     <Compile Include="Subrecords\REGN\CNAM.cs" />

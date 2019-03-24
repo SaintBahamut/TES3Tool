@@ -1,12 +1,12 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.REPA
+namespace TES3Lib.Subrecords.PROB
 {
     /// <summary>
-    /// Repair item data
+    /// Probe item details
     /// </summary>
-    public class RIDT : Subrecord
+    public class PBDT : Subrecord
     {
         public float Weight { get; set; }
 
@@ -16,11 +16,11 @@ namespace TES3Lib.Subrecords.REPA
 
         public float Quality { get; set; }
 
-        public RIDT()
+        public PBDT()
         {
         }
 
-        public RIDT(byte[] rawData) : base(rawData)
+        public PBDT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
             Weight = reader.ReadBytes<float>(base.Data);

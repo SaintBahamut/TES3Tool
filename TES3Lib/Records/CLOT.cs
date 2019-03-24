@@ -45,12 +45,11 @@ namespace TES3Lib.Records
             BPSL = new List<(INDX INDX, BNAM BNAM, CNAM CNAM)>();
             while (Data.Length != reader.offset)
             {
+                var subrecordName = GetRecordName(reader);
+                var subrecordSize = GetRecordSize(reader);
+
                 try
                 {
-                    var subrecordName = GetRecordName(reader);
-                    var subrecordSize = GetRecordSize(reader);
-
-
                     if (subrecordName.Equals("INDX"))
                     {
                         BPSL.Add((new INDX(reader.ReadBytes<byte[]>(Data, subrecordSize)), null, null));
@@ -78,7 +77,7 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building CLOT record something is borkeeeed {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
                     break;
                 }
             }

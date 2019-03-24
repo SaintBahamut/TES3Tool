@@ -1,12 +1,12 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.REPA
+namespace TES3Lib.Subrecords.LOCK
 {
     /// <summary>
-    /// Repair item data
+    /// Lockpick item details
     /// </summary>
-    public class RIDT : Subrecord
+    public class LKDT : Subrecord
     {
         public float Weight { get; set; }
 
@@ -16,11 +16,11 @@ namespace TES3Lib.Subrecords.REPA
 
         public float Quality { get; set; }
 
-        public RIDT()
+        public LKDT()
         {
         }
 
-        public RIDT(byte[] rawData) : base(rawData)
+        public LKDT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
             Weight = reader.ReadBytes<float>(base.Data);
