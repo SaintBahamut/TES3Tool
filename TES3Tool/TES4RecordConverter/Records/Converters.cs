@@ -140,10 +140,55 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwALCH.GetType().Name, mwALCH.NAME.EditorId, mwALCH);
             }
 
+            //AMMO
+            if (recordType.Equals("AMMO"))
+            {
+                var mwWEAP = ConvertAMMO((TES4Lib.Records.AMMO)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwWEAP.GetType().Name, mwWEAP.NAME.EditorId, mwWEAP);
+            }
+
             return null;
         }
 
-        private static TES3Lib.Records.ALCH ConvertALCH(TES4Lib.Records.ALCH obALCH)
+        static TES3Lib.Records.WEAP ConvertAMMO(TES4Lib.Records.AMMO obAMMO)
+        {
+            var mwWEAP = new TES3Lib.Records.WEAP
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obAMMO.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obAMMO.MODL.ModelPath, Config.WEAPPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obAMMO.FULL) ? obAMMO.FULL.DisplayName : string.Empty) },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obAMMO.ICON.IconFilePath, Config.MISCPath) },
+                WPDT = new TES3Lib.Subrecords.WEAP.WPDT
+                {
+                    Weight = obAMMO.DATA.Weight,
+                    Value = obAMMO.DATA.Value,
+                    Type = TES3Lib.Enums.WeaponType.Arrow,
+                    Health = 10,
+                    Speed = obAMMO.DATA.Speed,
+                    Reach = 1,
+                    EnchantmentPoints = !IsNull(obAMMO.ANAM) ? obAMMO.ANAM.EnchantmentPoints : (short)0,
+                    ChopMin = (byte)(0.5f * obAMMO.DATA.Damage),
+                    ChopMax = (byte)obAMMO.DATA.Damage,
+                    SlashMin = 0,
+                    SlashMax = 0,
+                    ThrustMin = 0,
+                    ThrustMax = 0,
+                },
+            };
+
+            if (!IsNull(obAMMO.ENAM))
+            {
+                var BaseId = GetBaseId(obAMMO.ENAM.EnchantmentFormId);
+                if (!string.IsNullOrEmpty(BaseId))
+                {
+                    mwWEAP.ENAM = new TES3Lib.Subrecords.WEAP.ENAM { EnchantmentId = BaseId };
+                }
+            }
+
+            return mwWEAP;
+        }
+
+        static TES3Lib.Records.ALCH ConvertALCH(TES4Lib.Records.ALCH obALCH)
         {
             var mwALCH = new TES3Lib.Records.ALCH
             {
@@ -167,9 +212,9 @@ namespace TES3Tool.TES4RecordConverter.Records
                     MagicEffect = CastMagicEffectToMW(effect.EFIT.MagicEffect),
                     Duration = effect.EFIT.Duration,
                     Magnitude = effect.EFIT.Magnitude,
-                    Unknown1 = 1,                  
+                    Unknown1 = 1,
                     Unknown2 = 2,
-                    Unknown3 = 3,                                 
+                    Unknown3 = 3,
                 };
                 enam.Skill = CastActorValueToSkillMW(effect.EFIT.ActorValue, enam.MagicEffect);
                 enam.Attribute = CastActorValueToAttributeMW(effect.EFIT.ActorValue, enam.MagicEffect);
@@ -676,7 +721,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             var mwCELL = new TES3Lib.Records.CELL();
             mwCELL.NAME = new TES3Lib.Subrecords.CELL.NAME();
-            mwCELL.NAME.CellName = obCELL.FULL.CellName;
+            mwCELL.NAME.CellName = obCELL.FULL.DisplayName;
 
             mwCELL.DATA = new TES3Lib.Subrecords.CELL.DATA();
 

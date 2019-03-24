@@ -34,7 +34,7 @@ namespace TES3Tool.TES4RecordConverter
                         if (cellRecord.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
 
                         //hack for now to get SI only
-                        if ((cellRecord.EDID.CellEditorId.Contains("SE") || cellRecord.EDID.CellEditorId.Contains("XP")) && cellRecord.FULL != null)
+                        if ((cellRecord.EDID.EditorId.Contains("SE") || cellRecord.EDID.EditorId.Contains("XP")) && cellRecord.FULL != null)
                         {
                             var convertedCell = ConvertCELL(cellRecord);
                             if (convertedCell == null) throw new Exception("Output cell was null");
@@ -89,12 +89,12 @@ namespace TES3Tool.TES4RecordConverter
                                 bool cellWithSameNameExists = (item.Record as TES3Lib.Records.CELL).NAME.CellName.Equals(convertedCell.NAME.CellName);
                                 if (cellWithSameNameExists)
                                 {
-                                    convertedCell.NAME.CellName = CellNameFormatter($"{convertedCell.NAME.CellName.Replace("\0", " ")}{cellRecord.EDID.CellEditorId}");
+                                    convertedCell.NAME.CellName = CellNameFormatter($"{convertedCell.NAME.CellName.Replace("\0", " ")}{cellRecord.EDID.EditorId}");
                                     break;
                                 }
                             }
 
-                            ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId, "CELL", cellRecord.EDID.CellEditorId, convertedCell));
+                            ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId, "CELL", cellRecord.EDID.EditorId, convertedCell));
 
                             Console.WriteLine($"DONE CONVERTING \"{convertedCell.NAME.CellName}\" CELL");
                         }

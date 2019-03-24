@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ApparatusType.cs" />
+    <Compile Include="Enums\Flags\AmmoFlag.cs" />
     <Compile Include="Enums\Flags\BookFlag.cs" />
     <Compile Include="Enums\Flags\AlchemyFlag.cs" />
     <Compile Include="Enums\Flags\CellFlag.cs" />
@@ -138,6 +139,8 @@
     <Compile Include="Subrecords\ACRE\XOWN.cs" />
     <Compile Include="Subrecords\ALCH\DATA.cs" />
     <Compile Include="Subrecords\ALCH\ENIT.cs" />
+    <Compile Include="Subrecords\AMMO\ANAM.cs" />
+    <Compile Include="Subrecords\AMMO\DATA.cs" />
     <Compile Include="Subrecords\APPA\DATA.cs" />
     <Compile Include="Subrecords\_Shared\XRGD.cs" />
     <Compile Include="Subrecords\ACRE\XRNK.cs" />
@@ -147,8 +150,6 @@
     <Compile Include="Subrecords\BOOK\DATA.cs" />
     <Compile Include="Subrecords\BOOK\DESC.cs" />
     <Compile Include="Subrecords\CELL\DATA.cs" />
-    <Compile Include="Subrecords\CELL\EDID.cs" />
-    <Compile Include="Subrecords\CELL\FULL.cs" />
     <Compile Include="Subrecords\CELL\XCCM.cs" />
     <Compile Include="Subrecords\CELL\XCLC.cs" />
     <Compile Include="Subrecords\CELL\XCLL.cs" />
@@ -157,7 +158,6 @@
     <Compile Include="Subrecords\CELL\XCMT.cs" />
     <Compile Include="Subrecords\CELL\XCWT.cs" />
     <Compile Include="Subrecords\CELL\XGLB.cs" />
-    <Compile Include="Subrecords\CELL\XOWN.cs" />
     <Compile Include="Subrecords\CELL\XRNK.cs" />
     <Compile Include="Subrecords\CLOT\ANAM.cs" />
     <Compile Include="Subrecords\CLOT\DATA.cs" />
