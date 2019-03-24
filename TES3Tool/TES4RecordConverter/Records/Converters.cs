@@ -1044,6 +1044,12 @@ namespace TES3Tool.TES4RecordConverter.Records
 
         static TES3Lib.Enums.ClothingType CastClothingTypeToMW(HashSet<TES4Lib.Enums.BodySlot> bipedObjectFlags)
         {
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.Amulet))
+                return TES3Lib.Enums.ClothingType.Amulet;
+
+            if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.RightRing) || bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.LeftRing))
+                return TES3Lib.Enums.ClothingType.Ring;
+
             if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.UpperBody))
                 return TES3Lib.Enums.ClothingType.Skirt;
 
