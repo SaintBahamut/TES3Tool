@@ -147,7 +147,34 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwWEAP.GetType().Name, mwWEAP.NAME.EditorId, mwWEAP);
             }
 
+            //APPARATUS
+            if (recordType.Equals("APPA"))
+            {
+                var mwAPPA = ConvertAPPA((TES4Lib.Records.APPA)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwAPPA.GetType().Name, mwAPPA.NAME.EditorId, mwAPPA);
+            }
+
             return null;
+        }
+
+        static TES3Lib.Records.APPA ConvertAPPA(TES4Lib.Records.APPA obAPPA)
+        {
+            var mwAPPA = new TES3Lib.Records.APPA
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obAPPA.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obAPPA.MODL.ModelPath, Config.APPAPath) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obAPPA.FULL) ? obAPPA.FULL.DisplayName : string.Empty) },
+                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obAPPA.ICON.IconFilePath, Config.APPAPath) },
+                AADT = new TES3Lib.Subrecords.APPA.AADT
+                {
+                    Type = (TES3Lib.Enums.ApparatusType)(int)obAPPA.DATA.Type,
+                    Quality = obAPPA.DATA.Quality,
+                    Value = obAPPA.DATA.Value,
+                    Weight = obAPPA.DATA.Weight
+                }
+            };
+
+            return mwAPPA;
         }
 
         static TES3Lib.Records.WEAP ConvertAMMO(TES4Lib.Records.AMMO obAMMO)
@@ -1445,7 +1472,6 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             return mwFlags;
         }
-
 
         /// <summary>
         /// Gets EditorId for FormId, if referenced record is not converted, then it converts it as well

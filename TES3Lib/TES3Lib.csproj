@@ -56,6 +56,7 @@
     <Compile Include="Enums\ClothingType.cs" />
     <Compile Include="Enums\CreatureType.cs" />
     <Compile Include="Enums\Flags\AlchemyFlag.cs" />
+    <Compile Include="Enums\ApparatusType.cs" />
     <Compile Include="Enums\Flags\BookFlag.cs" />
     <Compile Include="Enums\Flags\CellFlag.cs" />
     <Compile Include="Enums\Flags\EnchantmentFlag.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Subrecords\ALCH\ENAM.cs" />
     <Compile Include="Subrecords\ALCH\ALDT.cs" />
     <Compile Include="Subrecords\ALCH\TEXT.cs" />
+    <Compile Include="Subrecords\APPA\AADT.cs" />
     <Compile Include="Subrecords\ARMO\AODT.cs" />
     <Compile Include="Subrecords\ARMO\BNAM.cs" />
     <Compile Include="Subrecords\ARMO\CNAM.cs" />

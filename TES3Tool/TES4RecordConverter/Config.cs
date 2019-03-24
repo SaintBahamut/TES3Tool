@@ -26,5 +26,6 @@
         public static string INGRPath = "i";
         public static string BOOKPath = "p";
         public static string ALCHPath = "h";
+        public static string APPAPath = "h";
     }
 }

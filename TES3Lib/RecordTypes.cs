@@ -14,6 +14,7 @@
         //SKIL,
         //MGEF,
         SCPT,
+        APPA,
         //REGN,
         //BSGN,
         //LTEX,
