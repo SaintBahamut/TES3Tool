@@ -8,11 +8,15 @@ using TES3Lib.Enums.Flags;
 using TES3Lib.Subrecords.CELL;
 using static Utility.Common;
 using Utility;
+using TES3Lib.Subrecords.Shared;
 
 namespace TES3Lib.Records
 {
     public class CELL : Record
     {
+        /// <summary>
+        /// Cell name
+        /// </summary>
         public NAME NAME { get; set; }
 
         public DATA DATA { get; set; }
@@ -68,7 +72,7 @@ namespace TES3Lib.Records
                 {
                     if (!IsNull(NAME))
                     {
-                        Console.WriteLine(NAME.CellName);
+                        Console.WriteLine(NAME.EditorId);
                     }
                     Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
                     break;
@@ -88,7 +92,7 @@ namespace TES3Lib.Records
             {
                 if (property.Name == "REFR") continue;
                 var subrecord = (Subrecord)property.GetValue(this);
-                if (subrecord == null) continue;
+                if (IsNull(subrecord)) continue;
 
                 data.AddRange(subrecord.SerializeSubrecord());
             }
@@ -103,18 +107,11 @@ namespace TES3Lib.Records
                 data.AddRange(cellReferences.ToArray());
             }
 
-            uint flagSerialized = 0;
-            foreach (RecordFlag flagElement in Flags)
-            {
-                flagSerialized = flagSerialized | (uint)flagElement;
-            }
-
             return Encoding.ASCII.GetBytes(this.GetType().Name)
                 .Concat(BitConverter.GetBytes(data.Count()))
                 .Concat(BitConverter.GetBytes(Header))
-                .Concat(BitConverter.GetBytes(flagSerialized))
+                .Concat(BitConverter.GetBytes(SerializeFlag()))
                 .Concat(data).ToArray();
         }
-
     }
 }

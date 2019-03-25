@@ -134,7 +134,7 @@ namespace TES3Lib.Base
                 if (property.PropertyType.IsGenericType)
                 {
                     var subrecordList = property.GetValue(this) as IEnumerable;
-                    if (subrecordList == null) continue;
+                    if (IsNull(subrecordList)) continue;
                     foreach (var sub in subrecordList)
                     {
                         data.AddRange((sub as Subrecord).SerializeSubrecord());
@@ -146,19 +146,21 @@ namespace TES3Lib.Base
                 data.AddRange(subrecord.SerializeSubrecord());
             }
 
-            uint flagSerialized = 0;
+            return Encoding.ASCII.GetBytes(this.GetType().Name)
+                .Concat(BitConverter.GetBytes(data.Count()))
+                .Concat(BitConverter.GetBytes(Header))
+                .Concat(BitConverter.GetBytes(SerializeFlag()))
+                .Concat(data).ToArray();
+        }
 
+        protected uint SerializeFlag()
+        {
+            uint flagSerialized = 0;
             foreach (RecordFlag flagElement in Flags)
             {
                 flagSerialized = flagSerialized | (uint)flagElement;
             }
-
-
-            return Encoding.ASCII.GetBytes(this.GetType().Name)
-                .Concat(BitConverter.GetBytes(data.Count()))
-                .Concat(BitConverter.GetBytes(Header))
-                .Concat(BitConverter.GetBytes(flagSerialized))
-                .Concat(data).ToArray();
+            return flagSerialized;
         }
 
         protected string GetRecordName(ByteReader reader)

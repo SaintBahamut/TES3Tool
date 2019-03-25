@@ -3,6 +3,9 @@ using TES3Lib.Subrecords.TES3;
 
 namespace TES3Lib.Records
 {
+    /// <summary>
+    /// TES3 Header record
+    /// </summary>
     public class TES3 : Record
     {
         public HEDR HEDR { get; set; }

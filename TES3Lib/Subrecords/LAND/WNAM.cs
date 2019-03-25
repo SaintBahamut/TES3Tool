@@ -4,11 +4,11 @@ using Utility;
 namespace TES3Lib.Subrecords.LAND
 {
     /// <summary>
-    /// Unknown byte data
+    /// low-LOD heightmap
     /// </summary>
     public class WNAM : Subrecord
     {
-        public byte[,] Data { get; set; }
+        public byte[,] LowLodHeightMap { get; set; }
 
         public WNAM()
         {
@@ -17,13 +17,13 @@ namespace TES3Lib.Subrecords.LAND
         public WNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-          
-            Data = new byte[9, 9];
+
+            LowLodHeightMap = new byte[9, 9];
             for (int x = 0; x < 9; x++)
             {
                 for (int y = 0; y < 9; y++)
                 {
-                    Data[x, y] = reader.ReadBytes<byte>(base.Data, 3);
+                    LowLodHeightMap[x, y] = reader.ReadBytes<byte>(base.Data, 3);
                 }
             }
         }

@@ -35,7 +35,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
                 if (IsNull(cell)) return;
 
-                formId.InteriorCellName = (cell.Record as TES3Lib.Records.CELL).NAME.CellName;
+                formId.InteriorCellName = (cell.Record as TES3Lib.Records.CELL).NAME.EditorId;
             });
         }
 
@@ -58,7 +58,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             string fileName = sourcePath.Split('\\').Last();
 
-            string outputPath = $"{TES3Tool.Config.convertedRootFolder}\\{containingFolder}\\{fileName}";
+            string outputPath = $"{Config.convertedRootFolder}\\{containingFolder}\\{fileName}";
 
             int pathSize = outputPath.Count();
             if (pathSize <= 32)
@@ -67,7 +67,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             int diff = pathSize - 32;
             string newFileName = fileName.Remove(0, diff);
 
-            return $"{TES3Tool.Config.convertedRootFolder}\\{containingFolder}\\{newFileName}";
+            return $"{Config.convertedRootFolder}\\{containingFolder}\\{newFileName}";
         }
 
         internal static string EditorIdFormater(string sourceEditorId)

@@ -42,7 +42,7 @@ namespace TES3Tool.TES4RecordConverter
                             var cellReferences = cellSubBlock.Groups.FirstOrDefault(x => x.Label == cellRecord.FormId);
                             if (cellReferences == null) continue;
 
-                            Console.WriteLine($"BEGIN CONVERTING \"{convertedCell.NAME.CellName}\" CELL");
+                            Console.WriteLine($"BEGIN CONVERTING \"{convertedCell.NAME.EditorId}\" CELL");
                             foreach (var childrenType in cellReferences.Groups) //can have 3 with labels: persistent 8; temporaty 9; distant 10;
                             {
                                 int refrNumber = 1;
@@ -86,17 +86,17 @@ namespace TES3Tool.TES4RecordConverter
 
                             foreach (var item in ConvertedRecords["CELL"])
                             {
-                                bool cellWithSameNameExists = (item.Record as TES3Lib.Records.CELL).NAME.CellName.Equals(convertedCell.NAME.CellName);
+                                bool cellWithSameNameExists = (item.Record as TES3Lib.Records.CELL).NAME.EditorId.Equals(convertedCell.NAME.EditorId);
                                 if (cellWithSameNameExists)
                                 {
-                                    convertedCell.NAME.CellName = CellNameFormatter($"{convertedCell.NAME.CellName.Replace("\0", " ")}{cellRecord.EDID.EditorId}");
+                                    convertedCell.NAME.EditorId = CellNameFormatter($"{convertedCell.NAME.EditorId.Replace("\0", " ")}{cellRecord.EDID.EditorId}");
                                     break;
                                 }
                             }
 
                             ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId, "CELL", cellRecord.EDID.EditorId, convertedCell));
 
-                            Console.WriteLine($"DONE CONVERTING \"{convertedCell.NAME.CellName}\" CELL");
+                            Console.WriteLine($"DONE CONVERTING \"{convertedCell.NAME.EditorId}\" CELL");
                         }
                     }
                 }

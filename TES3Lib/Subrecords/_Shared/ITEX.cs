@@ -12,7 +12,6 @@ namespace TES3Lib.Subrecords.Shared
 
         public ITEX()
         {
-
         }
 
         public ITEX(byte[] rawData) : base(rawData)

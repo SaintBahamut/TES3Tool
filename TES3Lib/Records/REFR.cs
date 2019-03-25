@@ -30,6 +30,7 @@ namespace TES3Lib.Records
         public BNAM BNAM { get; set; }
         public INTV INTV { get; set; }
         public NAM9 NAM9 { get; set; }
+        public XCHG XCHG { get; set; }
         public XSOL XSOL { get; set; }
         public DATA DATA { get; set; }
 

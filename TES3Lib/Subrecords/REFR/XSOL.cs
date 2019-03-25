@@ -12,7 +12,6 @@ namespace TES3Lib.Subrecords.REFR
 
         public XSOL()
         {
-
         }
 
         public XSOL(byte[] rawData) : base(rawData)

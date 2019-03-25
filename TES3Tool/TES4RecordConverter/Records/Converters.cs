@@ -823,8 +823,8 @@ namespace TES3Tool.TES4RecordConverter.Records
             if (obCELL.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) return null; //we dont need deleted records for conversion
 
             var mwCELL = new TES3Lib.Records.CELL();
-            mwCELL.NAME = new TES3Lib.Subrecords.CELL.NAME();
-            mwCELL.NAME.CellName = obCELL.FULL.DisplayName;
+            mwCELL.NAME = new TES3Lib.Subrecords.Shared.NAME();
+            mwCELL.NAME.EditorId = obCELL.FULL.DisplayName;
 
             mwCELL.DATA = new TES3Lib.Subrecords.CELL.DATA();
 

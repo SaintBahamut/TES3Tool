@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using TES3Lib.Base;
-using TES3Lib.Enums.Flags;
 using TES3Lib.Subrecords.CLOT;
 using TES3Lib.Subrecords.Shared;
+using static Utility.Common;
 using Utility;
 
 namespace TES3Lib.Records
@@ -86,14 +86,14 @@ namespace TES3Lib.Records
         public override byte[] SerializeRecord()
         {
             var properties = this.GetType()
-                .GetProperties(BindingFlags.Public |
-                               BindingFlags.Instance |
-                               BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
+               .GetProperties(BindingFlags.Public |
+                              BindingFlags.Instance |
+                              BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
 
             List<byte> data = new List<byte>();
             foreach (PropertyInfo property in properties)
             {
-                if (property.Name == "BPSL")
+                if (property.Name.Equals("BPSL"))
                 {
                     if (BPSL.Count() > 0)
                     {
@@ -101,29 +101,23 @@ namespace TES3Lib.Records
                         foreach (var bpsl in BPSL)
                         {
                             containerItems.AddRange(bpsl.INDX.SerializeSubrecord());
-                            if (bpsl.BNAM != null) containerItems.AddRange(bpsl.BNAM.SerializeSubrecord());
-                            if (bpsl.CNAM != null) containerItems.AddRange(bpsl.CNAM.SerializeSubrecord());
+                            if (!IsNull(bpsl.BNAM)) containerItems.AddRange(bpsl.BNAM.SerializeSubrecord());
+                            if (!IsNull(bpsl.CNAM)) containerItems.AddRange(bpsl.CNAM.SerializeSubrecord());
                         }
                         data.AddRange(containerItems.ToArray());
                     }
                     continue;
                 }
                 var subrecord = (Subrecord)property.GetValue(this);
-                if (subrecord == null) continue;
+                if (IsNull(subrecord)) continue;
 
                 data.AddRange(subrecord.SerializeSubrecord());
-            }
-
-            uint flagSerialized = 0;
-            foreach (RecordFlag flagElement in Flags)
-            {
-                flagSerialized = flagSerialized | (uint)flagElement;
             }
 
             return Encoding.ASCII.GetBytes(this.GetType().Name)
                 .Concat(BitConverter.GetBytes(data.Count()))
                 .Concat(BitConverter.GetBytes(Header))
-                .Concat(BitConverter.GetBytes(flagSerialized))
+                .Concat(BitConverter.GetBytes(SerializeFlag()))
                 .Concat(data).ToArray();
         }
     }
