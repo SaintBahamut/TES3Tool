@@ -892,12 +892,12 @@ namespace TES3Tool.TES4RecordConverter.Records
             mwREFR.FRMR = new TES3Lib.Subrecords.REFR.FRMR();
             mwREFR.FRMR.ObjectIndex = refrNumber;
 
-            mwREFR.NAME = new TES3Lib.Subrecords.REFR.NAME();
-            mwREFR.NAME.ObjectId = baseId;
+            mwREFR.NAME = new TES3Lib.Subrecords.Shared.NAME();
+            mwREFR.NAME.EditorId = baseId;
 
             if (!IsNull(obREFR.XSCL))
             {
-                mwREFR.XSCL = new TES3Lib.Subrecords.REFR.XSCL
+                mwREFR.XSCL = new TES3Lib.Subrecords.Shared.XSCL
                 {
                     Scale = obREFR.XSCL.Scale <= 0.5f ? 0.5f : obREFR.XSCL.Scale
                 };
@@ -919,30 +919,30 @@ namespace TES3Tool.TES4RecordConverter.Records
                 {
                     float shiftX = (Config.cellShiftX * Config.mwCellSize);
                     float shiftY = (Config.cellShiftY * Config.mwCellSize);
-                    mwREFR.DODT = new TES3Lib.Subrecords.REFR.DODT
+                    mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
                     {
-                        XPos = obREFR.XTEL.DestLocX + shiftX,
-                        YPos = obREFR.XTEL.DestLocY + shiftY,
-                        ZPos = obREFR.XTEL.DestLocZ,
-                        XRotate = obREFR.XTEL.DestRotX,
-                        YRotate = obREFR.XTEL.DestRotY,
-                        ZRotate = obREFR.XTEL.DestRotZ
+                        PositionX = obREFR.XTEL.DestLocX + shiftX,
+                        PositionY = obREFR.XTEL.DestLocY + shiftY,
+                        PositionZ = obREFR.XTEL.DestLocZ,
+                        RotationX = obREFR.XTEL.DestRotX,
+                        RotationY = obREFR.XTEL.DestRotY,
+                        RotationZ = obREFR.XTEL.DestRotZ
                     };
                 }
                 else
                 {
-                    mwREFR.DODT = new TES3Lib.Subrecords.REFR.DODT
+                    mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
                     {
-                        XPos = obREFR.XTEL.DestLocX,
-                        YPos = obREFR.XTEL.DestLocY,
-                        ZPos = obREFR.XTEL.DestLocZ,
-                        XRotate = obREFR.XTEL.DestRotX,
-                        YRotate = obREFR.XTEL.DestRotY,
-                        ZRotate = obREFR.XTEL.DestRotZ
+                        PositionX = obREFR.XTEL.DestLocX,
+                        PositionY = obREFR.XTEL.DestLocY,
+                        PositionZ = obREFR.XTEL.DestLocZ,
+                        RotationX = obREFR.XTEL.DestRotX,
+                        RotationY = obREFR.XTEL.DestRotY,
+                        RotationZ = obREFR.XTEL.DestRotZ
                     };
-                    mwREFR.DNAM = new TES3Lib.Subrecords.REFR.DNAM
+                    mwREFR.DNAM = new TES3Lib.Subrecords.Shared.DNAM
                     {
-                        DoorName = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at end
+                        InteriorCellName = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at later stages of conversion
                     };
                     DoorDestinations.Add(mwREFR.DNAM);
                 }

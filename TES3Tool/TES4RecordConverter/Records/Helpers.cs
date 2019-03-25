@@ -11,7 +11,7 @@ namespace TES3Tool.TES4RecordConverter.Records
     {
         internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
 
-        internal static List<TES3Lib.Subrecords.REFR.DNAM> DoorDestinations = new List<TES3Lib.Subrecords.REFR.DNAM>();
+        internal static List<TES3Lib.Subrecords.Shared.DNAM> DoorDestinations = new List<TES3Lib.Subrecords.Shared.DNAM>();
 
         internal static List<ConvertedCellReference> CellReferences = new List<ConvertedCellReference>();
 
@@ -26,7 +26,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             Parallel.ForEach(DoorDestinations, formId =>
             {
                 var reference = CellReferences
-               .FirstOrDefault(x => x.ReferenceFormId.Equals(formId.DoorName));
+               .FirstOrDefault(x => x.ReferenceFormId.Equals(formId.InteriorCellName));
 
                 if (IsNull(reference)) return;
 
@@ -35,7 +35,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
                 if (IsNull(cell)) return;
 
-                formId.DoorName = (cell.Record as TES3Lib.Records.CELL).NAME.CellName;
+                formId.InteriorCellName = (cell.Record as TES3Lib.Records.CELL).NAME.CellName;
             });
         }
 
@@ -53,41 +53,6 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             return BaseId;
         }
-
-        //internal static int GetTES4DeletedRecordFlag(int recordFlags)
-        //{
-        //    return recordFlags & 0x00000020;
-        //}
-
-        //internal static int GetTES4CantWaitRecordFlag(int recordFlags)
-        //{
-        //    return recordFlags & 0x080000;
-        //}
-
-        //internal static int GetTES4IgnoredRecordFlag(int recordFlags)
-        //{
-        //    return recordFlags & 0x01000;
-        //}
-
-        ///// <summary>
-        ///// For TES4.Records.CELL.Flag
-        ///// </summary>
-        ///// <param name="recordFlags"></param>
-        ///// <returns></returns>
-        //internal static int GetTES4HasWaterCellFlag(int recordFlags)
-        //{
-        //    return recordFlags & 0x02;
-        //}
-
-        ///// <summary>
-        ///// For TES4.Records.CELL.Flag
-        ///// </summary>
-        ///// <param name="recordFlags"></param>
-        ///// <returns></returns>
-        //internal static int GetTES4BehavesLikeExteriorCellFlag(int recordFlags)
-        //{
-        //    return recordFlags & 0x80;
-        //}
 
         internal static string PathFormater(string sourcePath, string containingFolder)
         {
@@ -168,6 +133,11 @@ namespace TES3Tool.TES4RecordConverter.Records
             return path;
         }
 
+        /// <summary>
+        /// Some default mappings of oblivion objects to their morrowind counterparts
+        /// </summary>
+        /// <param name="formId">oblivion form id</param>
+        /// <returns></returns>
         static string GetDefaultIdFromFormId(string formId)
         {
             if (!formId.Contains("0000000")) return string.Empty;

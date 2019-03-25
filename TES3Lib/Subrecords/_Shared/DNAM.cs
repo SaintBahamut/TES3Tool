@@ -4,7 +4,8 @@ using Utility;
 namespace TES3Lib.Subrecords.Shared
 {
     /// <summary>
-    /// Cell name for DODT record, if interior
+    /// Target cell name
+    /// Cell name for coordinates from DODT record, (interior or travel service)
     /// </summary>
     public class DNAM : Subrecord
     {
@@ -12,7 +13,6 @@ namespace TES3Lib.Subrecords.Shared
 
         public DNAM()
         {
-
         }
 
         public DNAM(byte[] rawData) : base(rawData)

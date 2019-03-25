@@ -237,16 +237,12 @@
     <Compile Include="Subrecords\REFR\BNAM.cs" />
     <Compile Include="Subrecords\REFR\DATA.cs" />
     <Compile Include="Subrecords\REFR\DELE.cs" />
-    <Compile Include="Subrecords\REFR\DNAM.cs" />
-    <Compile Include="Subrecords\REFR\DODT.cs" />
     <Compile Include="Subrecords\REFR\FLTV.cs" />
     <Compile Include="Subrecords\REFR\INTV.cs" />
     <Compile Include="Subrecords\REFR\KNAM.cs" />
     <Compile Include="Subrecords\REFR\NAM9.cs" />
-    <Compile Include="Subrecords\REFR\NAME.cs" />
     <Compile Include="Subrecords\REFR\TNAM.cs" />
     <Compile Include="Subrecords\REFR\UNAM.cs" />
-    <Compile Include="Subrecords\REFR\XSCL.cs" />
     <Compile Include="Subrecords\REFR\XSOL.cs" />
     <Compile Include="Subrecords\SCPT\SCDT.cs" />
     <Compile Include="Subrecords\SCPT\SCHD.cs" />

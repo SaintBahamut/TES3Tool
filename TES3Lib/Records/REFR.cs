@@ -4,12 +4,13 @@ using System.Linq;
 using System.Reflection;
 using TES3Lib.Base;
 using TES3Lib.Subrecords.REFR;
+using TES3Lib.Subrecords.Shared;
 using Utility;
 
 namespace TES3Lib.Records
 {
     /// <summary>
-    /// Not real TES3 data type, just bag for cell object references
+    /// Cell reference
     /// </summary>
     public class REFR
     {
@@ -34,12 +35,10 @@ namespace TES3Lib.Records
 
         public REFR()
         {
-
         }
 
         public REFR(byte[] data, ByteReader reader)
         {
-
             do
             {
                 var subrecordName = GetRecordName(reader, data);

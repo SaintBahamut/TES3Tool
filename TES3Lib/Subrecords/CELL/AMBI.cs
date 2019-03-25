@@ -3,6 +3,9 @@ using Utility;
 
 namespace TES3Lib.Subrecords.CELL
 {
+    /// <summary>
+    /// Lighting color of interior cell
+    /// </summary>
     public class AMBI : Subrecord
     {
         public int AmbientColor { get; set; }

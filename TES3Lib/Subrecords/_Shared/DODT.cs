@@ -3,6 +3,9 @@ using Utility;
 
 namespace TES3Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Target coordinates subrecord (eg: door or travel service)
+    /// </summary>
     public class DODT : Subrecord
     {
         public float PositionX { get; set; }

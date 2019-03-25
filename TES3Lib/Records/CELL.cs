@@ -6,6 +6,7 @@ using System.Text;
 using TES3Lib.Base;
 using TES3Lib.Enums.Flags;
 using TES3Lib.Subrecords.CELL;
+using static Utility.Common;
 using Utility;
 
 namespace TES3Lib.Records
@@ -22,10 +23,8 @@ namespace TES3Lib.Records
 
         public NAM0 NAM0 { get; set; }
 
-        //Exterior only
         public NAM5 NAM5 { get; set; }
 
-        //Interior only
         public WHGT WHGT { get; set; }
 
         public AMBI AMBI { get; set; }
@@ -67,7 +66,7 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    if (NAME != null)
+                    if (!IsNull(NAME))
                     {
                         Console.WriteLine(NAME.CellName);
                     }

@@ -119,7 +119,7 @@ namespace TES3Tool.TES4RecordConverter
             //dispose helper structures
             ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
             CellReferences = new List<ConvertedCellReference>();
-            DoorDestinations = new List<TES3Lib.Subrecords.REFR.DNAM>();
+            DoorDestinations = new List<TES3Lib.Subrecords.Shared.DNAM>();
 
             return tes3;
         }
