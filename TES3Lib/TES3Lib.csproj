@@ -114,6 +114,7 @@
     <Compile Include="Subrecords\BOOK\ENAM.cs" />
     <Compile Include="Subrecords\BOOK\TEXT.cs" />
     <Compile Include="Subrecords\BSGN\TNAM.cs" />
+    <Compile Include="Subrecords\CELL\INTV.cs" />
     <Compile Include="Subrecords\CELL\NAME.cs" />
     <Compile Include="Subrecords\CLAS\CLDT.cs" />
     <Compile Include="Subrecords\CLOT\BNAM.cs" />
@@ -150,6 +151,8 @@
     <Compile Include="Subrecords\LEVC\CNAM.cs" />
     <Compile Include="Subrecords\LEVC\INDX.cs" />
     <Compile Include="Subrecords\LEVC\INTV.cs" />
+    <Compile Include="Subrecords\REFR\CNAM.cs" />
+    <Compile Include="Subrecords\REFR\INDX.cs" />
     <Compile Include="Subrecords\_Shared\NNAM.cs" />
     <Compile Include="Subrecords\LOCK\LKDT.cs" />
     <Compile Include="Subrecords\LTEX\INTV.cs" />

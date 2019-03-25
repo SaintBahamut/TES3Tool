@@ -18,6 +18,8 @@ namespace TES3Lib.Records
 
         public RGNN RGNN { get; set; }
 
+        public INTV INTV { get; set; }
+
         public NAM0 NAM0 { get; set; }
 
         //Exterior only
@@ -25,19 +27,14 @@ namespace TES3Lib.Records
 
         //Interior only
         public WHGT WHGT { get; set; }
+
         public AMBI AMBI { get; set; }
 
-        private List<REFR> _REFR = new List<REFR>();
-
-        public List<REFR> REFR
-        {
-            get { return _REFR; }
-            set { _REFR = value; }
-        }
+        public List<REFR> REFR { get; set; }
 
         public CELL()
         {
-
+            REFR = new List<REFR>();
         }
 
         public CELL(byte[] rawData) : base(rawData)
@@ -48,13 +45,13 @@ namespace TES3Lib.Records
         public override void BuildSubrecords()
         {
             var readerData = new ByteReader();
+            REFR = new List<REFR>();
             while (Data.Length != readerData.offset)
             {
+                var subrecordName = GetRecordName(readerData);
+                var subrecordSize = GetRecordSize(readerData);
                 try
                 {
-                    var subrecordName = GetRecordName(readerData);
-                    var subrecordSize = GetRecordSize(readerData);
-
                     if (subrecordName.Equals("FRMR"))
                     {
                         var refrListType = this.GetType().GetProperty("REFR");
@@ -70,7 +67,11 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building CELL record something is borkeeeed {e}");
+                    if (NAME != null)
+                    {
+                        Console.WriteLine(NAME.CellName);
+                    }
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
                     break;
                 }
             }

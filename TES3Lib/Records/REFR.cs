@@ -15,6 +15,8 @@ namespace TES3Lib.Records
     {
         public FRMR FRMR { get; set; }
         public NAME NAME { get; set; }
+        public CNAM CNAM { get; set; }
+        public INDX INDX { get; set; }
         public XSCL XSCL { get; set; }
         public DELE DELE { get; set; }
         public DODT DODT { get; set; }
@@ -36,25 +38,27 @@ namespace TES3Lib.Records
         }
 
         public REFR(byte[] data, ByteReader reader)
-        {       
-            try
+        {
+
+            do
             {
-                do
+                var subrecordName = GetRecordName(reader, data);
+                var subrecordSize = GetRecordSize(reader, data);
+                try
                 {
-                    var subrecordName = GetRecordName(reader, data);
-                    var subrecordSize = GetRecordSize(reader, data);
                     var subrecordProp = this.GetType().GetProperty(subrecordName);
-                
                     object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { reader.ReadBytes<byte[]>(data, subrecordSize) });
                     subrecordProp.SetValue(this, subrecord);
- 
-                } while (data.Length != reader.offset && !GetRecordName(reader, data).Equals("FRMR") && !GetRecordName(reader, data).Equals("NAM0"));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"REFR parse failure! {e}");
-                throw;
-            }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
+                    break;
+                }
+
+            } while (data.Length != reader.offset && !GetRecordName(reader, data).Equals("FRMR") && !GetRecordName(reader, data).Equals("NAM0"));
+
+
         }
 
         public byte[] SerializeRecord()
