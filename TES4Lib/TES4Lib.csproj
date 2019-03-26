@@ -46,10 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ApparatusType.cs" />
+    <Compile Include="Enums\CreatureType.cs" />
     <Compile Include="Enums\Flags\AmmoFlag.cs" />
     <Compile Include="Enums\Flags\BookFlag.cs" />
     <Compile Include="Enums\Flags\AlchemyFlag.cs" />
     <Compile Include="Enums\Flags\CellFlag.cs" />
+    <Compile Include="Enums\Flags\CreatureFlag.cs" />
     <Compile Include="Enums\Flags\EnchantmentFlag.cs" />
     <Compile Include="Enums\Flags\EquipmentFlag.cs" />
     <Compile Include="Enums\BodySlot.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\ResistanceType.cs" />
     <Compile Include="Enums\Skill.cs" />
+    <Compile Include="Enums\SoulGemType.cs" />
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\SpellType.cs" />
     <Compile Include="Enums\SpellLevel.cs" />
@@ -143,6 +146,8 @@
     <Compile Include="Subrecords\AMMO\ANAM.cs" />
     <Compile Include="Subrecords\AMMO\DATA.cs" />
     <Compile Include="Subrecords\APPA\DATA.cs" />
+    <Compile Include="Subrecords\CREA\SNAM.cs" />
+    <Compile Include="Subrecords\CREA\NIFT.cs" />
     <Compile Include="Subrecords\_Shared\XRGD.cs" />
     <Compile Include="Subrecords\ACRE\XRNK.cs" />
     <Compile Include="Subrecords\ARMO\ANAM.cs" />

@@ -31,16 +31,16 @@ namespace TES3Tool
 
 
             string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
-            var stat = TES4Load(fileESM, new List<string> {
-                "STAT", "CELL","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLI",
-                "FLOR","DOOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT"
-            });
+            //var stat = TES4Load(fileESM, new List<string> {
+            //    "STAT", "CELL","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLI",
+            //    "FLOR","DOOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT"
+            //});
 
-            //var stat = TES4Load(fileESM, new List<string> { "ARMO" });
+            var stat = TES4Load(fileESM, new List<string> { "CREA" });
 
 
-            var test = ConvertInteriorCells(stat);
-            test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path
+            //var test = ConvertInteriorCells(stat);
+            //test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path
 
 
 

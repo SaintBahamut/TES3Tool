@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using TES4Lib.Base;
+﻿using TES4Lib.Base;
 using Utility;
 
 namespace TES4Lib.Subrecords.CONT
@@ -17,8 +15,7 @@ namespace TES4Lib.Subrecords.CONT
         public CNTO(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            var baseFormIdBytes = reader.ReadBytes<byte[]>(base.Data, 4);
-            ItemId = BitConverter.ToString(baseFormIdBytes.Reverse().ToArray()).Replace("-", "");
+            ItemId = reader.ReadFormId(base.Data);
             ItemCount = reader.ReadBytes<int>(base.Data);
         }
     }

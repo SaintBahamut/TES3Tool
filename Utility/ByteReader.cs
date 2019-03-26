@@ -11,11 +11,13 @@ namespace Utility
         public int offset = 0;
 
         /// <summary>
-        /// Its shit but works (boxing hell), will refactor
+        /// Its shit but works
+        /// Read raw bytes from byte array, 
+        /// object instance keeps info about offset and updates it after every read
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="data"></param>
-        /// <param name="bytesToRead"></param>
+        /// <typeparam name="T">type of data to read</typeparam>
+        /// <param name="data">raw bytes</param>
+        /// <param name="bytesToRead">Number of bytes to read</param>
         /// <returns></returns>
         public T ReadBytes<T>(byte[] data, int? bytesToRead = null)
         {
@@ -131,7 +133,7 @@ namespace Utility
         {
             Type enumType = typeof(T);
             Type enumValueType = Enum.GetUnderlyingType(enumType);
-            int enumValueSize = Marshal.SizeOf(enumValueType);  
+            int enumValueSize = Marshal.SizeOf(enumValueType);
 
             uint converted = 0;
             switch (enumValueSize)
@@ -162,6 +164,18 @@ namespace Utility
             }
             return setOfEnum;
 
+        }
+
+        /// <summary>
+        /// Reads oblivion formId
+        /// </summary>
+        /// <param name="data">raw bytes</param>
+        /// <returns></returns>
+        public string ReadFormId(byte[] data)
+        {
+            var formId = BitConverter.ToString(data.Skip(offset).Take(4).Reverse().ToArray()).Replace("-", "");
+            offset += 4;
+            return formId;
         }
 
         public void SetOffset(int newOffset)

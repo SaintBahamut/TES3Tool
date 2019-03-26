@@ -1,4 +1,6 @@
-﻿using Utility;
+﻿using System;
+using System.Linq;
+using Utility;
 
 namespace TES4Lib.Base
 {
