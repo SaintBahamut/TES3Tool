@@ -24,7 +24,7 @@ namespace TES3Lib.Records
 
         public INDX INDX { get; set; }
 
-        List<(INAM INAM, INTV INTV)> ITEM { get; set; }
+        public List<(INAM INAM, INTV INTV)> ITEM { get; set; }
 
         public LEVI()
         {

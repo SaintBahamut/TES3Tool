@@ -8,7 +8,7 @@ namespace TES3Lib.Subrecords.LTEX
     /// </summary>
     public class INTV : Subrecord
     {
-        public int IdNumber { get; set; }
+        public int IndexNumber { get; set; }
 
         public INTV()
         {
@@ -17,7 +17,7 @@ namespace TES3Lib.Subrecords.LTEX
         public INTV(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            IdNumber = reader.ReadBytes<int>(base.Data);
+            IndexNumber = reader.ReadBytes<int>(base.Data);
         }
     }
 }

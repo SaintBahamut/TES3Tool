@@ -170,7 +170,45 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwCLOT.GetType().Name, mwCLOT.NAME.EditorId, mwCLOT);
             }
 
+            //LEVELED ITEM
+            if (recordType.Equals("LVLI"))
+            {
+                var mwLVLI = ConvertLVLI((TES4Lib.Records.LVLI)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwLVLI.GetType().Name, mwLVLI.NAME.EditorId, mwLVLI);
+            }
+
             return null;
+        }
+
+        static TES3Lib.Records.LEVI ConvertLVLI(TES4Lib.Records.LVLI obLVLI)
+        {
+            var mwLEVI = new TES3Lib.Records.LEVI
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obLVLI.EDID.EditorId) },
+                NNAM = new TES3Lib.Subrecords.Shared.NNAM { ChanceNone = obLVLI.LVLD.ChanceNone },
+                DATA = new TES3Lib.Subrecords.LEVI.DATA { Flag = new HashSet<TES3Lib.Enums.Flags.LeveledItemFlag>() },
+                ITEM = new List<(TES3Lib.Subrecords.LEVI.INAM INAM, TES3Lib.Subrecords.LEVI.INTV INTV)>()
+            };
+
+            if (obLVLI.LVLF.Flags.Contains(TES4Lib.Enums.Flags.LeveledItemFlag.CalcForEachItem))
+                mwLEVI.DATA.Flag.Add(TES3Lib.Enums.Flags.LeveledItemFlag.CalcForEachItem);
+
+            if (obLVLI.LVLF.Flags.Contains(TES4Lib.Enums.Flags.LeveledItemFlag.CalcFromAllLevels))
+                mwLEVI.DATA.Flag.Add(TES3Lib.Enums.Flags.LeveledItemFlag.CalcFromAllLevels);
+
+            if(IsNull(obLVLI.LVLO)) return mwLEVI;
+            foreach (var leveledItem in obLVLI.LVLO)
+            {
+                var BaseId = GetBaseId(leveledItem.ItemFormId);
+                if (!string.IsNullOrEmpty(BaseId))
+                {
+                    mwLEVI.ITEM.Add((new TES3Lib.Subrecords.LEVI.INAM { ItemEditorId = BaseId },
+                            new TES3Lib.Subrecords.LEVI.INTV { PCLevelOfPrevious = leveledItem.Level }));
+                }
+            }
+            mwLEVI.INDX = new TES3Lib.Subrecords.LEVI.INDX { ItemCount = mwLEVI.ITEM.Count() };
+
+            return mwLEVI;
         }
 
         static TES3Lib.Records.CLOT ConvertCLOT(TES4Lib.Records.CLOT obCLOT)
@@ -217,7 +255,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     Value = (int)obARMO.DATA.Weight,
                     Health = obARMO.DATA.Health,
                     EnchancmentPoints = 10,
-                    ArmorRating = obARMO.DATA.ArmorRating/100,
+                    ArmorRating = obARMO.DATA.ArmorRating / 100,
                 }
             };
 
@@ -364,7 +402,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             var mwBOOK = new TES3Lib.Records.BOOK
             {
-                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = BookEditorIdFormater(obBOOK.EDID.EditorId) },
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obBOOK.EDID.EditorId) },
                 MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obBOOK.MODL.ModelPath, Config.BOOKPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obBOOK.FULL.DisplayName) },
                 ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obBOOK.ICON.IconFilePath, Config.BOOKPath) },
@@ -1064,7 +1102,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             if (bipedObjectFlags.Contains(TES4Lib.Enums.BodySlot.LowerBody))
                 return TES3Lib.Enums.ClothingType.Pants;
-           
+
             return TES3Lib.Enums.ClothingType.Robe;
         }
 

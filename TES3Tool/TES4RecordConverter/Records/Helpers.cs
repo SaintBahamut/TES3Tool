@@ -70,36 +70,39 @@ namespace TES3Tool.TES4RecordConverter.Records
             return $"{Config.convertedRootFolder}\\{containingFolder}\\{newFileName}";
         }
 
+        static string NameShortnernerMapper(string name)
+        {
+            return name.Replace("Standard", "Std")
+            .Replace("Restore", "Rest")
+            .Replace("Apprentice", "Appr")
+            .Replace("Journeyman", "Jour")
+            .Replace("Intelligence", "Int")
+            .Replace("Personality", "Pers")
+            .Replace("Endurance", "End")
+            .Replace("Willpower", "Will")
+            .Replace("Summon", "Summ")
+            .Replace("Expert", "Expr")
+            .Replace("Common", "Comm")
+            .Replace("Strength", "Str")
+            .Replace("HeavyArmor", "HArmor")
+            .Replace("HandToHand", "HH");
+        }
+        
+
         internal static string EditorIdFormater(string sourceEditorId)
         {
             int idSize = sourceEditorId.Count();
             if (idSize <= 32)
                 return sourceEditorId;
 
-            int diff = idSize - 32;
+            var result = NameShortnernerMapper(sourceEditorId);
 
-            return sourceEditorId.Remove(0, diff);
-        }
-
-        internal static string BookEditorIdFormater(string sourceEditorId)
-        {
-            int idSize = sourceEditorId.Count();
-            if (idSize <= 32)
-                return sourceEditorId;
+            if (result.Length <= 32)
+                return result;
 
             int diff = idSize - 32;
 
-            var result = sourceEditorId.Remove(0, diff);
-
-            //i feel very lazy
-            if (result.Equals("StandardWaterWalking2Journeyman\0") || result.Equals("andardFireDamageArea3Journeyman\0") || result.Equals("estoreAttribIntelligence1Novice\0"))
-            {
-                result = result.Replace("andard", "Sc");
-                result = result.Replace("Sandard", "Sc");
-                result = result.Replace("estore", "Sc");
-            }
-
-            return result;
+            return result.Remove(0, diff);
         }
 
         internal static string NameFormater(string recordDisplayName)

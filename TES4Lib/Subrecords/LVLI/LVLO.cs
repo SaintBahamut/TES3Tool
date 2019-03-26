@@ -40,11 +40,20 @@ namespace TES4Lib.Subrecords.LVLI
         public LVLO(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Level = reader.ReadBytes<short>(base.Data);
-            Unused1 = reader.ReadBytes<short>(base.Data);
-            ItemFormId = BitConverter.ToString(reader.ReadBytes<byte[]>(RawData, FORMID_LENGTH).Reverse().ToArray()).Replace("-", "");
-            Count = reader.ReadBytes<short>(base.Data);
-            Unused2 = reader.ReadBytes<short>(base.Data);
+            if (base.Size.Equals(8))
+            {
+                Level = reader.ReadBytes<short>(base.Data);
+                ItemFormId = BitConverter.ToString(reader.ReadBytes<byte[]>(base.Data, FORMID_LENGTH).Reverse().ToArray()).Replace("-", "");
+                Count = reader.ReadBytes<short>(base.Data);
+            }
+            else
+            {
+                Level = reader.ReadBytes<short>(base.Data);
+                Unused1 = reader.ReadBytes<short>(base.Data);
+                ItemFormId = BitConverter.ToString(reader.ReadBytes<byte[]>(base.Data, FORMID_LENGTH).Reverse().ToArray()).Replace("-", "");
+                Count = reader.ReadBytes<short>(base.Data);
+                Unused2 = reader.ReadBytes<short>(base.Data);
+            }      
         }
     }
 }

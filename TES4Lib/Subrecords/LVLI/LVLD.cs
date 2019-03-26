@@ -8,12 +8,12 @@ namespace TES4Lib.Subrecords.LVLI
     /// </summary>
     public class LVLD : Subrecord
     {
-        public byte ChanceNoneValue { get; set; }
+        public byte ChanceNone { get; set; }
 
         public LVLD(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            ChanceNoneValue = reader.ReadBytes<byte>(base.Data);
+            ChanceNone = reader.ReadBytes<byte>(base.Data);
         }
     }
 }
