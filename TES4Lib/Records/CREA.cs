@@ -2,6 +2,7 @@
 using TES4Lib.Base;
 using TES4Lib.Subrecords.CREA;
 using TES4Lib.Subrecords.Shared;
+using BNAM = TES4Lib.Subrecords.CREA.BNAM;
 using SNAM = TES4Lib.Subrecords.CREA.SNAM;
 
 namespace TES4Lib.Records
@@ -53,13 +54,17 @@ namespace TES4Lib.Records
 
         public ZNAM ZNAM { get; set; }
 
-        public CSCR CSCR { get; set; }//START FROM HERE
+        public CSCR CSCR { get; set; }
 
-        public CSDT CSDT { get; set; }
+        #region should make these 3 one list but i dont really need those
 
-        public CSDI CSDI { get; set; }
+        public List<CSDT> CSDT { get; set; }
 
-        public CSDC CSDC { get; set; }
+        public List<CSDI> CSDI { get; set; }
+
+        public List<CSDC> CSDC { get; set; }
+
+        #endregion
 
         public BNAM BNAM { get; set; }
 

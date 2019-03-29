@@ -66,6 +66,7 @@
     <Compile Include="Enums\ResistanceType.cs" />
     <Compile Include="Enums\Skill.cs" />
     <Compile Include="Enums\SoulGemType.cs" />
+    <Compile Include="Enums\SoundType.cs" />
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\SpellType.cs" />
     <Compile Include="Enums\SpellLevel.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Subrecords\AMMO\ANAM.cs" />
     <Compile Include="Subrecords\AMMO\DATA.cs" />
     <Compile Include="Subrecords\APPA\DATA.cs" />
+    <Compile Include="Subrecords\CREA\BNAM.cs" />
     <Compile Include="Subrecords\CREA\SNAM.cs" />
     <Compile Include="Subrecords\CREA\NIFT.cs" />
     <Compile Include="Subrecords\_Shared\XRGD.cs" />
