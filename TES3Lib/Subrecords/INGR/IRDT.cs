@@ -79,12 +79,12 @@ namespace TES3Lib.Subrecords.INGR
 
             for (int i = 0; i < SkillIds.Length; i++)
             {
-                data.AddRange(ByteWriter.ToBytes(Convert.ToInt32(EffectIds[i]), typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(Convert.ToInt32(SkillIds[i]), typeof(int)));
             }
 
             for (int i = 0; i < AttributeIds.Length; i++)
             {
-                data.AddRange(ByteWriter.ToBytes(Convert.ToInt32(EffectIds[i]), typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(Convert.ToInt32(AttributeIds[i]), typeof(int)));
             }
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
