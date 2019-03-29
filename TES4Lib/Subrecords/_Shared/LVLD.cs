@@ -1,7 +1,7 @@
 ﻿using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.LVLI
+namespace TES4Lib.Subrecords.Shared
 {
     /// <summary>
     /// Chance none value

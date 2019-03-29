@@ -15,7 +15,7 @@ namespace TES3Tool.TES4RecordConverter
         {
             //convert cells
             var cellGroupsTop = tes4.Groups.FirstOrDefault(x => x.Label == "CELL");
-            if (cellGroupsTop == null)
+            if (IsNull(cellGroupsTop))
             {
                 Console.WriteLine("no CELL records");
                 return null;
@@ -34,13 +34,13 @@ namespace TES3Tool.TES4RecordConverter
                         if (cellRecord.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
 
                         //hack for now to get SI only
-                        if ((cellRecord.EDID.EditorId.Contains("SE") || cellRecord.EDID.EditorId.Contains("XP")) && cellRecord.FULL != null)
+                        if ((cellRecord.EDID.EditorId.Contains("SE") || cellRecord.EDID.EditorId.Contains("XP")) && !IsNull(cellRecord.FULL))
                         {
                             var convertedCell = ConvertCELL(cellRecord);
-                            if (convertedCell == null) throw new Exception("Output cell was null");
+                            if (IsNull(convertedCell)) throw new Exception("Output cell was null");
 
                             var cellReferences = cellSubBlock.Groups.FirstOrDefault(x => x.Label == cellRecord.FormId);
-                            if (cellReferences == null) continue;
+                            if (IsNull(cellReferences)) continue;
 
                             Console.WriteLine($"BEGIN CONVERTING \"{convertedCell.NAME.EditorId}\" CELL");
                             foreach (var childrenType in cellReferences.Groups) //can have 3 with labels: persistent 8; temporaty 9; distant 10;

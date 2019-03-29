@@ -150,6 +150,10 @@
     <Compile Include="Subrecords\CREA\BNAM.cs" />
     <Compile Include="Subrecords\CREA\SNAM.cs" />
     <Compile Include="Subrecords\CREA\NIFT.cs" />
+    <Compile Include="Subrecords\LVLC\TNAM.cs" />
+    <Compile Include="Subrecords\_Shared\LVLO.cs" />
+    <Compile Include="Subrecords\_Shared\LVLD.cs" />
+    <Compile Include="Subrecords\_Shared\LVLF.cs" />
     <Compile Include="Subrecords\_Shared\XRGD.cs" />
     <Compile Include="Subrecords\ACRE\XRNK.cs" />
     <Compile Include="Subrecords\ARMO\ANAM.cs" />
@@ -193,10 +197,7 @@
     <Compile Include="Subrecords\DOOR\ANAM.cs" />
     <Compile Include="Subrecords\ENCH\ENIT.cs" />
     <Compile Include="Subrecords\INGR\DATA.cs" />
-    <Compile Include="Subrecords\LVLI\LVLF.cs" />
-    <Compile Include="Subrecords\LVLI\LVLD.cs" />
     <Compile Include="Subrecords\LVLI\DATA.cs" />
-    <Compile Include="Subrecords\LVLI\LVLO.cs" />
     <Compile Include="Subrecords\SPEL\SPIT.cs" />
     <Compile Include="Subrecords\_Shared\BMDT.cs" />
     <Compile Include="Subrecords\_Shared\EFID.cs" />

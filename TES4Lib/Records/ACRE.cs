@@ -26,7 +26,6 @@ namespace TES4Lib.Records
 
         public ACRE(byte[] rawData) : base(rawData)
         {
-            IsImplemented = false;
             BuildSubrecords();
         }
     }

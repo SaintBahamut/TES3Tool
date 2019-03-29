@@ -1,10 +1,9 @@
 ﻿using TES4Lib.Base;
-using static Utility.Common;
 using Utility;
 using TES4Lib.Enums.Flags;
 using System.Collections.Generic;
 
-namespace TES4Lib.Subrecords.LVLI
+namespace TES4Lib.Subrecords.Shared
 {
     /// <summary>
     /// Level list flags (1 byte)
