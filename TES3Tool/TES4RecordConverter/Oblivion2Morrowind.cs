@@ -51,36 +51,98 @@ namespace TES3Tool.TES4RecordConverter
                                     if (obRef.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
 
                                     TES3Lib.Records.REFR mwREFR;
-                                    switch (obRef.GetType().Name)
+
+                                    var referenceTypeName = obRef.GetType().Name;
+
+                                    if (referenceTypeName.Equals("REFR"))
                                     {
-                                        case "REFR":
-                                            var obREFR = (TES4Lib.Records.REFR)obRef;
+                                        var obREFR = (TES4Lib.Records.REFR)obRef;
+                                        if (IsNull(obREFR.NAME)) continue;
+                                        var ReferenceBaseFormId = obREFR.NAME.BaseFormId;
 
-                                            if (IsNull(obREFR.NAME)) continue;
+                                        //MOVE THIS TO SEPARATE FUNCTION
+                                        var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
+                                        if (string.IsNullOrEmpty(BaseId))
+                                        {
+                                            var mwRecordFromREFR = ConvertRecordFromFormId(ReferenceBaseFormId);
+                                            if (IsNull(mwRecordFromREFR)) continue;
 
-                                            var BaseId = GetBaseIdFromFormId(obREFR.NAME.BaseFormId);
-                                            if (string.IsNullOrEmpty(BaseId))
-                                            {
-                                                var mwRecordFromREFR = ConvertRecordFromFormId(obREFR.NAME.BaseFormId);
-                                                if (IsNull(mwRecordFromREFR)) continue;
+                                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                                            ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
 
-                                                if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
-                                                ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
+                                            BaseId = mwRecordFromREFR.EditorId;
+                                        }
+                                        /////////
 
-                                                BaseId = mwRecordFromREFR.EditorId;
-                                            }
+                                        mwREFR = ConvertREFR(obREFR, BaseId, refrNumber);
+                                        CellReferences.Add(new ConvertedCellReference(cellRecord.FormId, obREFR.FormId, mwREFR)); //for tracking
 
-                                            mwREFR = ConvertREFR(obREFR, BaseId, refrNumber);
-                                            CellReferences.Add(new ConvertedCellReference(cellRecord.FormId, obREFR.FormId, mwREFR)); //for tracking
-
-                                            convertedCell.REFR.Add(mwREFR);
-                                            refrNumber++;
-                                            break;
-                                        case "ACHR":
-                                            continue;
-                                        case "ACRE":
-                                            continue;
+                                        convertedCell.REFR.Add(mwREFR);
+                                        refrNumber++;
                                     }
+
+                                    if (referenceTypeName.Equals("ACRE"))
+                                    {
+                                        var obACRE = (TES4Lib.Records.ACRE)obRef;
+                                        if (IsNull(obACRE.NAME)) continue;
+                                        var ReferenceBaseFormId = obACRE.NAME.BaseFormId;
+
+                                        //MOVE THIS TO SEPARATE FUNCTION
+                                        var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
+                                        if (string.IsNullOrEmpty(BaseId))
+                                        {
+                                            var mwRecordFromREFR = ConvertRecordFromFormId(ReferenceBaseFormId);
+                                            if (IsNull(mwRecordFromREFR)) continue;
+
+                                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                                            ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
+
+                                            BaseId = mwRecordFromREFR.EditorId;
+                                        }
+                                        /////////
+
+                                        mwREFR = ConvertACRE(obACRE, BaseId, refrNumber);
+                                        CellReferences.Add(new ConvertedCellReference(cellRecord.FormId, obACRE.FormId, mwREFR)); //for tracking
+
+                                        convertedCell.REFR.Add(mwREFR);
+                                        refrNumber++;
+                                    }
+
+                                    if (referenceTypeName.Equals("ACHR"))
+                                    {
+                                        continue;
+                                    }
+
+                                    //switch (obRef.GetType().Name)
+                                    //{
+                                    //    case "REFR":
+                                    //        var obREFR = (TES4Lib.Records.REFR)obRef;
+
+                                    //        if (IsNull(obREFR.NAME)) continue;
+
+                                    //        var BaseId = GetBaseIdFromFormId(obREFR.NAME.BaseFormId);
+                                    //        if (string.IsNullOrEmpty(BaseId))
+                                    //        {
+                                    //            var mwRecordFromREFR = ConvertRecordFromFormId(obREFR.NAME.BaseFormId);
+                                    //            if (IsNull(mwRecordFromREFR)) continue;
+
+                                    //            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                                    //            ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
+
+                                    //            BaseId = mwRecordFromREFR.EditorId;
+                                    //        }
+
+                                    //        mwREFR = ConvertREFR(obREFR, BaseId, refrNumber);
+                                    //        CellReferences.Add(new ConvertedCellReference(cellRecord.FormId, obREFR.FormId, mwREFR)); //for tracking
+
+                                    //        convertedCell.REFR.Add(mwREFR);
+                                    //        refrNumber++;
+                                    //        break;
+                                    //    case "ACHR":
+                                    //        continue;
+                                    //    case "ACRE":
+                                    //        continue;
+                                    //}
                                 }
                             }
 

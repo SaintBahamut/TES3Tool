@@ -24,7 +24,7 @@ namespace TES3Lib.Records
 
         public INDX INDX { get; set; }
 
-        List<(CNAM CNAM, INTV INTV)> CRIT { get; set; }
+        public List<(CNAM CNAM, INTV INTV)> CRIT { get; set; }
 
         public LEVC()
         {

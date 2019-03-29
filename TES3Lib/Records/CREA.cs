@@ -51,6 +51,11 @@ namespace TES3Lib.Records
 
         public XSCL XSCL { get; set; }
 
+        public CREA()
+        {
+
+        }
+
         public CREA(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();

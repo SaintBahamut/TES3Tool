@@ -1,4 +1,5 @@
-﻿using TES4Lib.Base;
+﻿using System.Collections.Generic;
+using TES4Lib.Base;
 using TES4Lib.Subrecords.LVLC;
 using TES4Lib.Subrecords.Shared;
 
@@ -12,7 +13,7 @@ namespace TES4Lib.Records
 
         public LVLF LVLF { get; set; }
 
-        public LVLO LVLO { get; set; }
+        public List<LVLO> LVLO { get; set; }
 
         public SCRI SCRI { get; set; }
 

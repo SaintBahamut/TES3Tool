@@ -177,7 +177,33 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwLVLI.GetType().Name, mwLVLI.NAME.EditorId, mwLVLI);
             }
 
+            //LEVELED CREATURE
+            if (recordType.Equals("LEVI"))
+            {
+                var mwLEVI = ConvertLVLC((TES4Lib.Records.LVLC)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwLEVI.GetType().Name, mwLEVI.NAME.EditorId, mwLEVI);
+            }
+
+            //CREATURE
+            if (recordType.Equals("CREA"))
+            {
+                var mwCREA = ConvertCREA((TES4Lib.Records.CREA)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwCREA.GetType().Name, mwCREA.NAME.EditorId, mwCREA);
+            }
+
             return null;
+        }
+
+        private static TES3Lib.Records.CREA ConvertCREA(CREA obCREA)
+        {
+            var mwCREA = new TES3Lib.Records.CREA
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obCREA.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obCREA.MODL.ModelPath, Config.WEAPPath) },//add sum moodcrabz
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCREA.FULL) ? obCREA.FULL.DisplayName : string.Empty) }
+            };
+            //START FROM HERE
+            return mwCREA;
         }
 
         static TES3Lib.Records.LEVI ConvertLVLI(TES4Lib.Records.LVLI obLVLI)
@@ -196,7 +222,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             if (obLVLI.LVLF.Flags.Contains(TES4Lib.Enums.Flags.LeveledItemFlag.CalcFromAllLevels))
                 mwLEVI.DATA.Flag.Add(TES3Lib.Enums.Flags.LeveledItemFlag.CalcFromAllLevels);
 
-            if(IsNull(obLVLI.LVLO)) return mwLEVI;
+            if (IsNull(obLVLI.LVLO)) return mwLEVI;
             foreach (var leveledItem in obLVLI.LVLO)
             {
                 var BaseId = GetBaseId(leveledItem.ItemFormId);
@@ -207,6 +233,35 @@ namespace TES3Tool.TES4RecordConverter.Records
                 }
             }
             mwLEVI.INDX = new TES3Lib.Subrecords.LEVI.INDX { ItemCount = mwLEVI.ITEM.Count() };
+
+            return mwLEVI;
+        }
+
+        static TES3Lib.Records.LEVC ConvertLVLC(TES4Lib.Records.LVLC obLVLC)
+        {
+            var mwLEVI = new TES3Lib.Records.LEVC
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obLVLC.EDID.EditorId) },
+                NNAM = new TES3Lib.Subrecords.Shared.NNAM { ChanceNone = obLVLC.LVLD.ChanceNone },
+                DATA = new TES3Lib.Subrecords.LEVC.DATA { Flag = new HashSet<TES3Lib.Enums.Flags.LeveledCreatureFlag>() },
+                CRIT = new List<(TES3Lib.Subrecords.LEVC.CNAM CNAM, TES3Lib.Subrecords.LEVC.INTV INTV)>()
+            };
+
+           
+            if (obLVLC.LVLF.Flags.Contains(TES4Lib.Enums.Flags.LeveledItemFlag.CalcFromAllLevels))
+                mwLEVI.DATA.Flag.Add(TES3Lib.Enums.Flags.LeveledCreatureFlag.CalcFromAllLevels);
+
+            if (IsNull(obLVLC.LVLO)) return mwLEVI;
+            foreach (var leveledCreature in obLVLC.LVLO)
+            {
+                var BaseId = GetBaseId(leveledCreature.ItemFormId);
+                if (!string.IsNullOrEmpty(BaseId))
+                {
+                    mwLEVI.CRIT.Add((new TES3Lib.Subrecords.LEVC.CNAM { CreatureEditorId = BaseId },
+                            new TES3Lib.Subrecords.LEVC.INTV { PCLevelOfPrevious = leveledCreature.Level }));
+                }
+            }
+            mwLEVI.INDX = new TES3Lib.Subrecords.LEVC.INDX { CreatureCount = mwLEVI.CRIT.Count() };
 
             return mwLEVI;
         }
@@ -1039,6 +1094,45 @@ namespace TES3Tool.TES4RecordConverter.Records
                 mwREFR.DATA.XRotate = obREFR.DATA.RotX;
                 mwREFR.DATA.YRotate = obREFR.DATA.RotY;
                 mwREFR.DATA.ZRotate = obREFR.DATA.RotZ;
+            }
+
+            return mwREFR;
+        }
+
+        public static TES3Lib.Records.REFR ConvertACRE(TES4Lib.Records.ACRE obACRE, string baseId, int refrNumber)
+        {
+            var mwREFR = new TES3Lib.Records.REFR();
+
+            mwREFR.FRMR = new TES3Lib.Subrecords.REFR.FRMR();
+            mwREFR.FRMR.ObjectIndex = refrNumber;
+
+            mwREFR.NAME = new TES3Lib.Subrecords.Shared.NAME();
+            mwREFR.NAME.EditorId = baseId;
+
+            //TODO: after you got all return here
+            //XESP
+            //XOWN
+            //XGLB
+            //XRNK
+
+
+            if (!IsNull(obACRE.XSCL))
+            {
+                mwREFR.XSCL = new TES3Lib.Subrecords.Shared.XSCL
+                {
+                    Scale = obACRE.XSCL.Scale <= 0.5f ? 0.5f : obACRE.XSCL.Scale
+                };
+            }
+
+            if (!IsNull(obACRE.DATA))
+            {
+                mwREFR.DATA = new TES3Lib.Subrecords.REFR.DATA();
+                mwREFR.DATA.XPos = obACRE.DATA.LocX;
+                mwREFR.DATA.YPos = obACRE.DATA.LocY;
+                mwREFR.DATA.ZPos = obACRE.DATA.LocZ;
+                mwREFR.DATA.XRotate = obACRE.DATA.RotX;
+                mwREFR.DATA.YRotate = obACRE.DATA.RotY;
+                mwREFR.DATA.ZRotate = obACRE.DATA.RotZ;
             }
 
             return mwREFR;

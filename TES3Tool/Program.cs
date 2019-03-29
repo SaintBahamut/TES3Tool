@@ -31,12 +31,12 @@ namespace TES3Tool
 
 
             string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
-            //var stat = TES4Load(fileESM, new List<string> {
-            //    "STAT", "CELL","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLI",
-            //    "FLOR","DOOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT"
-            //});
+            var stat = TES4Load(fileESM, new List<string> {
+                "STAT", "CELL","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLI",
+                "FLOR","DOOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA","LVLC"
+            });
 
-            var stat = TES4Load(fileESM, new List<string> { "CREA","LVLC" });
+            //var stat = TES4Load(fileESM, new List<string> { "CREA","LVLC" });
 
 
             var test = ConvertInteriorCells(stat);
