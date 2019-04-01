@@ -9,7 +9,7 @@
         Ingredients = 0x00000010,
         Lights = 0x00000080,
         Apparatus = 0x00000100,
-        Miscellaneous = 0x00000400,
+        Misc = 0x00000400,
         Spells = 0x00000800,
         MagicItems = 0x00001000,
         Potions = 0x00002000,

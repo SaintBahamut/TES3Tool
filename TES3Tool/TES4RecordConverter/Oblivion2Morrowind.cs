@@ -112,37 +112,6 @@ namespace TES3Tool.TES4RecordConverter
                                     {
                                         continue;
                                     }
-
-                                    //switch (obRef.GetType().Name)
-                                    //{
-                                    //    case "REFR":
-                                    //        var obREFR = (TES4Lib.Records.REFR)obRef;
-
-                                    //        if (IsNull(obREFR.NAME)) continue;
-
-                                    //        var BaseId = GetBaseIdFromFormId(obREFR.NAME.BaseFormId);
-                                    //        if (string.IsNullOrEmpty(BaseId))
-                                    //        {
-                                    //            var mwRecordFromREFR = ConvertRecordFromFormId(obREFR.NAME.BaseFormId);
-                                    //            if (IsNull(mwRecordFromREFR)) continue;
-
-                                    //            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
-                                    //            ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
-
-                                    //            BaseId = mwRecordFromREFR.EditorId;
-                                    //        }
-
-                                    //        mwREFR = ConvertREFR(obREFR, BaseId, refrNumber);
-                                    //        CellReferences.Add(new ConvertedCellReference(cellRecord.FormId, obREFR.FormId, mwREFR)); //for tracking
-
-                                    //        convertedCell.REFR.Add(mwREFR);
-                                    //        refrNumber++;
-                                    //        break;
-                                    //    case "ACHR":
-                                    //        continue;
-                                    //    case "ACRE":
-                                    //        continue;
-                                    //}
                                 }
                             }
 

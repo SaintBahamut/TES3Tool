@@ -27,5 +27,10 @@
         public static string BOOKPath = "p";
         public static string ALCHPath = "h";
         public static string APPAPath = "h";
+
+        public static string CREABiped = "r\\Skeleton.NIF\0";
+        public static string CREAamphibious = "r\\swimmer.NIF\0";
+        public static string CREAWeapon = "r\\Goblin01.NIF\0";
+        public static string CREADefault = "r\\CaveMudcrab.nif\0";
     }
 }

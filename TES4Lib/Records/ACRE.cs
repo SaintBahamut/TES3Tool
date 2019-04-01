@@ -10,7 +10,7 @@ namespace TES4Lib.Records
 
         public NAME NAME { get; set; }
 
-        public XRGD XRDG { get; set; }
+        public XRGD XRGD { get; set; }
 
         public XESP XESP { get; set; }
 

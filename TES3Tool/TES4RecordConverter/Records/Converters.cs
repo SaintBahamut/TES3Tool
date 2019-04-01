@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using TES4Lib.Records;
 using TES3Lib.Enums;
 using TES4Lib.Enums;
+using TES3Lib.Enums.Flags;
+using TES4Lib.Enums.Flags;
 
 namespace TES3Tool.TES4RecordConverter.Records
 {
@@ -173,15 +175,15 @@ namespace TES3Tool.TES4RecordConverter.Records
             //LEVELED ITEM
             if (recordType.Equals("LVLI"))
             {
-                var mwLVLI = ConvertLVLI((TES4Lib.Records.LVLI)obRecord);
-                return new ConvertedRecordData(obRecord.FormId, mwLVLI.GetType().Name, mwLVLI.NAME.EditorId, mwLVLI);
+                var mwLEVI = ConvertLVLI((TES4Lib.Records.LVLI)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwLEVI.GetType().Name, mwLEVI.NAME.EditorId, mwLEVI);
             }
 
             //LEVELED CREATURE
-            if (recordType.Equals("LEVI"))
+            if (recordType.Equals("LVLC"))
             {
-                var mwLEVI = ConvertLVLC((TES4Lib.Records.LVLC)obRecord);
-                return new ConvertedRecordData(obRecord.FormId, mwLEVI.GetType().Name, mwLEVI.NAME.EditorId, mwLEVI);
+                var mwLEVC = ConvertLVLC((TES4Lib.Records.LVLC)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwLEVC.GetType().Name, mwLEVC.NAME.EditorId, mwLEVC);
             }
 
             //CREATURE
@@ -194,17 +196,111 @@ namespace TES3Tool.TES4RecordConverter.Records
             return null;
         }
 
-        private static TES3Lib.Records.CREA ConvertCREA(CREA obCREA)
+        private static TES3Lib.Records.CREA ConvertCREA(TES4Lib.Records.CREA obCREA)
         {
             var mwCREA = new TES3Lib.Records.CREA
             {
-                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obCREA.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obCREA.MODL.ModelPath, Config.WEAPPath) },//add sum moodcrabz
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCREA.FULL) ? obCREA.FULL.DisplayName : string.Empty) }
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = CreatureIdFormater(obCREA.EDID.EditorId) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL(),
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCREA.FULL) ? obCREA.FULL.DisplayName : string.Empty) },
+                NPDT = new TES3Lib.Subrecords.CREA.NPDT
+                {
+                    CreatureType = CastCreatureTypeToMW(obCREA.DATA.CreatureType),
+                    Level = obCREA.ACBS.Flags.Contains(TES4Lib.Enums.Flags.CreatureFlag.PCLevelOffset) ? (int)Math.Max(obCREA.ACBS.CalcMax, obCREA.ACBS.CalcMin) : obCREA.ACBS.LevelOffset,
+                    Strength = obCREA.DATA.Strength,
+                    Intelligence = obCREA.DATA.Intelligence,
+                    Willpower = obCREA.DATA.Willpower,
+                    Agility = obCREA.DATA.Agility,
+                    Speed = obCREA.DATA.Speed,
+                    Endurance = obCREA.DATA.Endurance,
+                    Personality = obCREA.DATA.Personality,
+                    Luck = obCREA.DATA.Luck,
+                    Health = obCREA.ACBS.Flags.Contains(TES4Lib.Enums.Flags.CreatureFlag.PCLevelOffset) ? (int)Math.Max(obCREA.ACBS.CalcMax, obCREA.ACBS.CalcMin) * obCREA.DATA.Health/2 : obCREA.DATA.Health,                  
+                    SpellPts = obCREA.ACBS.Flags.Contains(TES4Lib.Enums.Flags.CreatureFlag.PCLevelOffset) ? (int)Math.Max(obCREA.ACBS.CalcMax, obCREA.ACBS.CalcMin) * obCREA.ACBS.BaseSpellPoints / 2 : obCREA.ACBS.BaseSpellPoints,
+                    Fatigue = obCREA.ACBS.Flags.Contains(TES4Lib.Enums.Flags.CreatureFlag.PCLevelOffset) ? (int)Math.Max(obCREA.ACBS.CalcMax, obCREA.ACBS.CalcMin) * obCREA.ACBS.Fatigue / 2 : obCREA.ACBS.Fatigue,
+                    Soul = GetSoulValue(obCREA.DATA.Soul),
+                    Combat = obCREA.DATA.CombatSkill,
+                    Magic = obCREA.DATA.MagicSkill,
+                    Stealth = obCREA.DATA.StealthSkill,
+                    AttackMin1 = (int)(0.90 * obCREA.DATA.AttackDamage),
+                    AttackMax1 = obCREA.DATA.AttackDamage,
+                    AttackMin2 = (int)(0.90 * obCREA.DATA.AttackDamage),
+                    AttackMax2 = obCREA.DATA.AttackDamage,
+                    AttackMin3 = (int)(0.90 * obCREA.DATA.AttackDamage),
+                    AttackMax3 = obCREA.DATA.AttackDamage,
+                    Gold = obCREA.ACBS.BarterGold,
+                },
+                FLAG = new TES3Lib.Subrecords.CREA.FLAG
+                {
+                    Flags = CastCreatureFlagsToMW(obCREA.ACBS.Flags),
+                },
+                NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>(),
+                NPCS = new List<TES3Lib.Subrecords.Shared.NPCS>(),
+                AIDT = new TES3Lib.Subrecords.Shared.AIDT
+                {
+                    Hello = obCREA.AIDT.EnergyLevel,
+                    Fight = obCREA.AIDT.Aggression,
+                    Flee = obCREA.AIDT.Confidence,
+                    Alarm = obCREA.AIDT.Responsibility,
+                    Flags = CastServicesToMW(obCREA.AIDT.Services)
+                },
+                XSCL = !IsNull(obCREA.BNAM) && !obCREA.BNAM.BaseScale.Equals(1.0f) ? new TES3Lib.Subrecords.Shared.XSCL { Scale = obCREA.BNAM.BaseScale } : null
             };
-            //START FROM HERE
+
+            if (mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.Biped))
+            {
+                mwCREA.MODL.ModelPath = Config.CREABiped;
+            }
+            else if (mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.WeaponAndShield))
+            {
+                mwCREA.MODL.ModelPath = Config.CREAWeapon;
+            }
+            else if(mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.Walks) && mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.Swims))
+            {
+                mwCREA.MODL.ModelPath = Config.CREAamphibious;
+            }
+            else
+            {
+                mwCREA.MODL.ModelPath = Config.CREADefault;
+            }
+
+            if (!IsNull(obCREA.INAM))
+            {
+                var BaseId = GetBaseId(obCREA.INAM.ItemFormId);
+                if (!string.IsNullOrEmpty(BaseId))
+                {
+                    mwCREA.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = BaseId, Count = 1 });
+                }
+            }
+
+            if (!IsNull(obCREA.CNTO))
+            {
+                foreach (var item in obCREA.CNTO)
+                {
+                    var BaseId = GetBaseId(item.ItemId);
+                    if (!string.IsNullOrEmpty(BaseId))
+                    {
+                        mwCREA.NPCO.Add(new TES3Lib.Subrecords.Shared.NPCO { ItemId = BaseId, Count = item.ItemCount });
+                    }
+                }
+            }
+
+            if (!IsNull(obCREA.SPLO))
+            {
+                foreach (var spell in obCREA.SPLO)// leveled spells not supported, might add
+                {
+                    var BaseId = GetBaseId(spell.SpellFormId);
+                    if (!string.IsNullOrEmpty(BaseId))
+                    {
+                        mwCREA.NPCS.Add(new TES3Lib.Subrecords.Shared.NPCS { SpellId = BaseId });
+                    }
+                }
+            }
+
+
             return mwCREA;
         }
+
 
         static TES3Lib.Records.LEVI ConvertLVLI(TES4Lib.Records.LVLI obLVLI)
         {
@@ -241,14 +337,14 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             var mwLEVI = new TES3Lib.Records.LEVC
             {
-                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obLVLC.EDID.EditorId) },
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = CreatureIdFormater(obLVLC.EDID.EditorId) },
                 NNAM = new TES3Lib.Subrecords.Shared.NNAM { ChanceNone = obLVLC.LVLD.ChanceNone },
                 DATA = new TES3Lib.Subrecords.LEVC.DATA { Flag = new HashSet<TES3Lib.Enums.Flags.LeveledCreatureFlag>() },
                 CRIT = new List<(TES3Lib.Subrecords.LEVC.CNAM CNAM, TES3Lib.Subrecords.LEVC.INTV INTV)>()
             };
 
-           
-            if (obLVLC.LVLF.Flags.Contains(TES4Lib.Enums.Flags.LeveledItemFlag.CalcFromAllLevels))
+
+            if (!IsNull(obLVLC.LVLF) && obLVLC.LVLF.Flags.Contains(TES4Lib.Enums.Flags.LeveledItemFlag.CalcFromAllLevels))
                 mwLEVI.DATA.Flag.Add(TES3Lib.Enums.Flags.LeveledCreatureFlag.CalcFromAllLevels);
 
             if (IsNull(obLVLC.LVLO)) return mwLEVI;
@@ -632,8 +728,9 @@ namespace TES3Tool.TES4RecordConverter.Records
                 MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obFLOR.MODL.ModelPath, TES3Tool.Config.FLORPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obFLOR.FULL.DisplayName) },
                 CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = 0 },
-                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 0x0008 | 0x0001 | 0x0002 }
-            };
+                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 0x0008 | 0x0001 | 0x0002 },
+                NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>()
+        };
 
             if (!IsNull(obFLOR.PFIG))
             {
@@ -644,16 +741,16 @@ namespace TES3Tool.TES4RecordConverter.Records
                 switch (fate) //interpret gods words
                 {
                     case 0:
-                        qnt = (int)obFLOR.PFPC.SpringProd;
+                        qnt = (int)obFLOR.PFPC.SpringProd/5;
                         break;
                     case 1:
-                        qnt = (int)obFLOR.PFPC.SummerProd;
+                        qnt = (int)obFLOR.PFPC.SummerProd/5;
                         break;
                     case 2:
-                        qnt = (int)obFLOR.PFPC.FallProd;
+                        qnt = (int)obFLOR.PFPC.FallProd/5;
                         break;
                     case 4:
-                        qnt = (int)obFLOR.PFPC.WinterProd;
+                        qnt = (int)obFLOR.PFPC.WinterProd/5;
                         break;
                 }
 
@@ -667,7 +764,6 @@ namespace TES3Tool.TES4RecordConverter.Records
                     TES4Lib.TES4.TES4RecordIndex.TryGetValue(obFLOR.PFIG.IngredientProduced, out record);
                     if (!IsNull(record))
                     {
-                        CONT.NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>();
                         var mwRecordFromREFR = ConvertRecordFromFormId(obFLOR.PFIG.IngredientProduced);
                         if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
                         ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
@@ -1671,6 +1767,27 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
         }
 
+        static TES3Lib.Enums.CreatureType CastCreatureTypeToMW(TES4Lib.Enums.CreatureType creatureType)
+        {
+            switch (creatureType)
+            {
+                case TES4Lib.Enums.CreatureType.Creature:
+                    return TES3Lib.Enums.CreatureType.Creature;
+                case TES4Lib.Enums.CreatureType.Daedra:
+                    return TES3Lib.Enums.CreatureType.Daedra;
+                case TES4Lib.Enums.CreatureType.Undead:
+                    return TES3Lib.Enums.CreatureType.Undead;
+                case TES4Lib.Enums.CreatureType.Humanoid:
+                    return TES3Lib.Enums.CreatureType.Humanoid;
+                case TES4Lib.Enums.CreatureType.Horse:
+                    return TES3Lib.Enums.CreatureType.Creature;
+                case TES4Lib.Enums.CreatureType.Giant:
+                    return TES3Lib.Enums.CreatureType.Humanoid;
+                default:
+                    return TES3Lib.Enums.CreatureType.Creature;
+            }
+        }
+
         static TES3Lib.Enums.EnchantmentType CastEnchantmentTypeToMW(TES4Lib.Enums.EnchantmentType enchantmentType)
         {
             switch (enchantmentType)
@@ -1686,6 +1803,62 @@ namespace TES3Tool.TES4RecordConverter.Records
                 default:
                     return TES3Lib.Enums.EnchantmentType.CastWhenUsed;
             }
+        }
+
+        static HashSet<TES3Lib.Enums.Flags.ServicesFlag> CastServicesToMW(HashSet<TES4Lib.Enums.Flags.ServicesFlag> obFLag)
+        {
+            var mwFlags = new HashSet<TES3Lib.Enums.Flags.ServicesFlag>();
+
+            foreach (var flag in obFLag)
+            {
+                switch (flag)
+                {
+                    case TES4Lib.Enums.Flags.ServicesFlag.Weapons:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Weapon);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Armor:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Armor);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Clothing:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Clothing);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Books:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Books);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Ingredients:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Ingredients);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Lights:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Lights);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Apparatus:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Apparatus);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Misc:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Misc);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Spells:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Spells);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.MagicItems:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.MagicItems);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Potions:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Potions);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Training:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Training);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Recharge:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Spellmaking);
+                        break;
+                    case TES4Lib.Enums.Flags.ServicesFlag.Repair:
+                        mwFlags.Add(TES3Lib.Enums.Flags.ServicesFlag.Repair);
+                        break;
+                }
+            }
+
+            return mwFlags;
         }
 
         static HashSet<TES3Lib.Enums.Flags.LightFlag> CastLightFlagsToMW(HashSet<TES4Lib.Enums.Flags.LightFlag> obFlags)
@@ -1723,6 +1896,61 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             return mwFlags;
+        }
+
+        static HashSet<TES3Lib.Enums.Flags.CreatureFlag> CastCreatureFlagsToMW(HashSet<TES4Lib.Enums.Flags.CreatureFlag> obFlags)
+        {
+            var convertedFlags = new HashSet<TES3Lib.Enums.Flags.CreatureFlag>();
+
+            foreach (var flag in obFlags)
+            {
+                switch (flag)
+                {
+                    case TES4Lib.Enums.Flags.CreatureFlag.Biped:
+                        convertedFlags.Add(TES3Lib.Enums.Flags.CreatureFlag.Biped);
+                        break;
+                    case TES4Lib.Enums.Flags.CreatureFlag.Essential:
+                        convertedFlags.Add(TES3Lib.Enums.Flags.CreatureFlag.Essential);
+                        break;
+                    case TES4Lib.Enums.Flags.CreatureFlag.WeaponAndShield:
+                        convertedFlags.Add(TES3Lib.Enums.Flags.CreatureFlag.WeaponAndShield);
+                        break;
+                    case TES4Lib.Enums.Flags.CreatureFlag.Respawn:
+                        convertedFlags.Add(TES3Lib.Enums.Flags.CreatureFlag.Respawn);
+                        break;
+                    case TES4Lib.Enums.Flags.CreatureFlag.Swims:
+                        convertedFlags.Add(TES3Lib.Enums.Flags.CreatureFlag.Swims);
+                        break;
+                    case TES4Lib.Enums.Flags.CreatureFlag.Flies:
+                        convertedFlags.Add(TES3Lib.Enums.Flags.CreatureFlag.Flies);
+                        break;
+                    case TES4Lib.Enums.Flags.CreatureFlag.Walks:
+                        convertedFlags.Add(TES3Lib.Enums.Flags.CreatureFlag.Walks);
+                        break;
+                }
+            }
+            return convertedFlags;
+        }
+
+        static int GetSoulValue(TES4Lib.Enums.SoulGemType soul)
+        {
+            switch (soul)
+            {
+                case SoulGemType.None: // gingers here?
+                    return 0;
+                case SoulGemType.Petty:
+                    return 30;
+                case SoulGemType.Lesser:
+                    return 60;
+                case SoulGemType.Common:
+                    return 105;
+                case SoulGemType.Greather:
+                    return 165;
+                case SoulGemType.Grand:
+                    return 400;
+                default:
+                    return 0;
+            }
         }
 
         /// <summary>

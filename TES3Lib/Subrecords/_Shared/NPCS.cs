@@ -19,6 +19,10 @@ namespace TES3Lib.Subrecords.Shared
         /// </summary>
         public string SpellId { get; set; }
 
+        public NPCS()
+        {
+        }
+
         public NPCS(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();

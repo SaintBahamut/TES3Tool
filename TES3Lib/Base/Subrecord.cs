@@ -8,15 +8,41 @@ using Utility;
 
 namespace TES3Lib.Base
 {
+    /// <summary>
+    /// Base class for TES3 Subrecord
+    /// </summary>
     abstract public class Subrecord
     {
+        /// <summary>
+        /// 4 letter subrecord name
+        /// </summary>
         readonly public string Name;
-        public int Size { get; set; }
+
+        /// <summary>
+        /// Subrecord size minus header
+        /// </summary>
+        protected int Size { get; set; }
+
+        /// <summary>
+        /// Subrecord data without header with length defnined in Size property
+        /// </summary>
         protected byte[] Data { get; set; }
+
+        /// <summary>
+        /// Raw bytes of record (header+data)
+        /// </summary>
         private byte[] RawData { get; set; }
 
+        /// <summary>
+        /// Will be removed, simple check if subrecord is implemented, if not it will use RawData
+        /// when serialized back to bytes
+        /// </summary>
         protected bool IsImplemented = true;
 
+        /// <summary>
+        /// Used for loading subrecord data from ESM/ESP
+        /// </summary>
+        /// <param name="rawData">raw byte array from ESP/ESM</param>
         public Subrecord(byte[] rawData)
         {
             RawData = rawData;
@@ -28,9 +54,15 @@ namespace TES3Lib.Base
 
         public Subrecord()
         {
+            Name = this.GetType().Name;
 
         }
 
+        /// <summary>
+        /// Serializes Subrecord into byte array
+        /// Overwrite when subrecords needs specific serialization functions
+        /// </summary>
+        /// <returns>Byte array with serialized subrecord</returns>
         public virtual byte[] SerializeSubrecord()
         {
             if (!IsImplemented) return RawData;

@@ -6,7 +6,7 @@
         Armor = 0x00002,
         Clothing = 0x00004,
         Books = 0x00008,
-        Ingrediant = 0x00010,
+        Ingredients = 0x00010,
         Picks = 0x00020,
         Probes = 0x00040,
         Lights = 0x00080,

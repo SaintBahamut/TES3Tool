@@ -24,7 +24,7 @@ namespace TES3Lib.Records
 
         public SCRI SCRI { get; set; }
 
-        public List<NPCO> NPCO = new List<NPCO>();
+        public List<NPCO> NPCO { get; set; }
 
         public CONT()
         {
@@ -39,6 +39,7 @@ namespace TES3Lib.Records
         public override void BuildSubrecords()
         {
             var reader = new ByteReader();
+ 
             while (Data.Length != reader.offset)
             {
                 try
@@ -64,49 +65,5 @@ namespace TES3Lib.Records
                 }
             }
         }
-
-        //public override byte[] SerializeRecord()
-        //{
-        //    var properties = this.GetType()
-        //        .GetProperties(System.Reflection.BindingFlags.Public |
-        //                       System.Reflection.BindingFlags.Instance |
-        //                       System.Reflection.BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
-
-        //    List<byte> data = new List<byte>();
-        //    foreach (PropertyInfo property in properties)
-        //    {
-        //        try
-        //        {
-        //            if (property.Name == "NPCO") continue;
-        //            var subrecord = (Subrecord)property.GetValue(this);
-        //            if (subrecord == null) continue;
-
-        //            data.AddRange(subrecord.SerializeSubrecord());
-        //        }
-        //        catch (Exception)
-        //        {
-
-        //            throw;
-        //        }
-        //    }
-
-        //    if (NPCO.Count() > 0)
-        //    {
-        //        List<byte> containerItems = new List<byte>();
-        //        foreach (var npco in NPCO)
-        //        {
-        //            containerItems.AddRange(npco.SerializeSubrecord());
-        //        }
-        //        data.AddRange(containerItems.ToArray());
-        //    }
-
-
-
-        //    return Encoding.ASCII.GetBytes(this.GetType().Name)
-        //        .Concat(BitConverter.GetBytes(data.Count()))
-        //        .Concat(BitConverter.GetBytes(Header))
-        //        .Concat(BitConverter.GetBytes(Flags))
-        //        .Concat(data).ToArray();
-        //}
     }
 }

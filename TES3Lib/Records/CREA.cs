@@ -8,6 +8,8 @@ using System;
 using System.Text;
 using Utility;
 using TES3Lib.Enums.Flags;
+using static Utility.Common;
+using System.Collections;
 
 namespace TES3Lib.Records
 {
@@ -25,29 +27,25 @@ namespace TES3Lib.Records
 
         public SCRI SCRI { get; set; }
 
-        public List<NPCO> NPCO = new List<NPCO>();
+        public List<NPCO> NPCO { get; set; }
 
-        public List<NPCS> NPCS = new List<NPCS>();
+        public List<NPCS> NPCS { get; set; }
 
         public AIDT AIDT { get; set; }
 
         public CNAM CNAM { get; set; }
 
-        public AI_W AI_W { get; set; }
+        public List<AI_W> AI_W { get; set; }
 
-        public AI_T AI_T { get; set; }
+        public List<AI_T> AI_T { get; set; }
 
-        public AI_F AI_F { get; set; }
+        public List<AI_F> AI_F { get; set; }
 
-        public AI_E AI_E { get; set; }
+        public List<AI_E> AI_E { get; set; }
 
-        public AI_A AI_A { get; set; }
+        public List<AI_A> AI_A { get; set; }
 
         public List<(DODT coordinates, DNAM cell)> TravelService = new List<(DODT coordinates, DNAM cell)>();
-
-        public DODT DODT { get; set; }
-
-        public DNAM DNAM { get; set; }
 
         public XSCL XSCL { get; set; }
 
@@ -64,6 +62,7 @@ namespace TES3Lib.Records
         public override void BuildSubrecords()
         {
             var reader = new ByteReader();
+        
             while (Data.Length != reader.offset)
             {
                 var subrecordName = GetRecordName(reader);
@@ -78,7 +77,7 @@ namespace TES3Lib.Records
 
                     if (subrecordName.Equals("DNAM"))
                     {
-                        TravelService[TravelService.Count-1] = (TravelService[TravelService.Count - 1].coordinates, new DNAM(reader.ReadBytes<byte[]>(Data, subrecordSize)));
+                        TravelService[TravelService.Count - 1] = (TravelService[TravelService.Count - 1].coordinates, new DNAM(reader.ReadBytes<byte[]>(Data, subrecordSize)));
                         continue;
                     }
 
@@ -108,61 +107,42 @@ namespace TES3Lib.Records
         public override byte[] SerializeRecord()
         {
             var properties = this.GetType()
-                .GetProperties(System.Reflection.BindingFlags.Public |
-                               System.Reflection.BindingFlags.Instance |
-                               System.Reflection.BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
+                .GetProperties(BindingFlags.Public |
+                               BindingFlags.Instance |
+                               BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
+
 
             List<byte> data = new List<byte>();
             foreach (PropertyInfo property in properties)
             {
-                try
+                if (property.Name == "TravelService")
                 {
-                    if (property.Name == "NPCO") continue;
-                    if (property.Name == "NPCS") continue;
-                    if (property.Name == "TravelService") continue;
+                    if (TravelService.Count() > 0)
+                    {
+                        List<byte> travelDest = new List<byte>();
+                        foreach (var destination in TravelService)
+                        {
+                            travelDest.AddRange(destination.coordinates.SerializeSubrecord());
+                            if (destination.cell != null) travelDest.AddRange(destination.cell.SerializeSubrecord());
 
-                    var subrecord = (Subrecord)property.GetValue(this);
-                    if (subrecord == null) continue;
-
-                    data.AddRange(subrecord.SerializeSubrecord());
+                        }
+                        data.AddRange(travelDest.ToArray());
+                    }
                 }
-                catch (Exception)
+
+                if (property.PropertyType.IsGenericType)
                 {
-
-                    throw;
+                    var subrecordList = property.GetValue(this) as IEnumerable;
+                    if (IsNull(subrecordList)) continue;
+                    foreach (var sub in subrecordList)
+                    {
+                        data.AddRange((sub as Subrecord).SerializeSubrecord());
+                    }
+                    continue;
                 }
-            }
-
-            if (NPCO.Count() > 0)
-            {
-                List<byte> containerItems = new List<byte>();
-                foreach (var npco in NPCO)
-                {
-                    containerItems.AddRange(npco.SerializeSubrecord());
-                }
-                data.AddRange(containerItems.ToArray());
-            }
-
-            if (NPCS.Count() > 0)
-            {
-                List<byte> containerSpells = new List<byte>();
-                foreach (var npcs in NPCS)
-                {
-                    containerSpells.AddRange(npcs.SerializeSubrecord());
-                }
-                data.AddRange(containerSpells.ToArray());
-            }
-
-            if (TravelService.Count() > 0)
-            {
-                List<byte> travelDest = new List<byte>();
-                foreach (var destination in TravelService)
-                {
-                    travelDest.AddRange(destination.coordinates.SerializeSubrecord());
-                    if(destination.cell != null) travelDest.AddRange(destination.cell.SerializeSubrecord());
-
-                }
-                data.AddRange(travelDest.ToArray());
+                var subrecord = (Subrecord)property.GetValue(this);
+                if (subrecord == null) continue;
+                data.AddRange(subrecord.SerializeSubrecord());
             }
 
             uint flagSerialized = 0;

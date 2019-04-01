@@ -26,27 +26,6 @@ namespace TES3Lib.Subrecords.Shared
 
         public byte Unknown4 { get; set; }
 
-        /// <summary>
-        /// NPC Service flags
-        /// 0x00001 = Weapon
-		///	0x00002 = Armor
-		///	0x00004 = Clothing
-		///	0x00008 = Books
-		///	0x00010 = Ingrediant
-		///	0x00020 = Picks
-		///	0x00040 = Probes
-		///	0x00080 = Lights
-		///	0x00100 = Apparatus
-		///	0x00200 = Repair
-		///	0x00400 = Misc
-		///	0x00800 = Spells
-		///	0x01000 = Magic Items
-		///	0x02000 = Potions
-		///	0x04000 = Training
-		///	0x08000 = Spellmaking
-		///	0x10000 = Enchanting
-		///	0x20000 = Repair Item
-        /// </summary>
         public HashSet<ServicesFlag> Flags { get; set; }
 
         public AIDT()

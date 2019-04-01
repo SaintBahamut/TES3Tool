@@ -6,11 +6,13 @@ namespace TES3Lib.Subrecords.CREA
 {
     public class NPDT : Subrecord
     {
-        public CreatureType Type { get; set; }
+        public CreatureType CreatureType { get; set; }
 
         public int Level { get; set; }
 
         public int Strength { get; set; }
+
+        public int Intelligence { get; set; }
 
         public int Willpower { get; set; }
 
@@ -60,9 +62,10 @@ namespace TES3Lib.Subrecords.CREA
         public NPDT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Type = (CreatureType)reader.ReadBytes<int>(base.Data);
+            CreatureType = (CreatureType)reader.ReadBytes<int>(base.Data);
             Level = reader.ReadBytes<int>(base.Data);
             Strength = reader.ReadBytes<int>(base.Data);
+            Intelligence = reader.ReadBytes<int>(base.Data);
             Willpower = reader.ReadBytes<int>(base.Data);
             Agility = reader.ReadBytes<int>(base.Data);
             Speed = reader.ReadBytes<int>(base.Data);

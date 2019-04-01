@@ -87,7 +87,37 @@ namespace TES3Tool.TES4RecordConverter.Records
             .Replace("HeavyArmor", "HArmor")
             .Replace("HandToHand", "HH");
         }
-        
+
+        static string CreatureNameShortnernerMapper(string name)
+        {
+            return name.Replace("Standard", "Std")
+            .Replace("Creature", "Cr")
+            .Replace("Grummite", "Grum")
+            .Replace("Blackroot", "Br")
+            .Replace("Test", "Ts")
+            .Replace("Custom", "Cus")
+            .Replace("Atronach", "Atr")
+            .Replace("Dementia", "Dem");
+        }
+
+
+        internal static string CreatureIdFormater(string sourceEditorId)
+        {
+            int idSize = sourceEditorId.Count();
+            if (idSize <= 24)
+                return sourceEditorId;
+
+            var result = CreatureNameShortnernerMapper(sourceEditorId);
+
+            idSize = result.Count();
+            if (result.Length <= 24)
+                return result;
+
+            int diff = idSize - 24;
+
+            return result.Remove(0, diff);
+        }
+
 
         internal static string EditorIdFormater(string sourceEditorId)
         {
@@ -97,6 +127,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             var result = NameShortnernerMapper(sourceEditorId);
 
+            idSize = result.Count();
             if (result.Length <= 32)
                 return result;
 

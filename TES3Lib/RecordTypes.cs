@@ -31,6 +31,7 @@
         BOOK,       
         WEAP,
         CREA,
+        LEVC,
         LEVI,
         NPC_,   
         CELL,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,6 +9,7 @@ using TES3Lib.Enums.Flags;
 using TES3Lib.Subrecords.NPC_;
 using TES3Lib.Subrecords.Shared;
 using Utility;
+using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -49,9 +51,9 @@ namespace TES3Lib.Records
 
         public FLAG FLAG { get; set; }
 
-        public List<NPCO> NPCO = new List<NPCO>();
+        public List<NPCO> NPCO { get; set; }
 
-        public List<NPCS> NPCS = new List<NPCS>();
+        public List<NPCS> NPCS { get; set; }
 
         public AIDT AIDT { get; set; }
 
@@ -124,61 +126,42 @@ namespace TES3Lib.Records
         public override byte[] SerializeRecord()
         {
             var properties = this.GetType()
-                .GetProperties(System.Reflection.BindingFlags.Public |
-                               System.Reflection.BindingFlags.Instance |
-                               System.Reflection.BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
+                .GetProperties(BindingFlags.Public |
+                               BindingFlags.Instance |
+                               BindingFlags.DeclaredOnly).OrderBy(x => x.MetadataToken).ToList();
+
 
             List<byte> data = new List<byte>();
             foreach (PropertyInfo property in properties)
             {
-                try
-                {             
-                    if (property.Name == "NPCO") continue;
-                    if (property.Name == "NPCS") continue;
-                    if (property.Name == "TravelService") continue;
-
-                    var subrecord = (Subrecord)property.GetValue(this);
-                    if (subrecord == null) continue;
-
-                    data.AddRange(subrecord.SerializeSubrecord());
-                }
-                catch (Exception)
+                if (property.Name == "TravelService")
                 {
+                    if (TravelService.Count() > 0)
+                    {
+                        List<byte> travelDest = new List<byte>();
+                        foreach (var destination in TravelService)
+                        {
+                            travelDest.AddRange(destination.coordinates.SerializeSubrecord());
+                            if (destination.cell != null) travelDest.AddRange(destination.cell.SerializeSubrecord());
 
-                    throw;
+                        }
+                        data.AddRange(travelDest.ToArray());
+                    }
                 }
-            }
 
-            if (NPCO.Count() > 0)
-            {
-                List<byte> containerItems = new List<byte>();
-                foreach (var npco in NPCO)
+                if (property.PropertyType.IsGenericType)
                 {
-                    containerItems.AddRange(npco.SerializeSubrecord());
+                    var subrecordList = property.GetValue(this) as IEnumerable;
+                    if (IsNull(subrecordList)) continue;
+                    foreach (var sub in subrecordList)
+                    {
+                        data.AddRange((sub as Subrecord).SerializeSubrecord());
+                    }
+                    continue;
                 }
-                data.AddRange(containerItems.ToArray());
-            }
-
-            if (NPCS.Count() > 0)
-            {
-                List<byte> containerSpells = new List<byte>();
-                foreach (var npcs in NPCS)
-                {
-                    containerSpells.AddRange(npcs.SerializeSubrecord());
-                }
-                data.AddRange(containerSpells.ToArray());
-            }
-
-            if (TravelService.Count() > 0)
-            {
-                List<byte> travelDest = new List<byte>();
-                foreach (var destination in TravelService)
-                {
-                    travelDest.AddRange(destination.coordinates.SerializeSubrecord());
-                    if (destination.cell != null) travelDest.AddRange(destination.cell.SerializeSubrecord());
-
-                }
-                data.AddRange(travelDest.ToArray());
+                var subrecord = (Subrecord)property.GetValue(this);
+                if (subrecord == null) continue;
+                data.AddRange(subrecord.SerializeSubrecord());
             }
 
             uint flagSerialized = 0;
