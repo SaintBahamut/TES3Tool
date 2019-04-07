@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using TES4Lib.Enums.Flags;
 using Utility;
@@ -32,7 +31,7 @@ namespace TES4Lib.Base
             Name = reader.ReadBytes<string>(RawData, 4);
             Size = reader.ReadBytes<int>(RawData);
             Flag = reader.ReadFlagBytes<RecordFlag>(RawData);
-            FormId = BitConverter.ToString(reader.ReadBytes<byte[]>(RawData, 4).Reverse().ToArray()).Replace("-", "");
+            FormId = reader.ReadFormId(RawData);
             VersionControlInfo = reader.ReadBytes<int>(RawData, 4);
             Data = reader.ReadBytes<byte[]>(RawData, Size);
         }

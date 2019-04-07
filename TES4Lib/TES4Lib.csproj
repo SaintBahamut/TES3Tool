@@ -60,8 +60,10 @@
     <Compile Include="Enums\EnchantmentType.cs" />
     <Compile Include="Enums\Flags\LeveledItemFlag.cs" />
     <Compile Include="Enums\Flags\LightFlag.cs" />
+    <Compile Include="Enums\Flags\NpcFlag.cs" />
     <Compile Include="Enums\Flags\RecordFlag.cs" />
     <Compile Include="Enums\Flags\ServicesFlag.cs" />
+    <Compile Include="Enums\Flags\WorldSpaceFlag.cs" />
     <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\ResistanceType.cs" />
     <Compile Include="Enums\Skill.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Enums\SpellSchool.cs" />
     <Compile Include="Enums\SpellRange.cs" />
     <Compile Include="Enums\WeaponType.cs" />
+    <Compile Include="Enums\WorldSpaceMusicType.cs" />
     <Compile Include="Records\ACHR.cs" />
     <Compile Include="Records\ACRE.cs" />
     <Compile Include="Records\ACTI.cs" />
@@ -151,6 +154,13 @@
     <Compile Include="Subrecords\CREA\SNAM.cs" />
     <Compile Include="Subrecords\CREA\NIFT.cs" />
     <Compile Include="Subrecords\LVLC\TNAM.cs" />
+    <Compile Include="Subrecords\WRLD\CNAM.cs" />
+    <Compile Include="Subrecords\WRLD\DATA.cs" />
+    <Compile Include="Subrecords\WRLD\NAM0.cs" />
+    <Compile Include="Subrecords\WRLD\NAM2.cs" />
+    <Compile Include="Subrecords\WRLD\NAM9.cs" />
+    <Compile Include="Subrecords\WRLD\SNAM.cs" />
+    <Compile Include="Subrecords\WRLD\WNAM.cs" />
     <Compile Include="Subrecords\_Shared\LVLO.cs" />
     <Compile Include="Subrecords\_Shared\LVLD.cs" />
     <Compile Include="Subrecords\_Shared\LVLF.cs" />
@@ -257,7 +267,6 @@
     <Compile Include="Subrecords\SOUN\FNAM.cs" />
     <Compile Include="Subrecords\SOUN\SNDD.cs" />
     <Compile Include="Subrecords\SOUN\SNDX.cs" />
-    <Compile Include="Subrecords\STAT\EDID.cs" />
     <Compile Include="Subrecords\STAT\MODB.cs" />
     <Compile Include="Subrecords\STAT\MODL.cs" />
     <Compile Include="Subrecords\STAT\MODT.cs" />
