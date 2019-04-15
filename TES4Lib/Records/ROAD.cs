@@ -2,6 +2,9 @@
 
 namespace TES4Lib.Records
 {
+    /// <summary>
+    /// Not supported
+    /// </summary>
     public class ROAD : Record
     {
         public ROAD(byte[] rawData) : base(rawData)

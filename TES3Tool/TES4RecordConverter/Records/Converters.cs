@@ -923,7 +923,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             return new TES3Lib.Records.STAT
             {
-                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obSTAT.MODL.ModelFileName, Config.STATPath) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obSTAT.MODL.ModelPath, Config.STATPath) },
                 NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = EditorIdFormater(obSTAT.EDID.EditorId) },
             };
         }

@@ -64,6 +64,7 @@
     <Compile Include="Enums\Flags\RecordFlag.cs" />
     <Compile Include="Enums\Flags\ServicesFlag.cs" />
     <Compile Include="Enums\Flags\WorldSpaceFlag.cs" />
+    <Compile Include="Enums\GroupLabel.cs" />
     <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\ResistanceType.cs" />
     <Compile Include="Enums\Skill.cs" />
@@ -139,6 +140,8 @@
     <Compile Include="Records\WEAP.cs" />
     <Compile Include="Records\WRLD.cs" />
     <Compile Include="Records\WTHR.cs" />
+    <Compile Include="Subrecords\WRLD\OFST.cs" />
+    <Compile Include="Subrecords\WRLD\XXXX.cs" />
     <Compile Include="Subrecords\ACHR\DATA.cs" />
     <Compile Include="Subrecords\ACHR\XMRC.cs" />
     <Compile Include="Subrecords\ACRE\DATA.cs" />
@@ -156,6 +159,7 @@
     <Compile Include="Subrecords\LVLC\TNAM.cs" />
     <Compile Include="Subrecords\WRLD\CNAM.cs" />
     <Compile Include="Subrecords\WRLD\DATA.cs" />
+    <Compile Include="Subrecords\WRLD\MNAM.cs" />
     <Compile Include="Subrecords\WRLD\NAM0.cs" />
     <Compile Include="Subrecords\WRLD\NAM2.cs" />
     <Compile Include="Subrecords\WRLD\NAM9.cs" />

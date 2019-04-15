@@ -47,7 +47,8 @@ namespace TES4Lib.Base
             while (Data.Length != readerData.offset)
             {
                 string subrecordName = GetRecordName(readerData);
-                int subrecordSize = GetRecordSize(readerData);
+                int subrecordSize = GetRecordSize(readerData);            
+
                 try
                 {
                     PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
@@ -68,6 +69,12 @@ namespace TES4Lib.Base
                     }
                     object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
                     subrecordProp.SetValue(this, subrecord);
+
+                    if (subrecordName.Equals("OFST") && !Name.Equals("HEDR"))
+                    {
+                        //better not go there
+                        break;
+                    }
                 }
                 catch (Exception e)
                 {

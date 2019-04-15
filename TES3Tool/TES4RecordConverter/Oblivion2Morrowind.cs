@@ -5,6 +5,8 @@ using static Utility.Common;
 using static TES3Tool.TES4RecordConverter.Records.Helpers;
 using static TES3Tool.TES4RecordConverter.Records.Converters;
 using TES3Tool.TES4RecordConverter.Records;
+using TES4Lib.Enums;
+using TES4Lib.Base;
 
 namespace TES3Tool.TES4RecordConverter
 {
@@ -153,6 +155,78 @@ namespace TES3Tool.TES4RecordConverter
             DoorDestinations = new List<TES3Lib.Subrecords.Shared.DNAM>();
 
             return tes3;
+        }
+
+        public static TES3Lib.TES3 ConvertExteriorObjects(TES4Lib.TES4 tes4)
+        {
+            //convert cells
+            var wrldGroupsTop = tes4.Groups.FirstOrDefault(x => x.Label == "WRLD");
+            if (IsNull(wrldGroupsTop))
+            {
+                Console.WriteLine("no WRLD records");
+                return null;
+            }
+            ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
+
+            foreach (var wrld in wrldGroupsTop.Records)
+            {
+                var wrldFormId = wrld.FormId;
+                var worldChildren = wrldGroupsTop.Groups.FirstOrDefault(x => x.Label == wrldFormId);
+
+                if (IsNull(worldChildren))
+                {
+                    Console.WriteLine("WRLD has no WorldChildren");
+                    continue;
+                }
+
+                //Here are records ROAD, CELL but i dont know if i need them, so i just proceed to exterior subblocks
+
+                foreach (var exteriorCellBlock in worldChildren.Groups)
+                {
+                    if (exteriorCellBlock.Type.Equals(GroupLabel.CellChildren)) continue; // that might happen but skip for now
+
+                    ProcessExteriorSubBlocks(exteriorCellBlock);
+                }
+
+            }
+
+            var tes3 = new TES3Lib.TES3();
+            TES3Lib.Records.TES3 header = createTES3HEader();
+            tes3.Records.Add(header);
+
+            foreach (var record in Enum.GetNames(typeof(TES3Lib.RecordTypes)))
+            {
+                if (!ConvertedRecords.ContainsKey(record)) continue;
+                tes3.Records.InsertRange(tes3.Records.Count, ConvertedRecords[record].Select(x => x.Record));
+            }
+
+            //dispose helper structures
+            ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
+            CellReferences = new List<ConvertedCellReference>();
+            DoorDestinations = new List<TES3Lib.Subrecords.Shared.DNAM>();
+
+            return tes3;
+        }
+
+        static void ProcessExteriorSubBlocks(Group exteriorCellBlock)
+        {
+            foreach (var exteriorCell in exteriorCellBlock.Records)
+            {
+                //convert cell
+                var cellChildren = exteriorCellBlock.Groups.FirstOrDefault(x => x.Label == exteriorCell.FormId);
+
+                if (IsNull(cellChildren))
+                {
+                    Console.WriteLine("cell has no objects");
+                    continue;
+                }
+
+                //CONVEEEERT
+                foreach (var childrenType in cellChildren.Groups)
+                {
+                    //TODO: start here tomorrow
+                }
+            }
         }
 
         private static TES3Lib.Records.TES3 createTES3HEader()

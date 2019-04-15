@@ -47,6 +47,11 @@ namespace TES4Lib.Records
         public NAM2 NAM2 { get; set; }
 
         /// <summary>
+        /// Map coordinates data
+        /// </summary>
+        public MNAM MNAM { get; set; }
+
+        /// <summary>
         /// Flags
         /// </summary>
         public DATA DATA { get; set; }
@@ -61,9 +66,20 @@ namespace TES4Lib.Records
         /// </summary>
         public NAM9 NAM9 { get; set; }
 
+        /// <summary>
+        /// Its a mystery \o/
+        /// </summary>
+        public XXXX XXXX { get; set; }
+
+        /// <summary>
+        /// Offset data
+        /// </summary>
+        public OFST OFST { get; set; }
+
+
         public WRLD(byte[] rawData) : base(rawData)
-        {
-        
+        {  
+
             BuildSubrecords();
         }
     }

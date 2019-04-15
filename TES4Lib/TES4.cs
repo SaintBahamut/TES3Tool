@@ -55,6 +55,7 @@ namespace TES4Lib
                     fileStream.Position += size;
                     continue;
                 }
+                
 
                 var data = new byte[size];
                 fileStream.Read(data, 0, data.Length);
