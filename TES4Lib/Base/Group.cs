@@ -20,7 +20,6 @@ namespace TES4Lib.Base
         public byte[] Data { get; set; }
         private byte[] RawData { get; set; }
 
-
         private List<Record> records = new List<Record>();
 
         public List<Record> Records
@@ -124,28 +123,37 @@ namespace TES4Lib.Base
         /// </summary>
         private void BuildWRLDGroup()
         {
+            var worldSpacesList = new List<string>() {"00009F18" };
+            var worldChildrenList = new List<string>();
+            worldSpacesList.AddRange(worldSpacesList);
+                
+
             //find the WRLD we are looking for
             var reader = new ByteReader();
             while (Data.Length != reader.offset)
             {
+                if (worldSpacesList.Count.Equals(0) && worldChildrenList.Equals(0)) break;
+
                 var name = reader.ReadBytes<string>(Data, 4);
                 var size = reader.ReadBytes<int>(Data);
                 reader.offset += 4;
                 string FormId = reader.ReadFormId(Data);
                 reader.offset -= 16;
 
-                if (name.Equals("WRLD") && FormId.Equals("00009F18"))//hard coded SEWorld
+                if (name.Equals("WRLD") && worldSpacesList.Contains(FormId))//hard coded SEWorld
                 {
                     var WRLD = new Records.WRLD(reader.ReadBytes<byte[]>(Data, size + 20));
                     TES4Lib.TES4.TES4RecordIndex.Add(WRLD.FormId, WRLD);
                     Records.Add(WRLD);
+                    worldSpacesList.Remove(WRLD.FormId);
                     continue;
                 }
-                if (name.Equals("GRUP") && PeekWorldChildren(reader.offset).Equals("00009F18")) //world children
+                if (name.Equals("GRUP") && worldChildrenList.Contains(PeekWorldChildren(reader.offset)))
                 {
                     var WorldChildren = new Group(reader.ReadBytes<byte[]>(Data, size));
                     Groups.Add(WorldChildren);
-                    break;
+                    worldChildrenList.Remove(WorldChildren.Label);
+                    continue;
                 }
 
                 //move by offset

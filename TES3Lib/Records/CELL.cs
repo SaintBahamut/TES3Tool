@@ -113,5 +113,15 @@ namespace TES3Lib.Records
                 .Concat(BitConverter.GetBytes(SerializeFlag()))
                 .Concat(data).ToArray();
         }
+
+        public override bool Equals(object obj)
+        {
+            var cell = obj as CELL;
+            if (cell.DATA.Flags.Contains(CellFlag.IsInteriorCell))
+            {
+                return this.NAME.EditorId.Equals(cell.NAME.EditorId);
+            }
+            return this.DATA.GridX.Equals(cell.DATA.GridX) && this.DATA.GridY.Equals(cell.DATA.GridY);
+        }
     }
 }

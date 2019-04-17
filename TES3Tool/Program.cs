@@ -21,7 +21,7 @@ namespace TES3Tool
             //var tes3 = TES3Load(file);
             //tes3.TES3Save("D:\\Out.esp");
 
-            //string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Morrowind.esm";
+            //string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\MORROWIND.esm";
             //var tes3 = TES3Load(file, new List<string> { "CELL" });
             //tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\dd.esp");
 
@@ -36,8 +36,9 @@ namespace TES3Tool
             //    "FLOR","DOOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA"
             //});
 
-            var stat = TES4Load(fileESM, new List<string> { "WRLD"});
-
+            var stat = TES4Load(fileESM, new List<string> { "WRLD" });
+            var testEX = ConvertExteriorObjects(stat);
+            testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUTEX.esp");
 
             //var test = ConvertInteriorCells(stat);
             //test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path

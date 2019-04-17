@@ -140,6 +140,8 @@
     <Compile Include="Records\WEAP.cs" />
     <Compile Include="Records\WRLD.cs" />
     <Compile Include="Records\WTHR.cs" />
+    <Compile Include="Subrecords\REGN\WNAM.cs" />
+    <Compile Include="Subrecords\REGN\RCLR.cs" />
     <Compile Include="Subrecords\WRLD\OFST.cs" />
     <Compile Include="Subrecords\WRLD\XXXX.cs" />
     <Compile Include="Subrecords\ACHR\DATA.cs" />

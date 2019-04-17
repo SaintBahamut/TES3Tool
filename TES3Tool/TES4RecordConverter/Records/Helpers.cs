@@ -194,7 +194,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         public readonly string OriginFormId;
         public readonly string Type;
         public readonly string EditorId;
-        public readonly TES3Lib.Base.Record Record;
+        public TES3Lib.Base.Record Record;
 
         public ConvertedRecordData(string originFormId, string type, string editorId, TES3Lib.Base.Record record)
         {

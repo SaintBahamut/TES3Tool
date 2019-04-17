@@ -196,7 +196,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return null;
         }
 
-        private static TES3Lib.Records.CREA ConvertCREA(TES4Lib.Records.CREA obCREA)
+        static TES3Lib.Records.CREA ConvertCREA(TES4Lib.Records.CREA obCREA)
         {
             var mwCREA = new TES3Lib.Records.CREA
             {
@@ -300,7 +300,6 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             return mwCREA;
         }
-
 
         static TES3Lib.Records.LEVI ConvertLVLI(TES4Lib.Records.LVLI obLVLI)
         {
@@ -1012,8 +1011,8 @@ namespace TES3Tool.TES4RecordConverter.Records
             if (obCELL.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) return null; //we dont need deleted records for conversion
 
             var mwCELL = new TES3Lib.Records.CELL();
-            mwCELL.NAME = new TES3Lib.Subrecords.Shared.NAME();
-            mwCELL.NAME.EditorId = obCELL.FULL.DisplayName;
+
+            mwCELL.NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = !IsNull(obCELL.FULL) ? obCELL.FULL.DisplayName : "\0" };
 
             mwCELL.DATA = new TES3Lib.Subrecords.CELL.DATA();
 
@@ -1037,39 +1036,44 @@ namespace TES3Tool.TES4RecordConverter.Records
                 }
             }
 
-            if (obCELL.XCLC != null) //exterior only
+            if (!IsNull(obCELL.XCLC)) //exterior only
             {
-                mwCELL.DATA.GridX = obCELL.XCLC.GridX;
-                mwCELL.DATA.GridY = obCELL.XCLC.GridY;
+                int mwScale = 2;
+                mwCELL.DATA.GridX = (obCELL.XCLC.GridX/mwScale) + Config.cellShiftX;
+                mwCELL.DATA.GridY = (obCELL.XCLC.GridY/mwScale) + Config.cellShiftY;
             }
 
-
-            //cell.RGNN = new TES3Lib.Subrecords.CELL.RGNN(); need dehardcode regions on my on my own, idk if ill need that anyway
+            if (!IsNull(obCELL.XCLR)) //TODO region entry covnerted
+            {
+                ///obCELL.XCLR.RegionsContainingCell
+                mwCELL.RGNN = new TES3Lib.Subrecords.CELL.RGNN { RegionName = "Sheogorad\0" };//TEEEEEEEEEEST
+            }
 
             // not needed? cell.NAM0 = new TES3Lib.Subrecords.CELL.NAM0();
             // exterior only cell.NAM5 = new TES3Lib.Subrecords.CELL.NAM5();
 
-            mwCELL.WHGT = new TES3Lib.Subrecords.CELL.WHGT();
-            if (obCELL.XCLW != null) //exterior only
+           
+            if (!IsNull(obCELL.XCLW))
             {
+                mwCELL.WHGT = new TES3Lib.Subrecords.CELL.WHGT();
                 mwCELL.WHGT.WaterHeight = obCELL.XCLW.WaterHeight;
             }
 
-            mwCELL.AMBI = new TES3Lib.Subrecords.CELL.AMBI();
-            if (obCELL.XCLL != null)
+            if (!IsNull(obCELL.XCLL))
             {
+                mwCELL.AMBI = new TES3Lib.Subrecords.CELL.AMBI();
                 mwCELL.AMBI.AmbientColor = obCELL.XCLL.Ambient;
                 mwCELL.AMBI.SunlightColor = obCELL.XCLL.Directional; //mabye not a good idea
                 mwCELL.AMBI.FogColor = obCELL.XCLL.Fog; //missing
                 mwCELL.AMBI.FogDensity = 1.0f;
             }
-            else
-            {
-                mwCELL.AMBI.AmbientColor = 0;
-                mwCELL.AMBI.SunlightColor = 0;
-                mwCELL.AMBI.FogColor = 0;
-                mwCELL.AMBI.FogDensity = 1.0f;
-            }
+            //else
+            //{
+            //    mwCELL.AMBI.AmbientColor = 0;
+            //    mwCELL.AMBI.SunlightColor = 0;
+            //    mwCELL.AMBI.FogColor = 0;
+            //    mwCELL.AMBI.FogDensity = 1.0f;
+            //}
 
             return mwCELL;
         }
@@ -1968,6 +1972,9 @@ namespace TES3Tool.TES4RecordConverter.Records
                 if (!IsNull(record))
                 {
                     var mwRecordFromREFR = ConvertRecordFromFormId(formId);
+
+                    if (IsNull(mwRecordFromREFR)) return string.Empty;
+
                     if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
                     ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
                     BaseId = mwRecordFromREFR.EditorId;

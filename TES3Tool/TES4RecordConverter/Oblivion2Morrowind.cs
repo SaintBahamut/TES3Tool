@@ -159,6 +159,7 @@ namespace TES3Tool.TES4RecordConverter
 
         public static TES3Lib.TES3 ConvertExteriorObjects(TES4Lib.TES4 tes4)
         {
+
             //convert cells
             var wrldGroupsTop = tes4.Groups.FirstOrDefault(x => x.Label == "WRLD");
             if (IsNull(wrldGroupsTop))
@@ -168,14 +169,16 @@ namespace TES3Tool.TES4RecordConverter
             }
             ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
 
-            foreach (var wrld in wrldGroupsTop.Records)
+            foreach (TES4Lib.Records.WRLD wrld in wrldGroupsTop.Records)
             {
+                Console.WriteLine($"Converting worldspace {wrld.FULL.DisplayName}");
+
                 var wrldFormId = wrld.FormId;
                 var worldChildren = wrldGroupsTop.Groups.FirstOrDefault(x => x.Label == wrldFormId);
 
                 if (IsNull(worldChildren))
                 {
-                    Console.WriteLine("WRLD has no WorldChildren");
+                    Console.WriteLine($"{wrld.FULL.DisplayName} has no WorldChildren");
                     continue;
                 }
 
@@ -210,23 +213,117 @@ namespace TES3Tool.TES4RecordConverter
 
         static void ProcessExteriorSubBlocks(Group exteriorCellBlock)
         {
-            foreach (var exteriorCell in exteriorCellBlock.Records)
+
+            foreach (var subBlocks in exteriorCellBlock.Groups)
             {
-                //convert cell
-                var cellChildren = exteriorCellBlock.Groups.FirstOrDefault(x => x.Label == exteriorCell.FormId);
-
-                if (IsNull(cellChildren))
+                foreach (TES4Lib.Records.CELL exteriorCell in subBlocks.Records)
                 {
-                    Console.WriteLine("cell has no objects");
-                    continue;
-                }
+                    bool cellMerge = false;
+                    string cellFormId = exteriorCell.FormId;
+                    var convertedCell = ConvertCELL(exteriorCell);
+                    
 
-                //CONVEEEERT
-                foreach (var childrenType in cellChildren.Groups)
-                {
-                    //TODO: start here tomorrow
+                    // resolve if this cell at this grid already exist
+                    foreach (var alreadyConvertedCell in ConvertedRecords["CELL"])
+                    {
+                        if (convertedCell.Equals(alreadyConvertedCell.Record as TES3Lib.Records.CELL))
+                        {
+                            cellMerge = true;
+                            convertedCell = mergeExteriorCells(alreadyConvertedCell.Record as TES3Lib.Records.CELL, convertedCell);
+
+                            Console.WriteLine("merging subcells...");
+                            break;
+                        }
+                    }
+
+                    var cellChildren = subBlocks.Groups.FirstOrDefault(x => x.Label == exteriorCell.FormId);
+
+                    if (IsNull(cellChildren))
+                    {
+                        Console.WriteLine("cell has no objects");
+                        continue;
+                    }
+
+                    foreach (var childrenType in cellChildren.Groups)
+                    {
+                        int refrNumber = IsNull(convertedCell.NAM0) ? convertedCell.NAM0.ReferenceCount : 1;
+
+                        foreach (var obRef in childrenType.Records)
+                        {
+                            if (obRef.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
+
+                            TES3Lib.Records.REFR mwREFR;
+
+                            var referenceTypeName = obRef.GetType().Name;
+
+                            if (referenceTypeName.Equals("REFR"))
+                            {
+                                var obREFR = (TES4Lib.Records.REFR)obRef;
+                                if (IsNull(obREFR.NAME)) continue;
+                                var ReferenceBaseFormId = obREFR.NAME.BaseFormId;
+
+                                //MOVE THIS TO SEPARATE FUNCTION
+                                var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
+                                if (string.IsNullOrEmpty(BaseId))
+                                {
+                                    var mwRecordFromREFR = ConvertRecordFromFormId(ReferenceBaseFormId);
+                                    if (IsNull(mwRecordFromREFR)) continue;
+
+                                    if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                                    ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
+
+                                    BaseId = mwRecordFromREFR.EditorId;
+                                }
+                                ///////
+
+                                //var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
+
+
+                                mwREFR = ConvertREFR(obREFR, BaseId, refrNumber);
+                                CellReferences.Add(new ConvertedCellReference(cellFormId, obREFR.FormId, mwREFR)); //for tracking
+
+                                convertedCell.REFR.Add(mwREFR);
+                                refrNumber++;
+                            }
+
+                            if (referenceTypeName.Equals("ACRE"))
+                            {
+
+                            }
+
+                            if (referenceTypeName.Equals("ACHR"))
+                            {
+                                continue;
+                            }
+
+                            if (referenceTypeName.Equals("LAND"))
+                            {
+                                continue;
+                            }
+
+                            if (referenceTypeName.Equals("PGRD"))
+                            {
+                                continue;
+                            }
+                        }
+
+                    }
+                    if (!cellMerge)
+                    {
+                        var editorId = !IsNull(exteriorCell.EDID) ? exteriorCell.EDID.EditorId : $"{exteriorCell.XCLC.GridX},{exteriorCell.XCLC.GridY}";
+                        ConvertedRecords["CELL"].Add(new ConvertedRecordData(exteriorCell.FormId, "CELL", editorId, convertedCell));
+                    }
+
                 }
             }
+        }
+
+        private static TES3Lib.Records.CELL mergeExteriorCells(TES3Lib.Records.CELL cellBase, TES3Lib.Records.CELL cellToMerge)
+        {
+            cellBase.NAME = cellBase.NAME.EditorId.Equals("\0") ? cellToMerge.NAME : cellBase.NAME;
+            cellBase.RGNN = IsNull(cellBase.RGNN) ? cellToMerge.RGNN : cellBase.RGNN;
+
+            return cellBase;
         }
 
         private static TES3Lib.Records.TES3 createTES3HEader()

@@ -32,7 +32,7 @@ namespace TES4Lib
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static TES4 TES4Load(string filePath, List<string> filteredGrops =null)
+        public static TES4 TES4Load(string filePath, List<string> filteredGrops = null, List<string> worldSpaceFormId = null)
         {
             if (filteredGrops == null) filteredGrops = new List<string>(); 
           
