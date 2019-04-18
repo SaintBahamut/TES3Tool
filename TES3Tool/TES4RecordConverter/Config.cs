@@ -3,7 +3,7 @@
     public static class Config
     {
         //positon shift
-        public static float mwCellSize = 8192;
+        public static int mwCellSize = 8192;
         public static int cellShiftX = 50;
         public static int cellShiftY = 50;
 

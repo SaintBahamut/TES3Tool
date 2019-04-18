@@ -125,14 +125,15 @@ namespace TES4Lib.Base
         {
             var worldSpacesList = new List<string>() {"00009F18" };
             var worldChildrenList = new List<string>();
-            worldSpacesList.AddRange(worldSpacesList);
+            worldChildrenList.AddRange(worldSpacesList);
                 
 
             //find the WRLD we are looking for
             var reader = new ByteReader();
             while (Data.Length != reader.offset)
             {
-                if (worldSpacesList.Count.Equals(0) && worldChildrenList.Equals(0)) break;
+                if (worldSpacesList.Count.Equals(0) && worldChildrenList.Count.Equals(0))
+                    break;
 
                 var name = reader.ReadBytes<string>(Data, 4);
                 var size = reader.ReadBytes<int>(Data);

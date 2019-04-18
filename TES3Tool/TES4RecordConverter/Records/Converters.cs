@@ -1012,7 +1012,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             var mwCELL = new TES3Lib.Records.CELL();
 
-            mwCELL.NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = !IsNull(obCELL.FULL) ? obCELL.FULL.DisplayName : "\0" };
+            mwCELL.NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = !IsNull(obCELL.FULL) ? obCELL.FULL.DisplayName : (!IsNull(obCELL.EDID) ? obCELL.EDID.EditorId : "\0") };
 
             mwCELL.DATA = new TES3Lib.Subrecords.CELL.DATA();
 
@@ -1043,7 +1043,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 mwCELL.DATA.GridY = (obCELL.XCLC.GridY/mwScale) + Config.cellShiftY;
             }
 
-            if (!IsNull(obCELL.XCLR)) //TODO region entry covnerted
+            if (!IsNull(obCELL.XCLR)) //TODO region entry converter
             {
                 ///obCELL.XCLR.RegionsContainingCell
                 mwCELL.RGNN = new TES3Lib.Subrecords.CELL.RGNN { RegionName = "Sheogorad\0" };//TEEEEEEEEEEST
@@ -1078,7 +1078,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwCELL;
         }
 
-        public static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber)
+        public static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber, bool isExterior = false)
         {
             var mwREFR = new TES3Lib.Records.REFR();
 
@@ -1106,38 +1106,42 @@ namespace TES3Tool.TES4RecordConverter.Records
             // no cell found, door leads to exterior space
             if (!IsNull(obREFR.XTEL))
             {
-                TES4Lib.Base.Record record;
-                TES4Lib.TES4.TES4RecordIndex.TryGetValue(obREFR.XTEL.DestinationDoorReference, out record);
-                if (IsNull(record)) //if record is null it means its exterior cell
+                if (!isExterior) //for now lets not break compatibility
                 {
-                    float shiftX = (Config.cellShiftX * Config.mwCellSize);
-                    float shiftY = (Config.cellShiftY * Config.mwCellSize);
-                    mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
+                    TES4Lib.Base.Record record;
+                    TES4Lib.TES4.TES4RecordIndex.TryGetValue(obREFR.XTEL.DestinationDoorReference, out record);
+
+                    if (IsNull(record)) //if record is null it means its exterior cell
                     {
-                        PositionX = obREFR.XTEL.DestLocX + shiftX,
-                        PositionY = obREFR.XTEL.DestLocY + shiftY,
-                        PositionZ = obREFR.XTEL.DestLocZ,
-                        RotationX = obREFR.XTEL.DestRotX,
-                        RotationY = obREFR.XTEL.DestRotY,
-                        RotationZ = obREFR.XTEL.DestRotZ
-                    };
-                }
-                else
-                {
-                    mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
+                        float shiftX = (Config.cellShiftX * Config.mwCellSize);
+                        float shiftY = (Config.cellShiftY * Config.mwCellSize);
+                        mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
+                        {
+                            PositionX = obREFR.XTEL.DestLocX + shiftX,
+                            PositionY = obREFR.XTEL.DestLocY + shiftY,
+                            PositionZ = obREFR.XTEL.DestLocZ,
+                            RotationX = obREFR.XTEL.DestRotX,
+                            RotationY = obREFR.XTEL.DestRotY,
+                            RotationZ = obREFR.XTEL.DestRotZ
+                        };
+                    }
+                    else
                     {
-                        PositionX = obREFR.XTEL.DestLocX,
-                        PositionY = obREFR.XTEL.DestLocY,
-                        PositionZ = obREFR.XTEL.DestLocZ,
-                        RotationX = obREFR.XTEL.DestRotX,
-                        RotationY = obREFR.XTEL.DestRotY,
-                        RotationZ = obREFR.XTEL.DestRotZ
-                    };
-                    mwREFR.DNAM = new TES3Lib.Subrecords.Shared.DNAM
-                    {
-                        InteriorCellName = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at later stages of conversion
-                    };
-                    DoorDestinations.Add(mwREFR.DNAM);
+                        mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
+                        {
+                            PositionX = obREFR.XTEL.DestLocX,
+                            PositionY = obREFR.XTEL.DestLocY,
+                            PositionZ = obREFR.XTEL.DestLocZ,
+                            RotationX = obREFR.XTEL.DestRotX,
+                            RotationY = obREFR.XTEL.DestRotY,
+                            RotationZ = obREFR.XTEL.DestRotZ
+                        };
+                        mwREFR.DNAM = new TES3Lib.Subrecords.Shared.DNAM
+                        {
+                            InteriorCellName = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at later stages of conversion
+                        };
+                        DoorDestinations.Add((mwREFR.DNAM, mwREFR.DODT));
+                    }
                 }
             }
 
@@ -1187,9 +1191,12 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             if (!IsNull(obREFR.DATA))
             {
+                int offsetX = isExterior ? (Config.mwCellSize * Config.cellShiftX) : 0;
+                int offsetY = isExterior ? (Config.mwCellSize * Config.cellShiftY) : 0;
+
                 mwREFR.DATA = new TES3Lib.Subrecords.REFR.DATA();
-                mwREFR.DATA.XPos = obREFR.DATA.LocX;
-                mwREFR.DATA.YPos = obREFR.DATA.LocY;
+                mwREFR.DATA.XPos = obREFR.DATA.LocX + offsetX;
+                mwREFR.DATA.YPos = obREFR.DATA.LocY + offsetY;
                 mwREFR.DATA.ZPos = obREFR.DATA.LocZ;
                 mwREFR.DATA.XRotate = obREFR.DATA.RotX;
                 mwREFR.DATA.YRotate = obREFR.DATA.RotY;
@@ -1199,7 +1206,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwREFR;
         }
 
-        public static TES3Lib.Records.REFR ConvertACRE(TES4Lib.Records.ACRE obACRE, string baseId, int refrNumber)
+        public static TES3Lib.Records.REFR ConvertACRE(TES4Lib.Records.ACRE obACRE, string baseId, int refrNumber, bool isExterior = false)
         {
             var mwREFR = new TES3Lib.Records.REFR();
 
@@ -1226,9 +1233,12 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             if (!IsNull(obACRE.DATA))
             {
+                int offsetX = isExterior ? (Config.mwCellSize * Config.cellShiftX) : 0;
+                int offsetY = isExterior ? (Config.mwCellSize * Config.cellShiftY) : 0;
+
                 mwREFR.DATA = new TES3Lib.Subrecords.REFR.DATA();
-                mwREFR.DATA.XPos = obACRE.DATA.LocX;
-                mwREFR.DATA.YPos = obACRE.DATA.LocY;
+                mwREFR.DATA.XPos = obACRE.DATA.LocX + offsetX;
+                mwREFR.DATA.YPos = obACRE.DATA.LocY + offsetY;
                 mwREFR.DATA.ZPos = obACRE.DATA.LocZ;
                 mwREFR.DATA.XRotate = obACRE.DATA.RotX;
                 mwREFR.DATA.YRotate = obACRE.DATA.RotY;
@@ -1967,10 +1977,10 @@ namespace TES3Tool.TES4RecordConverter.Records
             var BaseId = GetBaseIdFromFormId(formId);
             if (string.IsNullOrEmpty(BaseId))
             {
-                TES4Lib.Base.Record record;
-                TES4Lib.TES4.TES4RecordIndex.TryGetValue(formId, out record);
-                if (!IsNull(record))
-                {
+                //TES4Lib.Base.Record record;
+                //TES4Lib.TES4.TES4RecordIndex.TryGetValue(formId, out record);
+                //if (!IsNull(record))
+                //{
                     var mwRecordFromREFR = ConvertRecordFromFormId(formId);
 
                     if (IsNull(mwRecordFromREFR)) return string.Empty;
@@ -1978,7 +1988,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
                     ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
                     BaseId = mwRecordFromREFR.EditorId;
-                }
+                //}
             }
             return BaseId;
         }

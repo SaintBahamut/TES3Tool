@@ -11,7 +11,7 @@ namespace TES3Tool.TES4RecordConverter.Records
     {
         internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
 
-        internal static List<TES3Lib.Subrecords.Shared.DNAM> DoorDestinations = new List<TES3Lib.Subrecords.Shared.DNAM>();
+        internal static List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)> DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
 
         internal static List<ConvertedCellReference> CellReferences = new List<ConvertedCellReference>();
 
@@ -26,16 +26,19 @@ namespace TES3Tool.TES4RecordConverter.Records
             Parallel.ForEach(DoorDestinations, formId =>
             {
                 var reference = CellReferences
-               .FirstOrDefault(x => x.ReferenceFormId.Equals(formId.InteriorCellName));
+               .FirstOrDefault(x => x.ReferenceFormId.Equals(formId.Cell.InteriorCellName));
 
                 if (IsNull(reference)) return;
 
-                var cell = ConvertedRecords["CELL"]
-                .FirstOrDefault(x => x.OriginFormId.Equals(reference.ParentCellFormId));
+                var record = ConvertedRecords["CELL"]
+                .FirstOrDefault(x => x.OriginFormId.Equals(reference.ParentCellFormId)) ;
 
-                if (IsNull(cell)) return;
+                if (IsNull(record)) return;
 
-                formId.InteriorCellName = (cell.Record as TES3Lib.Records.CELL).NAME.EditorId;
+                var cell = record.Record as TES3Lib.Records.CELL;
+
+                formId.Cell.InteriorCellName = cell.NAME.EditorId;
+                
             });
         }
 
