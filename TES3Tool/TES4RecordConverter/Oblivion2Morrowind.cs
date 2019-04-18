@@ -260,7 +260,7 @@ namespace TES3Tool.TES4RecordConverter
                                 if (IsNull(obREFR.NAME)) continue;
                                 var ReferenceBaseFormId = obREFR.NAME.BaseFormId;
 
-                                var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
+                                var BaseId = GetBaseId(ReferenceBaseFormId);
                                 if (string.IsNullOrEmpty(BaseId)) continue;
 
                                 mwREFR = ConvertREFR(obREFR, BaseId, refrNumber, true);

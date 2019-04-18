@@ -1972,7 +1972,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        private static string GetBaseId(string formId)
+        public static string GetBaseId(string formId)
         {
             var BaseId = GetBaseIdFromFormId(formId);
             if (string.IsNullOrEmpty(BaseId))
