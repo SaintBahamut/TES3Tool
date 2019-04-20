@@ -40,7 +40,7 @@ namespace TES3Tool
                 "STAT","WRLD","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLC","LVLI",
                 "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA"
             });
-            var testEX = ConvertExteriorObjects(stat);
+            var testEX = ConvertExteriors(stat);
             testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUTEX.esp");
 
             //var test = ConvertInteriorCells(stat);

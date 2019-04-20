@@ -177,18 +177,9 @@ namespace TES3Tool.TES4RecordConverter.Records
         /// <returns></returns>
         static string GetDefaultIdFromFormId(string formId)
         {
-            if (!formId.Contains("0000000")) return string.Empty;
-            if (formId.Equals("0000000F")) return "Gold_001\0";
-            if (formId.Equals("0000000A")) return "pick_journeyman_01\0";
-            if (formId.Equals("0000000C")) return "repair_journeyman_01\0";
-            if (formId.Equals("00000002")) return "TravelMarker\0";
-            if (formId.Equals("00000006")) return "TempleMarker\0";
-            if (formId.Equals("00000003")) return "NorthMarker\0";
-            if (formId.Equals("00000001")) return "DoorMarker\0";
-            if (formId.Equals("00000005")) return "DivineMarker\0";
-            if (formId.Equals("0000000E")) return "LootBag\0";
-            if (formId.Equals("00000004")) return "PrisonMarker\0";
-            return string.Empty;
+            string mwEditorId = string.Empty;
+            Config.OblivionMorrowindRecordsMap.TryGetValue(formId, out mwEditorId);
+            return mwEditorId;
         }
     }
 

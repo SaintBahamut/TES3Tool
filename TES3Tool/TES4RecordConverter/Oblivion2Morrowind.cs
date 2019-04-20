@@ -12,128 +12,40 @@ namespace TES3Tool.TES4RecordConverter
 {
     public static class Oblivion2Morrowind
     {
+        internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
 
-        public static TES3Lib.TES3 ConvertInteriorCells(TES4Lib.TES4 tes4)
+        internal static List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)> DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
+
+        internal static List<ConvertedCellReference> CellReferences = new List<ConvertedCellReference>();
+
+        public static TES3Lib.TES3 ConvertInteriorsAndExteriors(TES4Lib.TES4 tes4)
         {
-            //convert cells
-            var cellGroupsTop = tes4.Groups.FirstOrDefault(x => x.Label == "CELL");
-            if (IsNull(cellGroupsTop))
+            ConvertInteriorCells(tes4);
+            ConvertExteriorCells(tes4);
+
+            DoorDestinationsFormIdToNames();
+
+            var tes3 = new TES3Lib.TES3();
+            TES3Lib.Records.TES3 header = createTES3HEader();
+            tes3.Records.Add(header);
+
+            foreach (var record in Enum.GetNames(typeof(TES3Lib.RecordTypes)))
             {
-                Console.WriteLine("no CELL records");
-                return null;
+                if (!ConvertedRecords.ContainsKey(record)) continue;
+                tes3.Records.InsertRange(tes3.Records.Count, ConvertedRecords[record].Select(x => x.Record));
             }
-            ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
 
+            //dispose helper structures
+            ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
+            CellReferences = new List<ConvertedCellReference>();
+            DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
 
-            //this is soooo bad
-            foreach (var cellBlock in cellGroupsTop.Groups)
-            {
-                foreach (var cellSubBlock in cellBlock.Groups)
-                {
-                    foreach (TES4Lib.Records.CELL cellRecord in cellSubBlock.Records)
-                    {
+            return tes3;
+        }
 
-                        if (cellRecord.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
-
-                        //hack for now to get SI only
-                        if ((cellRecord.EDID.EditorId.Contains("SE") || cellRecord.EDID.EditorId.Contains("XP")) && !IsNull(cellRecord.FULL))
-                        {
-                            var convertedCell = ConvertCELL(cellRecord);
-                            if (IsNull(convertedCell)) throw new Exception("Output cell was null");
-
-                            var cellReferences = cellSubBlock.Groups.FirstOrDefault(x => x.Label == cellRecord.FormId);
-                            if (IsNull(cellReferences)) continue;
-
-                            Console.WriteLine($"BEGIN CONVERTING \"{convertedCell.NAME.EditorId}\" CELL");
-                            foreach (var childrenType in cellReferences.Groups) //can have 3 with labels: persistent 8; temporaty 9; distant 10;
-                            {
-                                int refrNumber = 1;
-                                foreach (var obRef in childrenType.Records)
-                                {
-                                    if (obRef.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
-
-                                    TES3Lib.Records.REFR mwREFR;
-
-                                    var referenceTypeName = obRef.GetType().Name;
-
-                                    if (referenceTypeName.Equals("REFR"))
-                                    {
-                                        var obREFR = (TES4Lib.Records.REFR)obRef;
-                                        if (IsNull(obREFR.NAME)) continue;
-                                        var ReferenceBaseFormId = obREFR.NAME.BaseFormId;
-
-                                        //MOVE THIS TO SEPARATE FUNCTION
-                                        var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
-                                        if (string.IsNullOrEmpty(BaseId))
-                                        {
-                                            var mwRecordFromREFR = ConvertRecordFromFormId(ReferenceBaseFormId);
-                                            if (IsNull(mwRecordFromREFR)) continue;
-
-                                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
-                                            ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
-
-                                            BaseId = mwRecordFromREFR.EditorId;
-                                        }
-                                        /////////
-
-                                        mwREFR = ConvertREFR(obREFR, BaseId, refrNumber);
-                                        CellReferences.Add(new ConvertedCellReference(cellRecord.FormId, obREFR.FormId, mwREFR)); //for tracking
-
-                                        convertedCell.REFR.Add(mwREFR);
-                                        refrNumber++;
-                                    }
-
-                                    if (referenceTypeName.Equals("ACRE"))
-                                    {
-                                        var obACRE = (TES4Lib.Records.ACRE)obRef;
-                                        if (IsNull(obACRE.NAME)) continue;
-                                        var ReferenceBaseFormId = obACRE.NAME.BaseFormId;
-
-                                        //MOVE THIS TO SEPARATE FUNCTION
-                                        var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
-                                        if (string.IsNullOrEmpty(BaseId))
-                                        {
-                                            var mwRecordFromREFR = ConvertRecordFromFormId(ReferenceBaseFormId);
-                                            if (IsNull(mwRecordFromREFR)) continue;
-
-                                            if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
-                                            ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
-
-                                            BaseId = mwRecordFromREFR.EditorId;
-                                        }
-                                        /////////
-
-                                        mwREFR = ConvertACRE(obACRE, BaseId, refrNumber);
-                                        CellReferences.Add(new ConvertedCellReference(cellRecord.FormId, obACRE.FormId, mwREFR)); //for tracking
-
-                                        convertedCell.REFR.Add(mwREFR);
-                                        refrNumber++;
-                                    }
-
-                                    if (referenceTypeName.Equals("ACHR"))
-                                    {
-                                        continue;
-                                    }
-                                }
-                            }
-
-                            foreach (var item in ConvertedRecords["CELL"])
-                            {
-                                bool cellWithSameNameExists = (item.Record as TES3Lib.Records.CELL).NAME.EditorId.Equals(convertedCell.NAME.EditorId);
-                                if (cellWithSameNameExists)
-                                {
-                                    convertedCell.NAME.EditorId = CellNameFormatter($"{convertedCell.NAME.EditorId.Replace("\0", " ")}{cellRecord.EDID.EditorId}");
-                                    break;
-                                }
-                            }
-
-                            ConvertedRecords["CELL"].Add(new ConvertedRecordData(cellRecord.FormId, "CELL", cellRecord.EDID.EditorId, convertedCell));
-
-                            Console.WriteLine($"DONE CONVERTING \"{convertedCell.NAME.EditorId}\" CELL");
-                        }
-                    }
-                }
-            }
+        public static TES3Lib.TES3 ConvertInteriors(TES4Lib.TES4 tes4)
+        {
+            ConvertInteriorCells(tes4);
 
             DoorDestinationsFormIdToNames();
 
@@ -157,7 +69,50 @@ namespace TES3Tool.TES4RecordConverter
             return tes3;
         }
 
-        public static TES3Lib.TES3 ConvertExteriorObjects(TES4Lib.TES4 tes4)
+        public static TES3Lib.TES3 ConvertExteriors(TES4Lib.TES4 tes4)
+        {
+            ConvertExteriorCells(tes4);
+
+            Console.WriteLine($"EXTERIOR CELL AND REFERENCED RECORDS CONVERSION DONE \n BUILDING TES3 PLUGIN/MASTER INSTANCE");
+
+            var tes3 = new TES3Lib.TES3();
+            TES3Lib.Records.TES3 header = createTES3HEader();
+            tes3.Records.Add(header);
+
+            foreach (var record in Enum.GetNames(typeof(TES3Lib.RecordTypes)))
+            {
+                if (!ConvertedRecords.ContainsKey(record)) continue;
+                tes3.Records.InsertRange(tes3.Records.Count, ConvertedRecords[record].Select(x => x.Record));
+            }
+
+            //dispose helper structures
+            ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
+            CellReferences = new List<ConvertedCellReference>();
+            DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
+
+            return tes3;
+        }
+
+        private static void ConvertInteriorCells(TES4Lib.TES4 tes4)
+        {
+            //convert cells
+            var cellGroupsTop = tes4.Groups.FirstOrDefault(x => x.Label == "CELL");
+            if (IsNull(cellGroupsTop))
+            {
+                Console.WriteLine("no CELL records");
+                return null;
+            }
+            ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
+
+            foreach (var cellBlock in cellGroupsTop.Groups)
+            {
+                ProcessInteriorSubBlocks(cellBlock);
+            }
+
+            
+        }
+
+        private static void ConvertExteriorCells(TES4Lib.TES4 tes4)
         {
 
             //convert cells
@@ -190,28 +145,100 @@ namespace TES3Tool.TES4RecordConverter
 
                     ProcessExteriorSubBlocks(exteriorCellBlock);
                 }
-
             }
-
-            var tes3 = new TES3Lib.TES3();
-            TES3Lib.Records.TES3 header = createTES3HEader();
-            tes3.Records.Add(header);
-
-            foreach (var record in Enum.GetNames(typeof(TES3Lib.RecordTypes)))
-            {
-                if (!ConvertedRecords.ContainsKey(record)) continue;
-                tes3.Records.InsertRange(tes3.Records.Count, ConvertedRecords[record].Select(x => x.Record));
-            }
-
-            //dispose helper structures
-            ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
-            CellReferences = new List<ConvertedCellReference>();
-            DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
-
-            return tes3;
         }
 
-        static void ProcessExteriorSubBlocks(Group exteriorCellBlock)
+        private static void ProcessInteriorSubBlocks(Group interiorSubBlock)
+        {
+            foreach (var cellSubBlock in interiorSubBlock.Groups)
+            {
+                foreach (TES4Lib.Records.CELL interiorCell in cellSubBlock.Records)
+                {
+                    string cellFormId = interiorCell.FormId;
+
+                    if (interiorCell.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
+
+                    //hack for now to get SI only
+                    if ((interiorCell.EDID.EditorId.Contains("SE") || interiorCell.EDID.EditorId.Contains("XP")) && !IsNull(interiorCell.FULL))
+                    {
+                        var convertedCell = ConvertCELL(interiorCell);
+                        if (IsNull(convertedCell)) throw new Exception("Output cell was null");
+
+                        var cellReferences = cellSubBlock.Groups.FirstOrDefault(x => x.Label == interiorCell.FormId);
+                        if (IsNull(cellReferences)) continue;
+
+                        Console.WriteLine($"BEGIN CONVERTING \"{convertedCell.NAME.EditorId}\" CELL");
+                        foreach (var childrenType in cellReferences.Groups) //can have 3 with labels: persistent 8; temporaty 9; distant 10;
+                        {
+                            int refrNumber = 1;
+                            foreach (var obRef in childrenType.Records)
+                            {
+                                if (obRef.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
+
+                                TES3Lib.Records.REFR mwREFR;
+
+                                var referenceTypeName = obRef.GetType().Name;
+
+                                if (referenceTypeName.Equals("REFR"))
+                                {
+                                    var obREFR = obRef as TES4Lib.Records.REFR;
+                                    if (IsNull(obREFR.NAME)) continue;
+                                    var ReferenceBaseFormId = obREFR.NAME.BaseFormId;
+
+                                    var BaseId = GetBaseId(ReferenceBaseFormId);
+                                    if (string.IsNullOrEmpty(BaseId)) continue;
+
+                                    mwREFR = ConvertREFR(obREFR, BaseId, refrNumber, true);
+                                    CellReferences.Add(new ConvertedCellReference(cellFormId, obREFR.FormId, mwREFR)); //for tracking
+
+                                    convertedCell.REFR.Add(mwREFR);
+                                    refrNumber++;
+                                    continue;
+                                }
+
+                                if (referenceTypeName.Equals("ACRE"))
+                                {
+                                    var obACRE = obRef as TES4Lib.Records.ACRE;
+                                    if (IsNull(obACRE.NAME)) continue;
+                                    var ReferenceBaseFormId = obACRE.NAME.BaseFormId;
+
+                                    var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
+                                    if (string.IsNullOrEmpty(BaseId)) continue;
+
+                                    mwREFR = ConvertACRE(obACRE, BaseId, refrNumber, true);
+                                    CellReferences.Add(new ConvertedCellReference(cellFormId, obACRE.FormId, mwREFR)); //for tracking
+
+                                    convertedCell.REFR.Add(mwREFR);
+                                    refrNumber++;
+                                    continue;
+                                }
+
+                                if (referenceTypeName.Equals("ACHR"))
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+
+                        foreach (var item in ConvertedRecords["CELL"])
+                        {
+                            bool cellWithSameNameExists = (item.Record as TES3Lib.Records.CELL).NAME.EditorId.Equals(convertedCell.NAME.EditorId);
+                            if (cellWithSameNameExists)
+                            {
+                                convertedCell.NAME.EditorId = CellNameFormatter($"{convertedCell.NAME.EditorId.Replace("\0", " ")}{interiorCell.EDID.EditorId}");
+                                break;
+                            }
+                        }
+
+                        ConvertedRecords["CELL"].Add(new ConvertedRecordData(interiorCell.FormId, "CELL", interiorCell.EDID.EditorId, convertedCell));
+
+                        Console.WriteLine($"DONE CONVERTING \"{convertedCell.NAME.EditorId}\" CELL");
+                    }
+                }
+            }
+        }
+
+        private static void ProcessExteriorSubBlocks(Group exteriorCellBlock)
         {
             foreach (var subBlocks in exteriorCellBlock.Groups)
             {
