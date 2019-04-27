@@ -12,12 +12,6 @@ namespace TES3Tool.TES4RecordConverter
 {
     public static class Oblivion2Morrowind
     {
-        internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
-
-        internal static List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)> DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
-
-        internal static List<ConvertedCellReference> CellReferences = new List<ConvertedCellReference>();
-
         public static TES3Lib.TES3 ConvertInteriorsAndExteriors(TES4Lib.TES4 tes4)
         {
             ConvertInteriorCells(tes4);
@@ -100,7 +94,7 @@ namespace TES3Tool.TES4RecordConverter
             if (IsNull(cellGroupsTop))
             {
                 Console.WriteLine("no CELL records");
-                return null;
+                return;
             }
             ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
 

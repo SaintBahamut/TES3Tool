@@ -12,6 +12,8 @@ namespace TES4Lib.Base
     [DebuggerDisplay("{Type} {Label}")]
     public class Group
     {
+        private const uint TES4_RECORD_HEADER_SIZE = 20;
+
         readonly public string Name;
         public int Size { get; set; }
         public dynamic Label { get; set; }
@@ -102,7 +104,7 @@ namespace TES4Lib.Base
                 {
 
                     Assembly assembly = Assembly.GetExecutingAssembly();
-                    var rawRecord = reader.ReadBytes<byte[]>(Data, size + 20);
+                    var rawRecord = reader.ReadBytes<byte[]>(Data, size + TES4_RECORD_HEADER_SIZE);
                     Record record = assembly
                         .CreateInstance($"TES4Lib.Records.{name}", false, BindingFlags.Default, null, new object[] { rawRecord }, null, null) as Record;
 
@@ -135,16 +137,15 @@ namespace TES4Lib.Base
                 if (worldSpacesList.Count.Equals(0) && worldChildrenList.Count.Equals(0))
                     break;
 
-                var name = reader.ReadBytes<string>(Data, 4);
-                var size = reader.ReadBytes<int>(Data);
-                reader.offset += 4;
-                string FormId = reader.ReadFormId(Data);
-                reader.offset -= 16;
+                var name = GetName(reader);
+                var size = GetSize(reader);   
+                string FormId = GetFormId(reader);
+   
 
                 if (name.Equals("WRLD") && worldSpacesList.Contains(FormId))//hard coded SEWorld
                 {
-                    var WRLD = new Records.WRLD(reader.ReadBytes<byte[]>(Data, size + 20));
-                    TES4Lib.TES4.TES4RecordIndex.Add(WRLD.FormId, WRLD);
+                    var WRLD = new Records.WRLD(reader.ReadBytes<byte[]>(Data, size + TES4_RECORD_HEADER_SIZE));
+                    TES4.TES4RecordIndex.Add(WRLD.FormId, WRLD);
                     Records.Add(WRLD);
                     worldSpacesList.Remove(WRLD.FormId);
                     continue;
@@ -160,7 +161,7 @@ namespace TES4Lib.Base
                 //move by offset
                 if (!name.Equals("GRUP"))
                 {
-                    reader.offset += size + 20;
+                    reader.offset += size + TES4_RECORD_HEADER_SIZE;
                     continue;
                 }
                 reader.offset += size;
@@ -173,6 +174,29 @@ namespace TES4Lib.Base
             reader.offset = offset+8;
             string parent = reader.ReadFormId(Data);
             return parent;   
+        }
+
+        private string GetName(ByteReader reader)
+        {
+            var name = reader.ReadBytes<string>(Data, 4);
+            reader.ShiftBackBy(4);
+            return name;
+        }
+
+        private uint GetSize(ByteReader reader)
+        {
+            reader.ShiftForwardBy(4);
+            uint size = reader.ReadBytes<uint>(Data);
+            reader.ShiftBackBy(8);
+            return size;
+        }
+
+        private string GetFormId(ByteReader reader)
+        {
+            reader.ShiftForwardBy(12);
+            string FormId = reader.ReadFormId(Data);
+            reader.ShiftBackBy(16);
+            return FormId;
         }
     }
 }

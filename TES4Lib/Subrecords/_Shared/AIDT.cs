@@ -4,7 +4,7 @@ using TES4Lib.Enums;
 using TES4Lib.Enums.Flags;
 using Utility;
 
-namespace TES4Lib.Subrecords.CREA
+namespace TES4Lib.Subrecords.Shared
 {
     public class AIDT : Subrecord
     {

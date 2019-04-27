@@ -1,7 +1,7 @@
 ﻿using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.CREA
+namespace TES4Lib.Subrecords.Shared
 {
     /// <summary>
     /// Item dropped on death

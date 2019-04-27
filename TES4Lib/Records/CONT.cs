@@ -43,8 +43,8 @@ namespace TES4Lib.Records
             {
                 try
                 {
-                    var subrecordName = GetRecordName(readerData);
-                    var subrecordSize = GetRecordSize(readerData);
+                    var subrecordName = GetSubrecordName(readerData);
+                    var subrecordSize = GetSubrecordSize(readerData);
                     var subrecordProp = this.GetType().GetProperty(subrecordName);
                     var subrecordData = readerData.ReadBytes<byte[]>(Data, (int)subrecordSize);
 

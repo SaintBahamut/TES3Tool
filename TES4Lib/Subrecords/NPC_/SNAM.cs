@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TES4Lib.Base;
+﻿using TES4Lib.Base;
 using Utility;
 
 namespace TES4Lib.Subrecords.NPC_
@@ -28,8 +23,7 @@ namespace TES4Lib.Subrecords.NPC_
         public SNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            var formIdBytes = reader.ReadBytes<byte[]>(base.Data, FORMID_LENGTH);
-            FormId = BitConverter.ToString(formIdBytes.Reverse().ToArray()).Replace("-", "");
+            FormId = reader.ReadFormId(base.Data);
             Rank = reader.ReadBytes<byte>(base.Data);
             Flag = reader.ReadBytes<byte[]>(base.Data);
         }

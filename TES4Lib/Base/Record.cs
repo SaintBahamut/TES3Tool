@@ -46,8 +46,8 @@ namespace TES4Lib.Base
             var readerData = new ByteReader();
             while (Data.Length != readerData.offset)
             {
-                string subrecordName = GetRecordName(readerData);
-                int subrecordSize = GetRecordSize(readerData);            
+                string subrecordName = GetSubrecordName(readerData);
+                int subrecordSize = GetSubrecordSize(readerData);            
 
                 try
                 {
@@ -84,14 +84,14 @@ namespace TES4Lib.Base
             }
         }
 
-        protected string GetRecordName(ByteReader reader)
+        protected string GetSubrecordName(ByteReader reader)
         {
             var name = reader.ReadBytes<string>(Data, 4);
             reader.ShiftBackBy(4);
             return name;
         }
 
-        protected ushort GetRecordSize(ByteReader reader)
+        protected ushort GetSubrecordSize(ByteReader reader)
         {
             reader.ShiftForwardBy(4);
             ushort size = reader.ReadBytes<ushort>(Data);

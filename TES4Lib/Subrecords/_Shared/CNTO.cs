@@ -1,12 +1,15 @@
 ﻿using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.CONT
+namespace TES4Lib.Subrecords.Shared
 {
+    /// <summary>
+    /// Represents item held by container
+    /// </summary>
     public class CNTO : Subrecord
     {
         /// <summary>
-        /// FormId of item
+        /// Item formId
         /// </summary>
         public string ItemId { get; set; }
 

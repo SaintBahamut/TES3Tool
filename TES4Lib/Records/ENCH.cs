@@ -32,8 +32,8 @@ namespace TES4Lib.Records
             EFCT = new List<(EFID, EFIT, SCIT, SULL)>();
             while (Data.Length != readerData.offset)
             {
-                var subrecordName = GetRecordName(readerData);
-                var subrecordSize = GetRecordSize(readerData);
+                var subrecordName = GetSubrecordName(readerData);
+                var subrecordSize = GetSubrecordSize(readerData);
 
                 if (subrecordName.Equals("EFID"))
                 {

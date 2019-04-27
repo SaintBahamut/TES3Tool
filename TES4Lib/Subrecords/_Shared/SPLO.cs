@@ -1,15 +1,15 @@
 ﻿using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.CREA
+namespace TES4Lib.Subrecords.Shared
 {
     /// <summary>
-    /// Creature spell
+    /// Actor spell
     /// </summary>
     public class SPLO : Subrecord
     {
         /// <summary>
-        /// points to a SPEL or LVSP record
+        /// Spell reference
         /// </summary>
         public string SpellFormId { get; set; }
 
