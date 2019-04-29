@@ -11,7 +11,7 @@ namespace TES3Tool.TES4RecordConverter.Records
     {
         internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
 
-        internal static List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)> DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
+        internal static List<TES3Lib.Records.REFR> DoorReferences = new List<TES3Lib.Records.REFR>();
 
         internal static List<ConvertedCellReference> CellReferences = new List<ConvertedCellReference>();
 
@@ -21,24 +21,43 @@ namespace TES3Tool.TES4RecordConverter.Records
             return template.Replace("_PLACEHOLDER_", SoundEditorId);
         }  
 
-        internal static void DoorDestinationsFormIdToNames()
+        internal static void UpdateDoorReferences()
         {
-            Parallel.ForEach(DoorDestinations, formId =>
+            Parallel.ForEach(DoorReferences, doorREFR =>
             {
                 var reference = CellReferences
-               .FirstOrDefault(x => x.ReferenceFormId.Equals(formId.Cell.InteriorCellName));
+               .FirstOrDefault(x => x.ReferenceFormId.Equals(doorREFR.DNAM.InteriorCellName));
 
-                if (IsNull(reference)) return;
+                if (IsNull(reference))
+                {
+                    return;
+                }
 
                 var record = ConvertedRecords["CELL"]
-                .FirstOrDefault(x => x.OriginFormId.Equals(reference.ParentCellFormId)) ;
+                .FirstOrDefault(x => x.OriginFormId.Contains(reference.ParentCellFormId)) ;
 
-                if (IsNull(record)) return;
+                if (IsNull(record))
+                {
+                    return;
+                }
 
                 var cell = record.Record as TES3Lib.Records.CELL;
 
-                formId.Cell.InteriorCellName = cell.NAME.EditorId;
-                
+                //Here we can try support outliners
+
+                if(!cell.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell))
+                {
+
+                    float shiftX = (Config.cellShiftX * Config.mwCellSize);
+                    float shiftY = (Config.cellShiftY * Config.mwCellSize);
+                    doorREFR.DODT.PositionX += shiftX;
+                    doorREFR.DODT.PositionY += shiftY;
+                    doorREFR.DNAM = null;
+                }
+                else
+                {
+                    doorREFR.DNAM.InteriorCellName = cell.NAME.EditorId;
+                }            
             });
         }
 
@@ -185,7 +204,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
     public class ConvertedRecordData
     {
-        public readonly string OriginFormId;
+        public string OriginFormId;
         public readonly string Type;
         public readonly string EditorId;
         public TES3Lib.Base.Record Record;
@@ -201,7 +220,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
     public class ConvertedCellReference
     {
-        public readonly string ParentCellFormId;
+        public string ParentCellFormId;
         public readonly string ReferenceFormId;
         public readonly string Type;
         public readonly string EditorId;

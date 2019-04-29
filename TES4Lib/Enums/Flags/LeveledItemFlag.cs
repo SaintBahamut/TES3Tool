@@ -7,5 +7,6 @@
         /// </summary>
         CalcFromAllLevels = 1,
         CalcForEachItem = 2,
+        UseAllSpells = 4
     }
 }

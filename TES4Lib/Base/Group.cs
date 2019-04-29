@@ -12,7 +12,7 @@ namespace TES4Lib.Base
     [DebuggerDisplay("{Type} {Label}")]
     public class Group
     {
-        private const uint TES4_RECORD_HEADER_SIZE = 20;
+        private const int TES4_RECORD_HEADER_SIZE = 20;
 
         readonly public string Name;
         public int Size { get; set; }
@@ -46,7 +46,7 @@ namespace TES4Lib.Base
             Type = reader.ReadBytes<GroupLabel>(RawData);
             Label = GenerateLabel(Type, labelRaw);
             Stamp = reader.ReadBytes<int>(RawData);
-            Data = reader.ReadBytes<byte[]>(RawData, RawData.Length - 20);
+            Data = reader.ReadBytes<byte[]>(RawData, RawData.Length - TES4_RECORD_HEADER_SIZE);
 
             if (this.Label is string && this.Label == "WRLD")
             {
@@ -94,17 +94,14 @@ namespace TES4Lib.Base
 
             while (Data.Length != reader.offset)
             {
-                var name = reader.ReadBytes<string>(Data, 4);
-                var size = reader.ReadBytes<int>(Data);
-
-
-                reader.offset -= 8;
-
+                var name = GetName(reader);
+                var size = GetSize(reader);
+      
                 if (!name.Equals("GRUP"))
                 {
 
                     Assembly assembly = Assembly.GetExecutingAssembly();
-                    var rawRecord = reader.ReadBytes<byte[]>(Data, size + TES4_RECORD_HEADER_SIZE);
+                    var rawRecord = reader.ReadBytes<byte[]>(Data, (int)(size + TES4_RECORD_HEADER_SIZE));
                     Record record = assembly
                         .CreateInstance($"TES4Lib.Records.{name}", false, BindingFlags.Default, null, new object[] { rawRecord }, null, null) as Record;
 
@@ -125,16 +122,28 @@ namespace TES4Lib.Base
         /// </summary>
         private void BuildWRLDGroup()
         {
-            var worldSpacesList = new List<string>() {"00009F18" };
-            var worldChildrenList = new List<string>();
-            worldChildrenList.AddRange(worldSpacesList);
-                
+            //refactor this pls
+
+            string SEWorld = "00009F18";
+            string SETheFringe = "00011F7B";
+            string SETheFringeOrdered = "00011F7C";
+            string SENSCrucible = "00011F7E";
+            string SENSBliss = "00011F7D";
+            string SENSPalace = "000122E5";
+            string SEVitharnWorld = "00014D44";
+
+            string SEManiaGarden = "0004FE12";
+            string SEDementiaGarden = "0004FE13";
+
+
+
+            var worldSpacesList = new List<string>() { SEWorld, SETheFringe, SENSCrucible, SENSBliss , SENSPalace, SEVitharnWorld };
 
             //find the WRLD we are looking for
             var reader = new ByteReader();
             while (Data.Length != reader.offset)
             {
-                if (worldSpacesList.Count.Equals(0) && worldChildrenList.Count.Equals(0))
+                if (worldSpacesList.Count.Equals(0))
                     break;
 
                 var name = GetName(reader);
@@ -147,21 +156,26 @@ namespace TES4Lib.Base
                     var WRLD = new Records.WRLD(reader.ReadBytes<byte[]>(Data, size + TES4_RECORD_HEADER_SIZE));
                     TES4.TES4RecordIndex.Add(WRLD.FormId, WRLD);
                     Records.Add(WRLD);
+                  
+                    //world children should follow
+                    size = GetSize(reader);
+                    var WorldChildren = new Group(reader.ReadBytes<byte[]>(Data, size));
+                    Groups.Add(WorldChildren);
                     worldSpacesList.Remove(WRLD.FormId);
                     continue;
                 }
-                if (name.Equals("GRUP") && worldChildrenList.Contains(PeekWorldChildren(reader.offset)))
-                {
-                    var WorldChildren = new Group(reader.ReadBytes<byte[]>(Data, size));
-                    Groups.Add(WorldChildren);
-                    worldChildrenList.Remove(WorldChildren.Label);
-                    continue;
-                }
+                //if (name.Equals("GRUP") && worldChildrenList.Contains(PeekWorldChildren(reader.offset)))
+                //{
+                //    var WorldChildren = new Group(reader.ReadBytes<byte[]>(Data, size));
+                //    Groups.Add(WorldChildren);
+                //    worldChildrenList.Remove(WorldChildren.Label);
+                //    continue;
+                //}
 
                 //move by offset
                 if (!name.Equals("GRUP"))
                 {
-                    reader.offset += size + TES4_RECORD_HEADER_SIZE;
+                    reader.offset += (size + TES4_RECORD_HEADER_SIZE);
                     continue;
                 }
                 reader.offset += size;
@@ -183,10 +197,10 @@ namespace TES4Lib.Base
             return name;
         }
 
-        private uint GetSize(ByteReader reader)
+        private int GetSize(ByteReader reader)
         {
             reader.ShiftForwardBy(4);
-            uint size = reader.ReadBytes<uint>(Data);
+            int size = reader.ReadBytes<int>(Data);
             reader.ShiftBackBy(8);
             return size;
         }

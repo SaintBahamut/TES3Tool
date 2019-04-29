@@ -9,6 +9,9 @@ namespace TES4Lib.Base
 {
     public class Record
     {
+        private const ushort TES4_SUBRECORD_HEADER_SIZE = 6;
+        private const int TES4_RECORD_NAME_SIZE = 4;
+
         #region Fields
         public string Name { get; set; }
         public int Size { get; set; }
@@ -28,11 +31,11 @@ namespace TES4Lib.Base
         {
             RawData = rawData;
             var reader = new ByteReader();
-            Name = reader.ReadBytes<string>(RawData, 4);
+            Name = reader.ReadBytes<string>(RawData, TES4_RECORD_NAME_SIZE);
             Size = reader.ReadBytes<int>(RawData);
             Flag = reader.ReadFlagBytes<RecordFlag>(RawData);
             FormId = reader.ReadFormId(RawData);
-            VersionControlInfo = reader.ReadBytes<int>(RawData, 4);
+            VersionControlInfo = reader.ReadBytes<int>(RawData);
             Data = reader.ReadBytes<byte[]>(RawData, Size);
         }
 
@@ -86,8 +89,8 @@ namespace TES4Lib.Base
 
         protected string GetSubrecordName(ByteReader reader)
         {
-            var name = reader.ReadBytes<string>(Data, 4);
-            reader.ShiftBackBy(4);
+            var name = reader.ReadBytes<string>(Data, TES4_RECORD_NAME_SIZE);
+            reader.ShiftBackBy(TES4_RECORD_NAME_SIZE);
             return name;
         }
 
@@ -95,8 +98,8 @@ namespace TES4Lib.Base
         {
             reader.ShiftForwardBy(4);
             ushort size = reader.ReadBytes<ushort>(Data);
-            size += 6;
-            reader.ShiftBackBy(6);
+            size += TES4_SUBRECORD_HEADER_SIZE;
+            reader.ShiftBackBy(TES4_SUBRECORD_HEADER_SIZE);
             return size;
         }
 

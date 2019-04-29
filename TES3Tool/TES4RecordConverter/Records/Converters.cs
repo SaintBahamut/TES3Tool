@@ -1078,7 +1078,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwCELL;
         }
 
-        public static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber, bool isExterior = false)
+        public static TES3Lib.Records.REFR ConvertREFR(TES4Lib.Records.REFR obREFR, string baseId, int refrNumber, bool IsInteriorCell)
         {
             var mwREFR = new TES3Lib.Records.REFR();
 
@@ -1106,51 +1106,67 @@ namespace TES3Tool.TES4RecordConverter.Records
             // no cell found, door leads to exterior space
             if (!IsNull(obREFR.XTEL))
             {
-                if (!isExterior) //for now lets not break compatibility
+                mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
                 {
-                    TES4Lib.Base.Record record;
-                    TES4Lib.TES4.TES4RecordIndex.TryGetValue(obREFR.XTEL.DestinationDoorReference, out record);
+                    PositionX = obREFR.XTEL.DestLocX,
+                    PositionY = obREFR.XTEL.DestLocY,
+                    PositionZ = obREFR.XTEL.DestLocZ,
+                    RotationX = obREFR.XTEL.DestRotX,
+                    RotationY = obREFR.XTEL.DestRotY,
+                    RotationZ = obREFR.XTEL.DestRotZ
+                };
+                mwREFR.DNAM = new TES3Lib.Subrecords.Shared.DNAM
+                {
+                    InteriorCellName = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at later stages of conversion
+                };
 
-                    if (IsNull(record)) //if record is null it means its exterior cell
-                    {
-                        float shiftX = (Config.cellShiftX * Config.mwCellSize);
-                        float shiftY = (Config.cellShiftY * Config.mwCellSize);
-                        mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
-                        {
-                            PositionX = obREFR.XTEL.DestLocX + shiftX,
-                            PositionY = obREFR.XTEL.DestLocY + shiftY,
-                            PositionZ = obREFR.XTEL.DestLocZ,
-                            RotationX = obREFR.XTEL.DestRotX,
-                            RotationY = obREFR.XTEL.DestRotY,
-                            RotationZ = obREFR.XTEL.DestRotZ
-                        };
-                    }
-                    else
-                    {
-                        mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
-                        {
-                            PositionX = obREFR.XTEL.DestLocX,
-                            PositionY = obREFR.XTEL.DestLocY,
-                            PositionZ = obREFR.XTEL.DestLocZ,
-                            RotationX = obREFR.XTEL.DestRotX,
-                            RotationY = obREFR.XTEL.DestRotY,
-                            RotationZ = obREFR.XTEL.DestRotZ
-                        };
-                        mwREFR.DNAM = new TES3Lib.Subrecords.Shared.DNAM
-                        {
-                            InteriorCellName = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at later stages of conversion
-                        };
-                        DoorDestinations.Add((mwREFR.DNAM, mwREFR.DODT));
-                    }
-                }
+                DoorReferences.Add(mwREFR);
+
+                //if (!isExterior) //for now lets not break compatibility
+                //{
+                //    TES4Lib.Base.Record record;
+                //    TES4Lib.TES4.TES4RecordIndex.TryGetValue(obREFR.XTEL.DestinationDoorReference, out record);
+
+                //    if (IsNull(record)) //if record is null it means its exterior cell
+                //    {
+                //        float shiftX = (Config.cellShiftX * Config.mwCellSize);
+                //        float shiftY = (Config.cellShiftY * Config.mwCellSize);
+                //        mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
+                //        {
+                //            PositionX = obREFR.XTEL.DestLocX + shiftX,
+                //            PositionY = obREFR.XTEL.DestLocY + shiftY,
+                //            PositionZ = obREFR.XTEL.DestLocZ,
+                //            RotationX = obREFR.XTEL.DestRotX,
+                //            RotationY = obREFR.XTEL.DestRotY,
+                //            RotationZ = obREFR.XTEL.DestRotZ
+                //        };
+                //    }
+                //    else
+                //    {
+                //        mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
+                //        {
+                //            PositionX = obREFR.XTEL.DestLocX,
+                //            PositionY = obREFR.XTEL.DestLocY,
+                //            PositionZ = obREFR.XTEL.DestLocZ,
+                //            RotationX = obREFR.XTEL.DestRotX,
+                //            RotationY = obREFR.XTEL.DestRotY,
+                //            RotationZ = obREFR.XTEL.DestRotZ
+                //        };
+                //        mwREFR.DNAM = new TES3Lib.Subrecords.Shared.DNAM
+                //        {
+                //            InteriorCellName = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at later stages of conversion
+                //        };
+                //        DoorReferences.Add(mwREFR);
+                //    }
+                //}
             }
 
             if (!IsNull(obREFR.XLOC))
             {
-                if (obREFR.XLOC.LockLevel > 0)
-                {
-                    mwREFR.FLTV = new TES3Lib.Subrecords.REFR.FLTV { LockLevel = obREFR.XLOC.LockLevel };
-                }
+                //if (obREFR.XLOC.LockLevel > 0)
+                //{
+                //    mwREFR.FLTV = new TES3Lib.Subrecords.REFR.FLTV { LockLevel = obREFR.XLOC.LockLevel };
+                //}
 
                 if (!obREFR.XLOC.Key.Equals("00000000"))
                 {
@@ -1167,7 +1183,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                             BaseId = mwRecordFromREFR.EditorId;
                         }
                     }
-                    mwREFR.KNAM = new TES3Lib.Subrecords.REFR.KNAM { DoorKeyId = BaseId };
+                    //mwREFR.KNAM = new TES3Lib.Subrecords.REFR.KNAM { DoorKeyId = BaseId };
 
                 }
             }
@@ -1191,8 +1207,8 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             if (!IsNull(obREFR.DATA))
             {
-                int offsetX = isExterior ? (Config.mwCellSize * Config.cellShiftX) : 0;
-                int offsetY = isExterior ? (Config.mwCellSize * Config.cellShiftY) : 0;
+                int offsetX = IsInteriorCell ? 0 : (Config.mwCellSize * Config.cellShiftX);
+                int offsetY = IsInteriorCell ? 0 : (Config.mwCellSize * Config.cellShiftY);
 
                 mwREFR.DATA = new TES3Lib.Subrecords.REFR.DATA();
                 mwREFR.DATA.XPos = obREFR.DATA.LocX + offsetX;

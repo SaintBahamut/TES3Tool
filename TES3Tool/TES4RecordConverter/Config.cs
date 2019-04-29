@@ -57,8 +57,8 @@ namespace TES3Tool
             {"00022E5B","ingred_frost_salts_01\0" },
             {"0003369F","ingred_void_salts_01\0" },
             {"0003368F","ingred_rat_meat_01\0" },
-            {"00009182","ingred_vampire_dust_01" },
-            {"00023D89","ingred_bread_01" },
+            {"00009182","ingred_vampire_dust_01\0" },
+            {"00023D89","ingred_bread_01\0" },
         };
     }
 }

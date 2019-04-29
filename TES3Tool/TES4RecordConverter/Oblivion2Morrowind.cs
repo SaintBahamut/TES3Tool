@@ -14,10 +14,12 @@ namespace TES3Tool.TES4RecordConverter
     {
         public static TES3Lib.TES3 ConvertInteriorsAndExteriors(TES4Lib.TES4 tes4)
         {
+            ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
+
             ConvertInteriorCells(tes4);
             ConvertExteriorCells(tes4);
-
-            DoorDestinationsFormIdToNames();
+                   
+            UpdateDoorReferences();
 
             var tes3 = new TES3Lib.TES3();
             TES3Lib.Records.TES3 header = createTES3HEader();
@@ -32,16 +34,18 @@ namespace TES3Tool.TES4RecordConverter
             //dispose helper structures
             ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
             CellReferences = new List<ConvertedCellReference>();
-            DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
+            DoorReferences = new List<TES3Lib.Records.REFR>();
 
             return tes3;
         }
 
         public static TES3Lib.TES3 ConvertInteriors(TES4Lib.TES4 tes4)
         {
+            ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
+
             ConvertInteriorCells(tes4);
 
-            DoorDestinationsFormIdToNames();
+            UpdateDoorReferences();
 
             Console.WriteLine($"INTERIOR CELL AND REFERENCED RECORDS CONVERSION DONE \n BUILDING TES3 PLUGIN/MASTER INSTANCE");
 
@@ -58,13 +62,15 @@ namespace TES3Tool.TES4RecordConverter
             //dispose helper structures
             ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
             CellReferences = new List<ConvertedCellReference>();
-            DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
+            DoorReferences = new List<TES3Lib.Records.REFR>();
 
             return tes3;
         }
 
         public static TES3Lib.TES3 ConvertExteriors(TES4Lib.TES4 tes4)
         {
+            ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
+
             ConvertExteriorCells(tes4);
 
             Console.WriteLine($"EXTERIOR CELL AND REFERENCED RECORDS CONVERSION DONE \n BUILDING TES3 PLUGIN/MASTER INSTANCE");
@@ -82,7 +88,7 @@ namespace TES3Tool.TES4RecordConverter
             //dispose helper structures
             ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
             CellReferences = new List<ConvertedCellReference>();
-            DoorDestinations = new List<(TES3Lib.Subrecords.Shared.DNAM Cell, TES3Lib.Subrecords.Shared.DODT Coordinates)>();
+            DoorReferences = new List<TES3Lib.Records.REFR>();
 
             return tes3;
         }
@@ -96,8 +102,7 @@ namespace TES3Tool.TES4RecordConverter
                 Console.WriteLine("no CELL records");
                 return;
             }
-            ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
-
+            
             foreach (var cellBlock in cellGroupsTop.Groups)
             {
                 ProcessInteriorSubBlocks(cellBlock);
@@ -114,9 +119,8 @@ namespace TES3Tool.TES4RecordConverter
             if (IsNull(wrldGroupsTop))
             {
                 Console.WriteLine("no WRLD records");
-                return null;
+                return;
             }
-            ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
 
             foreach (TES4Lib.Records.WRLD wrld in wrldGroupsTop.Records)
             {
@@ -131,13 +135,56 @@ namespace TES3Tool.TES4RecordConverter
                     continue;
                 }
 
-                //Here are records ROAD, CELL but i dont know if i need them, so i just proceed to exterior subblocks
+                //Here are records ROAD
 
                 foreach (var exteriorCellBlock in worldChildren.Groups)
                 {
-                    if (exteriorCellBlock.Type.Equals(GroupLabel.CellChildren)) continue; // that might happen but skip for now
+                    if (exteriorCellBlock.Type.Equals(GroupLabel.CellChildren)) continue;
 
                     ProcessExteriorSubBlocks(exteriorCellBlock);
+                }
+
+                //process extra CELL record
+                var wrldCell = worldChildren.Records.FirstOrDefault(x => x.Name.Equals("CELL")) as TES4Lib.Records.CELL;
+
+                if (!IsNull(wrldCell))
+                {
+                    var convertedCell = ConvertCELL(wrldCell);
+                    var wrldCellChildren = worldChildren.Groups.FirstOrDefault(x => x.Type.Equals(GroupLabel.CellChildren));
+                    ConvertCellChildren(ref convertedCell, wrldCellChildren, wrld.FormId);
+
+                    DistributeWorldSpaceReferecnes(convertedCell);
+
+                }
+       
+            }
+        }
+
+        private static void DistributeWorldSpaceReferecnes(TES3Lib.Records.CELL convertedCell)
+        {
+            foreach (var cellReference in convertedCell.REFR)
+            {
+                int cellGrindX = (int)(cellReference.DATA.XPos / Config.mwCellSize);
+                int cellGrindY = (int)(cellReference.DATA.YPos / Config.mwCellSize);
+
+                ConvertedRecordData targetConvertedCell = ConvertedRecords["CELL"].FirstOrDefault(x => 
+                    (x.Record as TES3Lib.Records.CELL).DATA.GridX.Equals(cellGrindX) && (x.Record as TES3Lib.Records.CELL).DATA.GridX.Equals(cellGrindX));
+
+                if (!IsNull(targetConvertedCell))
+                {
+                    var cellRecord = targetConvertedCell.Record as TES3Lib.Records.CELL;
+                    cellRecord.NAM0.ReferenceCount++;
+                    cellReference.FRMR.ObjectIndex = cellRecord.NAM0.ReferenceCount;
+                    cellRecord.REFR.Add(cellReference);
+
+                    //need update parent formId
+                    var convertedReference = CellReferences.FirstOrDefault(x => x.Reference.Equals(cellReference));
+                    convertedReference.ParentCellFormId = targetConvertedCell.OriginFormId;
+
+                }
+                else
+                {
+                    Console.WriteLine($"target cell at coordinates {cellGrindX}.{cellGrindY} not found");
                 }
             }
         }
@@ -158,61 +205,12 @@ namespace TES3Tool.TES4RecordConverter
                         var convertedCell = ConvertCELL(interiorCell);
                         if (IsNull(convertedCell)) throw new Exception("Output cell was null");
 
-                        var cellReferences = cellSubBlock.Groups.FirstOrDefault(x => x.Label == interiorCell.FormId);
-                        if (IsNull(cellReferences)) continue;
+                        var cellChildren = cellSubBlock.Groups.FirstOrDefault(x => x.Label == interiorCell.FormId);
+                        if (IsNull(cellChildren)) continue;
 
                         Console.WriteLine($"BEGIN CONVERTING \"{convertedCell.NAME.EditorId}\" CELL");
-                        foreach (var childrenType in cellReferences.Groups) //can have 3 with labels: persistent 8; temporaty 9; distant 10;
-                        {
-                            int refrNumber = 1;
-                            foreach (var obRef in childrenType.Records)
-                            {
-                                if (obRef.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
 
-                                TES3Lib.Records.REFR mwREFR;
-
-                                var referenceTypeName = obRef.GetType().Name;
-
-                                if (referenceTypeName.Equals("REFR"))
-                                {
-                                    var obREFR = obRef as TES4Lib.Records.REFR;
-                                    if (IsNull(obREFR.NAME)) continue;
-                                    var ReferenceBaseFormId = obREFR.NAME.BaseFormId;
-
-                                    var BaseId = GetBaseId(ReferenceBaseFormId);
-                                    if (string.IsNullOrEmpty(BaseId)) continue;
-
-                                    mwREFR = ConvertREFR(obREFR, BaseId, refrNumber, true);
-                                    CellReferences.Add(new ConvertedCellReference(cellFormId, obREFR.FormId, mwREFR)); //for tracking
-
-                                    convertedCell.REFR.Add(mwREFR);
-                                    refrNumber++;
-                                    continue;
-                                }
-
-                                if (referenceTypeName.Equals("ACRE"))
-                                {
-                                    var obACRE = obRef as TES4Lib.Records.ACRE;
-                                    if (IsNull(obACRE.NAME)) continue;
-                                    var ReferenceBaseFormId = obACRE.NAME.BaseFormId;
-
-                                    var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
-                                    if (string.IsNullOrEmpty(BaseId)) continue;
-
-                                    mwREFR = ConvertACRE(obACRE, BaseId, refrNumber, true);
-                                    CellReferences.Add(new ConvertedCellReference(cellFormId, obACRE.FormId, mwREFR)); //for tracking
-
-                                    convertedCell.REFR.Add(mwREFR);
-                                    refrNumber++;
-                                    continue;
-                                }
-
-                                if (referenceTypeName.Equals("ACHR"))
-                                {
-                                    continue;
-                                }
-                            }
-                        }
+                        ConvertCellChildren(ref convertedCell, cellChildren, cellFormId);                      
 
                         foreach (var item in ConvertedRecords["CELL"])
                         {
@@ -248,6 +246,10 @@ namespace TES3Tool.TES4RecordConverter
                         if (convertedCell.Equals(alreadyConvertedCell.Record as TES3Lib.Records.CELL))
                         {
                             cellMerge = true;
+                            cellFormId = alreadyConvertedCell.OriginFormId;
+
+                            alreadyConvertedCell.OriginFormId += exteriorCell.FormId;  //store all source cells formid as one string
+
                             convertedCell = mergeExteriorCells(alreadyConvertedCell.Record as TES3Lib.Records.CELL, convertedCell);
 
                             Console.WriteLine("merging subcells...");
@@ -263,77 +265,85 @@ namespace TES3Tool.TES4RecordConverter
                         continue;
                     }
 
-                    foreach (var childrenType in cellChildren.Groups)
-                    {
-                        int refrNumber = !IsNull(convertedCell.NAM0) ? convertedCell.NAM0.ReferenceCount : 1;
+                    ConvertCellChildren(ref convertedCell, cellChildren, cellFormId);
 
-                        foreach (var obRef in childrenType.Records)
-                        {
-                            if (obRef.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
-
-                            TES3Lib.Records.REFR mwREFR;
-
-                            var referenceTypeName = obRef.GetType().Name;
-
-                            if (referenceTypeName.Equals("REFR"))
-                            {
-                                var obREFR = obRef as TES4Lib.Records.REFR;
-                                if (IsNull(obREFR.NAME)) continue;
-                                var ReferenceBaseFormId = obREFR.NAME.BaseFormId;
-
-                                var BaseId = GetBaseId(ReferenceBaseFormId);
-                                if (string.IsNullOrEmpty(BaseId)) continue;
-
-                                mwREFR = ConvertREFR(obREFR, BaseId, refrNumber, true);
-                                CellReferences.Add(new ConvertedCellReference(cellFormId, obREFR.FormId, mwREFR)); //for tracking
-
-                                convertedCell.REFR.Add(mwREFR);
-                                refrNumber++;
-                                continue;
-                            }
-
-                            if (referenceTypeName.Equals("ACRE"))
-                            {
-                                var obACRE = obRef as TES4Lib.Records.ACRE;
-                                if (IsNull(obACRE.NAME)) continue;
-                                var ReferenceBaseFormId = obACRE.NAME.BaseFormId;
-
-                                var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
-                                if (string.IsNullOrEmpty(BaseId)) continue;
-
-                                mwREFR = ConvertACRE(obACRE, BaseId, refrNumber, true);
-                                CellReferences.Add(new ConvertedCellReference(cellFormId, obACRE.FormId, mwREFR)); //for tracking
-
-                                convertedCell.REFR.Add(mwREFR);
-                                refrNumber++;
-                                continue;
-                            }
-
-                            if (referenceTypeName.Equals("ACHR"))
-                            {
-                                continue;
-                            }
-
-                            if (referenceTypeName.Equals("LAND"))
-                            {
-                                continue;
-                            }
-
-                            if (referenceTypeName.Equals("PGRD"))
-                            {
-                                continue;
-                            }
-                        }
-
-                    }
                     if (!cellMerge)
                     {
-                        //if (!IsNull(convertedCell.RGNN) && convertedCell.REFR.Count.Equals(0)) return;
+                        //if (IsNull(convertedCell.RGNN) && convertedCell.REFR.Count.Equals(0)) return;
 
                         var editorId = !IsNull(exteriorCell.EDID) ? exteriorCell.EDID.EditorId : $"{exteriorCell.XCLC.GridX},{exteriorCell.XCLC.GridY}";
                         ConvertedRecords["CELL"].Add(new ConvertedRecordData(exteriorCell.FormId, "CELL", editorId, convertedCell));
                     }
                     Console.WriteLine($"DONE CONVERTING \"{convertedCell.DATA.GridX},{convertedCell.DATA.GridX}\" CELL");
+                }
+            }
+        }
+
+        private static void ConvertCellChildren(ref TES3Lib.Records.CELL mwCELL, Group cellChildren, string originalCellFormId)
+        {
+            foreach (var childrenType in cellChildren.Groups)
+            {
+                if(IsNull(mwCELL.NAM0))
+                {
+                    mwCELL.NAM0 = new TES3Lib.Subrecords.CELL.NAM0 { ReferenceCount = 1 };
+                }
+
+                foreach (var obRef in childrenType.Records)
+                {
+                    if (obRef.Flag.Contains(TES4Lib.Enums.Flags.RecordFlag.Deleted)) continue;
+
+                    TES3Lib.Records.REFR mwREFR;
+
+                    var referenceTypeName = obRef.GetType().Name;
+
+                    if (referenceTypeName.Equals("REFR"))
+                    {
+                        var obREFR = obRef as TES4Lib.Records.REFR;
+                        if (IsNull(obREFR.NAME)) continue;
+                        var ReferenceBaseFormId = obREFR.NAME.BaseFormId;
+
+                        var BaseId = GetBaseId(ReferenceBaseFormId);
+                        if (string.IsNullOrEmpty(BaseId)) continue;
+
+                        mwREFR = ConvertREFR(obREFR, BaseId, mwCELL.NAM0.ReferenceCount, mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell));
+                        CellReferences.Add(new ConvertedCellReference(originalCellFormId, obREFR.FormId, mwREFR)); //for tracking
+
+                        mwCELL.REFR.Add(mwREFR);
+                        mwCELL.NAM0.ReferenceCount++;
+                        continue;
+                    }
+
+                    if (referenceTypeName.Equals("ACRE"))
+                    {
+                        var obACRE = obRef as TES4Lib.Records.ACRE;
+                        if (IsNull(obACRE.NAME)) continue;
+                        var ReferenceBaseFormId = obACRE.NAME.BaseFormId;
+
+                        var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
+                        if (string.IsNullOrEmpty(BaseId)) continue;
+
+                        mwREFR = ConvertACRE(obACRE, BaseId, mwCELL.NAM0.ReferenceCount, true);
+                        CellReferences.Add(new ConvertedCellReference(originalCellFormId, obACRE.FormId, mwREFR)); //for tracking
+
+                        mwCELL.REFR.Add(mwREFR);
+                        mwCELL.NAM0.ReferenceCount++;
+                        continue;
+                    }
+
+                    if (referenceTypeName.Equals("ACHR"))
+                    {
+                        continue;
+                    }
+
+                    if (referenceTypeName.Equals("LAND"))
+                    {
+                        continue;
+                    }
+
+                    if (referenceTypeName.Equals("PGRD"))
+                    {
+                        continue;
+                    }
                 }
             }
         }

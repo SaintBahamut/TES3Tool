@@ -37,10 +37,10 @@ namespace TES3Tool
             //});
 
             var stat = TES4Load(fileESM, new List<string> {
-                "STAT","WRLD","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLC","LVLI",
-                "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA"
+                "STAT","WRLD","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLC","LVLI","CELL",
+                "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA","DOOR"
             });
-            var testEX = ConvertExteriors(stat);
+            var testEX = ConvertInteriorsAndExteriors(stat);
             testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUTEX.esp");
 
             //var test = ConvertInteriorCells(stat);
