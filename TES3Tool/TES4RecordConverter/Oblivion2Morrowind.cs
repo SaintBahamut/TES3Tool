@@ -168,7 +168,7 @@ namespace TES3Tool.TES4RecordConverter
                 int cellGrindY = (int)(cellReference.DATA.YPos / Config.mwCellSize);
 
                 ConvertedRecordData targetConvertedCell = ConvertedRecords["CELL"].FirstOrDefault(x => 
-                    (x.Record as TES3Lib.Records.CELL).DATA.GridX.Equals(cellGrindX) && (x.Record as TES3Lib.Records.CELL).DATA.GridX.Equals(cellGrindX));
+                    (x.Record as TES3Lib.Records.CELL).DATA.GridX.Equals(cellGrindX) && (x.Record as TES3Lib.Records.CELL).DATA.GridY.Equals(cellGrindY));
 
                 if (!IsNull(targetConvertedCell))
                 {
@@ -274,7 +274,7 @@ namespace TES3Tool.TES4RecordConverter
                         var editorId = !IsNull(exteriorCell.EDID) ? exteriorCell.EDID.EditorId : $"{exteriorCell.XCLC.GridX},{exteriorCell.XCLC.GridY}";
                         ConvertedRecords["CELL"].Add(new ConvertedRecordData(exteriorCell.FormId, "CELL", editorId, convertedCell));
                     }
-                    Console.WriteLine($"DONE CONVERTING \"{convertedCell.DATA.GridX},{convertedCell.DATA.GridX}\" CELL");
+                    Console.WriteLine($"DONE CONVERTING \"{convertedCell.DATA.GridX},{convertedCell.DATA.GridY}\" CELL");
                 }
             }
         }

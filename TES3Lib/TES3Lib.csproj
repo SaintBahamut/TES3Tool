@@ -72,6 +72,7 @@
     <Compile Include="Enums\Flags\SpellFlag.cs" />
     <Compile Include="Enums\GlobalVariableType.cs" />
     <Compile Include="Enums\MagicEffect.cs" />
+    <Compile Include="Enums\PathGridNodeType.cs" />
     <Compile Include="Enums\RaceFlags.cs" />
     <Compile Include="Enums\Skill.cs" />
     <Compile Include="Enums\Specialization.cs" />
@@ -150,6 +151,9 @@
     <Compile Include="Subrecords\LEVC\CNAM.cs" />
     <Compile Include="Subrecords\LEVC\INDX.cs" />
     <Compile Include="Subrecords\LEVC\INTV.cs" />
+    <Compile Include="Subrecords\PGRD\PGRC.cs" />
+    <Compile Include="Subrecords\PGRD\PGRP.cs" />
+    <Compile Include="Subrecords\PGRD\DATA.cs" />
     <Compile Include="Subrecords\REFR\CNAM.cs" />
     <Compile Include="Subrecords\REFR\INDX.cs" />
     <Compile Include="Subrecords\REFR\XCHG.cs" />

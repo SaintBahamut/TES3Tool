@@ -13,44 +13,33 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-            //string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minitest.ESP";
-            //var tes3 = TES3Load(file);
-            //tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minitest.ESP");
+            //ConvertSI();
 
-            ////string file = "D:\\Out.esp";
-            //var tes3 = TES3Load(file);
-            //tes3.TES3Save("D:\\Out.esp");
-
-            //string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\MORROWIND.esm";
-            //var tes3 = TES3Load(file, new List<string> { "CELL" });
-            //tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\dd.esp");
+            MWLoadTest();
 
 
-            //string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\BOBOLIONTEST.esp";
-            // string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\CONVERIX.ESP";
 
+            Console.WriteLine("Done");
+            Console.ReadLine();
+        }
 
+       public static void ConvertSI()
+       {
             string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.ESM";
-            //var stat = TES4Load(fileESM, new List<string> {
-            //    "STAT", "CELL","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLC","LVLI",
-            //    "FLOR","DOOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA"
-            //});
 
             var stat = TES4Load(fileESM, new List<string> {
                 "STAT","WRLD","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLC","LVLI","CELL",
                 "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA","DOOR"
             });
             var testEX = ConvertInteriorsAndExteriors(stat);
-            testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUTEX.esp");
+            testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\SI.esp");
+        }
 
-            //var test = ConvertInteriorCells(stat);
-            //test.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\OUTPUT.esp"); //yep i use this kind of shitty path
+        public static void MWLoadTest()
+        {
+            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\MORROWIND.esm";
 
-
-
-
-            Console.WriteLine("Done");
-            Console.ReadLine();
+            var tes3 = TES3Load(fileESM, new List<string> { "PGRD" }); 
         }
     }
 }

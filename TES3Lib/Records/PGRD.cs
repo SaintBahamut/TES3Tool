@@ -1,12 +1,22 @@
 ﻿using TES3Lib.Base;
+using TES3Lib.Subrecords.PGRD;
+using TES3Lib.Subrecords.Shared;
 
 namespace TES3Lib.Records
 {
     public class PGRD : Record
     {
+        public DATA DATA { get; set; }
+
+        public NAME NAME { get; set; }
+
+        public PGRP PGRP { get; set; }
+
+        public PGRC PGRC { get; set; }
+
+
         public PGRD(byte[] rawData) : base(rawData)
         {
-            IsImplemented = false;
             BuildSubrecords();
         }
     }
