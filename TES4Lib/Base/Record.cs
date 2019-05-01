@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using TES4Lib.Enums.Flags;
 using Utility;
+using zlib;
 using static Utility.Common;
 
 namespace TES4Lib.Base
@@ -37,6 +39,11 @@ namespace TES4Lib.Base
             FormId = reader.ReadFormId(RawData);
             VersionControlInfo = reader.ReadBytes<int>(RawData);
             Data = reader.ReadBytes<byte[]>(RawData, Size);
+
+            if (Flag.Contains(RecordFlag.Compressed))
+            {
+                DecompressData(Data);
+            }          
         }
 
         /// <summary>
@@ -104,5 +111,44 @@ namespace TES4Lib.Base
         }
 
         protected bool IsEndOfData(ByteReader reader) => (reader.offset == Data.Length);
+
+        private void DecompressData(byte[] inData)
+        {
+            var reader = new ByteReader();
+            Size = reader.ReadBytes<int>(inData);
+
+            byte[] DataDecompressed;
+            Decompress(reader.ReadBytes<byte[]>(inData, inData.Length-4), out DataDecompressed);
+
+            if (!Size.Equals(DataDecompressed.Length))
+            {
+                throw new Exception("Failed to decompress record data");
+            }
+         
+            Data = DataDecompressed;
+        }
+
+        public static void Decompress(byte[] inData, out byte[] outData)
+        {
+            using (MemoryStream outMemoryStream = new MemoryStream())
+            using (ZOutputStream outZStream = new ZOutputStream(outMemoryStream))
+            using (Stream inMemoryStream = new MemoryStream(inData))
+            {
+                CopyStream(inMemoryStream, outZStream);
+                outZStream.finish();
+                outData = outMemoryStream.ToArray();
+            }
+        }
+
+        public static void CopyStream(System.IO.Stream input, System.IO.Stream output)
+        {
+            byte[] buffer = new byte[2000];
+            int len;
+            while ((len = input.Read(buffer, 0, 2000)) > 0)
+            {
+                output.Write(buffer, 0, len);
+            }
+            output.Flush();
+        }
     }
 }
