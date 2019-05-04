@@ -1299,49 +1299,26 @@ namespace TES3Tool.TES4RecordConverter.Records
             mwPGRD.PGRP.Points = new TES3Lib.Subrecords.PGRD.PGRP.Point[obPGRD.PGRP.Points.Length];
             for (int i = 0; i < mwPGRD.PGRP.Points.Length; i++)
             {
-                mwPGRD.PGRP.Points[i].X = Convert.ToInt32(obPGRD.PGRP.Points[i].x) + offsetX;
-                mwPGRD.PGRP.Points[i].Y = Convert.ToInt32(obPGRD.PGRP.Points[i].y) + offsetY;
-                mwPGRD.PGRP.Points[i].Z = Convert.ToInt32(obPGRD.PGRP.Points[i].z);
+                mwPGRD.PGRP.Points[i].X = Convert.ToInt32(obPGRD.PGRP.Points[i].X) + offsetX;
+                mwPGRD.PGRP.Points[i].Y = Convert.ToInt32(obPGRD.PGRP.Points[i].Y) + offsetY;
+                mwPGRD.PGRP.Points[i].Z = Convert.ToInt32(obPGRD.PGRP.Points[i].Z);
                 mwPGRD.PGRP.Points[i].IsUserPoint = 0;
+                mwPGRD.PGRP.Points[i].EdgeCount = obPGRD.PGRP.Points[i].EdgeCount;
                 mwPGRD.PGRP.Points[i].Unknown1 = 0;
                 mwPGRD.PGRP.Points[i].Unknown2 = 0;
             }
 
             if (!IsNull(obPGRD.PGRR))
             {
-
-                Dictionary<int, List<int>> connections = new Dictionary<int, List<int>>();
-
-                for (int p = 0; p < mwPGRD.PGRP.Points.Length; p++)
+                mwPGRD.PGRC = new TES3Lib.Subrecords.PGRD.PGRC
                 {
-                    connections.Add(p, new List<int>());
-                    for (int e= 0; e < obPGRD.PGRR.Edges.GetLength(0); e++)
-                    {
-                        if (obPGRD.PGRR.Edges[e,0] == p)
-                        {
-                            connections[p].Add(obPGRD.PGRR.Edges[e, 1]);
-                        }                      
-                    }
+                    Edges = new int[obPGRD.PGRR.Edges.Length]
+                };
 
-                    if (connections[p].Count() > 255)
-                    {
-                        Console.WriteLine("Edge count to big in Pathgrid");
-                    }
-
-                    mwPGRD.PGRP.Points[p].ConnectionsCount = (byte)connections[p].Count(); ;
-                }
-
-                int dimLength = obPGRD.PGRR.Edges.GetLength(0);
-                mwPGRD.PGRC = new TES3Lib.Subrecords.PGRD.PGRC { Edges = new int[dimLength * 2] };
-
-                List<int> edgeList = new List<int>();
-
-                foreach (var edge in connections)
+                for (int i = 0; i < mwPGRD.PGRC.Edges.Length; i++)
                 {
-                    edgeList.AddRange(edge.Value);
+                    mwPGRD.PGRC.Edges[i] = (int)obPGRD.PGRR.Edges[i];
                 }
-
-                mwPGRD.PGRC.Edges = edgeList.ToArray();
             }
 
             return mwPGRD;

@@ -26,14 +26,14 @@ namespace TES3Tool
 
        public static void ConvertSI()
        {
-            string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\bobolion.esp";
+            string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm";
 
             var stat = TES4Load(fileESM, new List<string> {
                 "STAT","WRLD","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLC","LVLI","CELL",
                 "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA","DOOR"
             });
-            //var testEX = ConvertInteriorsAndExteriors(stat);
-            //testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\SI.esp");
+            var testEX = ConvertInteriorsAndExteriors(stat);
+            testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\SI.esp");
         }
 
         public static void MWLoadTest()

@@ -29,7 +29,7 @@ namespace TES3Lib.Subrecords.PGRD
                 Points[i].Y = reader.ReadBytes<int>(base.Data);
                 Points[i].Z = reader.ReadBytes<int>(base.Data);
                 Points[i].IsUserPoint = reader.ReadBytes<byte>(base.Data);
-                Points[i].ConnectionsCount = reader.ReadBytes<byte>(base.Data);
+                Points[i].EdgeCount = reader.ReadBytes<byte>(base.Data);
                 Points[i].Unknown1 = reader.ReadBytes<byte>(base.Data);
                 Points[i].Unknown2 = reader.ReadBytes<byte>(base.Data);
             }
@@ -42,7 +42,7 @@ namespace TES3Lib.Subrecords.PGRD
             public int Y;
             public int Z;
             public byte IsUserPoint;
-            public byte ConnectionsCount;
+            public byte EdgeCount;
             public byte Unknown1;
             public byte Unknown2;
         }
@@ -56,7 +56,7 @@ namespace TES3Lib.Subrecords.PGRD
                 data.AddRange(ByteWriter.ToBytes(gridNode.Y, typeof(int)));
                 data.AddRange(ByteWriter.ToBytes(gridNode.Z, typeof(int)));
                 data.Add(gridNode.IsUserPoint);
-                data.Add(gridNode.ConnectionsCount);
+                data.Add(gridNode.EdgeCount);
                 data.Add(gridNode.Unknown1);
                 data.Add(gridNode.Unknown2);
             }

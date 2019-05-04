@@ -15,22 +15,22 @@ namespace TES4Lib.Subrecords.PGRD
 
             for (int i = 0; i < nodeCount; i++)
             {
-                Points[i].x = reader.ReadBytes<float>(base.Data);
-                Points[i].y = reader.ReadBytes<float>(base.Data);
-                Points[i].z = reader.ReadBytes<float>(base.Data);
-                Points[i].type = reader.ReadBytes<byte>(base.Data);
-                Points[i].filter = reader.ReadBytes<byte[]>(base.Data,3);
+                Points[i].X = reader.ReadBytes<float>(base.Data);
+                Points[i].Y = reader.ReadBytes<float>(base.Data);
+                Points[i].Z = reader.ReadBytes<float>(base.Data);
+                Points[i].EdgeCount = reader.ReadBytes<byte>(base.Data);
+                Points[i].PointType = reader.ReadBytes<byte[]>(base.Data,3);
             }
             
         }
 
         public struct GridNode
         {
-            public float x;
-            public float y;
-            public float z;
-            public byte type;
-            public byte[] filter;
+            public float X;
+            public float Y;
+            public float Z;
+            public byte EdgeCount;
+            public byte[] PointType;
         }
     }
 }

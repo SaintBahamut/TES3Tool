@@ -10,6 +10,8 @@ namespace TES4Lib.Subrecords.PGRD
     {
         public PGAG(byte[] rawData) : base(rawData)
         {
+            var reader = new ByteReader();
+            byte shit = reader.ReadBytes<byte>(base.Data);
         }
     }
 }
