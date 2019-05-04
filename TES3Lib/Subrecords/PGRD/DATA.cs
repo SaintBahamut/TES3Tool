@@ -23,7 +23,7 @@ namespace TES3Lib.Subrecords.PGRD
         /// <summary>
         /// Grid node count in cell
         /// </summary>
-        public short TotalPoints { get; set; }
+        public short Points { get; set; }
 
         public DATA()
         {
@@ -36,7 +36,7 @@ namespace TES3Lib.Subrecords.PGRD
             GridX = reader.ReadBytes<int>(base.Data);
             GridY = reader.ReadBytes<int>(base.Data);
             Granularity = reader.ReadBytes<short>(base.Data);
-            TotalPoints = reader.ReadBytes<short>(base.Data);
+            Points = reader.ReadBytes<short>(base.Data);
         }
     }
 }

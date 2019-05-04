@@ -15,6 +15,7 @@ namespace TES3Tool.TES4RecordConverter
         public static TES3Lib.TES3 ConvertInteriorsAndExteriors(TES4Lib.TES4 tes4)
         {
             ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
+            ConvertedRecords.Add("PGRD", new List<ConvertedRecordData>());
 
             ConvertInteriorCells(tes4);
             ConvertExteriorCells(tes4);
@@ -342,7 +343,15 @@ namespace TES3Tool.TES4RecordConverter
 
                     if (referenceTypeName.Equals("PGRD"))
                     {
-                        continue;
+                        if (mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell))
+                        {
+                            var obPGRD = obRef as TES4Lib.Records.PGRD;
+                            var mwPGRD = ConvertPGRD(obPGRD, mwCELL);
+                            ConvertedRecords["PGRD"].Add(new ConvertedRecordData(originalCellFormId, "CELL", mwCELL.NAME.EditorId, mwPGRD));
+
+                            continue;
+                        }
+                        
                     }
                 }
             }

@@ -9,7 +9,7 @@ namespace TES3Lib.Subrecords.PGRD
 {
     public class PGRC : Subrecord
     {
-        public int[] NodeLinks { get; set; }
+        public int[] Edges { get; set; }
 
         public PGRC()
         {
@@ -19,12 +19,12 @@ namespace TES3Lib.Subrecords.PGRD
         public PGRC(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            NodeLinks = new int[base.Data.Length/sizeof(int)];
+            Edges = new int[base.Data.Length/sizeof(int)];
 
 
-            for (int i = 0; i < NodeLinks.GetLength(0); i++)
+            for (int i = 0; i < Edges.GetLength(0); i++)
             {
-                NodeLinks[i] = reader.ReadBytes<int>(base.Data);
+                Edges[i] = reader.ReadBytes<int>(base.Data);
             }
             
         }
@@ -33,9 +33,9 @@ namespace TES3Lib.Subrecords.PGRD
         {
             List<byte> data = new List<byte>();
 
-            for (int i = 0; i < NodeLinks.GetLength(0); i++)
+            for (int i = 0; i < Edges.GetLength(0); i++)
             {
-                data.AddRange(ByteWriter.ToBytes(NodeLinks[i], typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(Edges[i], typeof(int)));
             }
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)

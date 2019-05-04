@@ -10,7 +10,7 @@ namespace TES3Lib.Subrecords.PGRD
 {
     public class PGRP : Subrecord
     {
-        public GridNode[] GridNodes { get; set; }
+        public Point[] Points { get; set; }
 
         public PGRP()
         {
@@ -21,35 +21,44 @@ namespace TES3Lib.Subrecords.PGRD
         {
             var reader = new ByteReader();
             int nodeCount = base.Data.Length / 16;
-            GridNodes = new GridNode[nodeCount];
+            Points = new Point[nodeCount];
 
             for (int i = 0; i < nodeCount; i++)
             {
-                GridNodes[i].x = reader.ReadBytes<int>(base.Data);
-                GridNodes[i].y = reader.ReadBytes<int>(base.Data);
-                GridNodes[i].z = reader.ReadBytes<int>(base.Data);
-                GridNodes[i].type = reader.ReadBytes<int>(base.Data);
+                Points[i].X = reader.ReadBytes<int>(base.Data);
+                Points[i].Y = reader.ReadBytes<int>(base.Data);
+                Points[i].Z = reader.ReadBytes<int>(base.Data);
+                Points[i].IsUserPoint = reader.ReadBytes<byte>(base.Data);
+                Points[i].ConnectionsCount = reader.ReadBytes<byte>(base.Data);
+                Points[i].Unknown1 = reader.ReadBytes<byte>(base.Data);
+                Points[i].Unknown2 = reader.ReadBytes<byte>(base.Data);
             }
             
         }
 
-        public struct GridNode
+        public struct Point
         {
-            public int x;
-            public int y;
-            public int z;
-            public int type;
+            public int X;
+            public int Y;
+            public int Z;
+            public byte IsUserPoint;
+            public byte ConnectionsCount;
+            public byte Unknown1;
+            public byte Unknown2;
         }
 
         public override byte[] SerializeSubrecord()
         {
             List<byte> data = new List<byte>();
-            foreach (GridNode gridNode in GridNodes)
+            foreach (Point gridNode in Points)
             {
-                data.AddRange(ByteWriter.ToBytes(gridNode.x, typeof(int)));
-                data.AddRange(ByteWriter.ToBytes(gridNode.y, typeof(int)));
-                data.AddRange(ByteWriter.ToBytes(gridNode.z, typeof(int)));
-                data.AddRange(ByteWriter.ToBytes(gridNode.type, typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(gridNode.X, typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(gridNode.Y, typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(gridNode.Z, typeof(int)));
+                data.Add(gridNode.IsUserPoint);
+                data.Add(gridNode.ConnectionsCount);
+                data.Add(gridNode.Unknown1);
+                data.Add(gridNode.Unknown2);
             }
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)

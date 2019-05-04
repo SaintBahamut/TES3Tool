@@ -215,7 +215,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     Endurance = obCREA.DATA.Endurance,
                     Personality = obCREA.DATA.Personality,
                     Luck = obCREA.DATA.Luck,
-                    Health = obCREA.ACBS.Flags.Contains(TES4Lib.Enums.Flags.CreatureFlag.PCLevelOffset) ? (int)Math.Max(obCREA.ACBS.CalcMax, obCREA.ACBS.CalcMin) * obCREA.DATA.Health/2 : obCREA.DATA.Health,                  
+                    Health = obCREA.ACBS.Flags.Contains(TES4Lib.Enums.Flags.CreatureFlag.PCLevelOffset) ? (int)Math.Max(obCREA.ACBS.CalcMax, obCREA.ACBS.CalcMin) * obCREA.DATA.Health / 2 : obCREA.DATA.Health,
                     SpellPts = obCREA.ACBS.Flags.Contains(TES4Lib.Enums.Flags.CreatureFlag.PCLevelOffset) ? (int)Math.Max(obCREA.ACBS.CalcMax, obCREA.ACBS.CalcMin) * obCREA.ACBS.BaseSpellPoints / 2 : obCREA.ACBS.BaseSpellPoints,
                     Fatigue = obCREA.ACBS.Flags.Contains(TES4Lib.Enums.Flags.CreatureFlag.PCLevelOffset) ? (int)Math.Max(obCREA.ACBS.CalcMax, obCREA.ACBS.CalcMin) * obCREA.ACBS.Fatigue / 2 : obCREA.ACBS.Fatigue,
                     Soul = GetSoulValue(obCREA.DATA.Soul),
@@ -255,7 +255,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             {
                 mwCREA.MODL.ModelPath = Config.CREAWeapon;
             }
-            else if(mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.Walks) && mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.Swims))
+            else if (mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.Walks) && mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.Swims))
             {
                 mwCREA.MODL.ModelPath = Config.CREAamphibious;
             }
@@ -729,7 +729,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = 0 },
                 FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 0x0008 | 0x0001 | 0x0002 },
                 NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>()
-        };
+            };
 
             if (!IsNull(obFLOR.PFIG))
             {
@@ -740,16 +740,16 @@ namespace TES3Tool.TES4RecordConverter.Records
                 switch (fate) //interpret gods words
                 {
                     case 0:
-                        qnt = (int)obFLOR.PFPC.SpringProd/5;
+                        qnt = (int)obFLOR.PFPC.SpringProd / 12;
                         break;
                     case 1:
-                        qnt = (int)obFLOR.PFPC.SummerProd/5;
+                        qnt = (int)obFLOR.PFPC.SummerProd / 12;
                         break;
                     case 2:
-                        qnt = (int)obFLOR.PFPC.FallProd/5;
+                        qnt = (int)obFLOR.PFPC.FallProd / 12;
                         break;
                     case 4:
-                        qnt = (int)obFLOR.PFPC.WinterProd/5;
+                        qnt = (int)obFLOR.PFPC.WinterProd / 12;
                         break;
                 }
 
@@ -969,7 +969,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             {
                 SCHD = new TES3Lib.Subrecords.SCPT.SCHD
                 {
-                    Name = $"Sound_{BaseId}",
+                    Name = $"Sound_{BaseId}", //write formatter dawg
                     LocalVarSize = 6,
                     NumFloats = 6,
                     NumLongs = 6,
@@ -1039,8 +1039,8 @@ namespace TES3Tool.TES4RecordConverter.Records
             if (!IsNull(obCELL.XCLC)) //exterior only
             {
                 int mwScale = 2;
-                mwCELL.DATA.GridX = (obCELL.XCLC.GridX/mwScale) + Config.cellShiftX;
-                mwCELL.DATA.GridY = (obCELL.XCLC.GridY/mwScale) + Config.cellShiftY;
+                mwCELL.DATA.GridX = (obCELL.XCLC.GridX / mwScale) + Config.cellShiftX;
+                mwCELL.DATA.GridY = (obCELL.XCLC.GridY / mwScale) + Config.cellShiftY;
             }
 
             if (!IsNull(obCELL.XCLR)) //TODO region entry converter
@@ -1052,7 +1052,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             // not needed? cell.NAM0 = new TES3Lib.Subrecords.CELL.NAM0();
             // exterior only cell.NAM5 = new TES3Lib.Subrecords.CELL.NAM5();
 
-           
+
             if (!IsNull(obCELL.XCLW))
             {
                 mwCELL.WHGT = new TES3Lib.Subrecords.CELL.WHGT();
@@ -1262,6 +1262,89 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             return mwREFR;
+        }
+
+        public static TES3Lib.Records.PGRD ConvertPGRD(TES4Lib.Records.PGRD obPGRD, TES3Lib.Records.CELL mwCELL)
+        {
+            var mwPGRD = new TES3Lib.Records.PGRD();
+
+            bool isExterior = !mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell);
+            int offsetX = isExterior ? Config.cellShiftX : 0;
+            int offsetY = isExterior ? Config.cellShiftY : 0;
+
+
+            mwPGRD.DATA = new TES3Lib.Subrecords.PGRD.DATA
+            {
+                GridX = isExterior ? mwCELL.DATA.GridX + offsetX : 0,
+                GridY = isExterior ? mwCELL.DATA.GridY + offsetY : 0,
+                Granularity = 256, //just insert whatever, might work
+                Points = obPGRD.DATA.NumberOfNodes
+            };
+
+            mwPGRD.NAME = new TES3Lib.Subrecords.Shared.NAME();
+            if (!IsNull(mwCELL.NAME))
+            {
+                mwPGRD.NAME.EditorId = mwCELL.NAME.EditorId;
+            }
+            else if (!IsNull(mwCELL.RGNN))
+            {
+                mwPGRD.NAME.EditorId = mwCELL.RGNN.RegionName;
+            }
+            else
+            {
+                mwPGRD.NAME.EditorId = "Wilderness\0"; //just a guess
+            }
+
+            mwPGRD.PGRP = new TES3Lib.Subrecords.PGRD.PGRP();
+            mwPGRD.PGRP.Points = new TES3Lib.Subrecords.PGRD.PGRP.Point[obPGRD.PGRP.Points.Length];
+            for (int i = 0; i < mwPGRD.PGRP.Points.Length; i++)
+            {
+                mwPGRD.PGRP.Points[i].X = Convert.ToInt32(obPGRD.PGRP.Points[i].x) + offsetX;
+                mwPGRD.PGRP.Points[i].Y = Convert.ToInt32(obPGRD.PGRP.Points[i].y) + offsetY;
+                mwPGRD.PGRP.Points[i].Z = Convert.ToInt32(obPGRD.PGRP.Points[i].z);
+                mwPGRD.PGRP.Points[i].IsUserPoint = 0;
+                mwPGRD.PGRP.Points[i].Unknown1 = 0;
+                mwPGRD.PGRP.Points[i].Unknown2 = 0;
+            }
+
+            if (!IsNull(obPGRD.PGRR))
+            {
+
+                Dictionary<int, List<int>> connections = new Dictionary<int, List<int>>();
+
+                for (int p = 0; p < mwPGRD.PGRP.Points.Length; p++)
+                {
+                    connections.Add(p, new List<int>());
+                    for (int e= 0; e < obPGRD.PGRR.Edges.GetLength(0); e++)
+                    {
+                        if (obPGRD.PGRR.Edges[e,0] == p)
+                        {
+                            connections[p].Add(obPGRD.PGRR.Edges[e, 1]);
+                        }                      
+                    }
+
+                    if (connections[p].Count() > 255)
+                    {
+                        Console.WriteLine("Edge count to big in Pathgrid");
+                    }
+
+                    mwPGRD.PGRP.Points[p].ConnectionsCount = (byte)connections[p].Count(); ;
+                }
+
+                int dimLength = obPGRD.PGRR.Edges.GetLength(0);
+                mwPGRD.PGRC = new TES3Lib.Subrecords.PGRD.PGRC { Edges = new int[dimLength * 2] };
+
+                List<int> edgeList = new List<int>();
+
+                foreach (var edge in connections)
+                {
+                    edgeList.AddRange(edge.Value);
+                }
+
+                mwPGRD.PGRC.Edges = edgeList.ToArray();
+            }
+
+            return mwPGRD;
         }
 
         static byte CalcThrust(TES3Lib.Enums.WeaponType type, short damage)
@@ -1993,18 +2076,13 @@ namespace TES3Tool.TES4RecordConverter.Records
             var BaseId = GetBaseIdFromFormId(formId);
             if (string.IsNullOrEmpty(BaseId))
             {
-                //TES4Lib.Base.Record record;
-                //TES4Lib.TES4.TES4RecordIndex.TryGetValue(formId, out record);
-                //if (!IsNull(record))
-                //{
-                    var mwRecordFromREFR = ConvertRecordFromFormId(formId);
+                var mwRecordFromREFR = ConvertRecordFromFormId(formId);
 
-                    if (IsNull(mwRecordFromREFR)) return string.Empty;
+                if (IsNull(mwRecordFromREFR)) return string.Empty;
 
-                    if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
-                    ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
-                    BaseId = mwRecordFromREFR.EditorId;
-                //}
+                if (!ConvertedRecords.ContainsKey(mwRecordFromREFR.Type)) ConvertedRecords.Add(mwRecordFromREFR.Type, new List<ConvertedRecordData>());
+                ConvertedRecords[mwRecordFromREFR.Type].Add(mwRecordFromREFR);
+                BaseId = mwRecordFromREFR.EditorId;
             }
             return BaseId;
         }

@@ -8,12 +8,18 @@ namespace TES3Lib.Records
     {
         public DATA DATA { get; set; }
 
+        /// <summary>
+        /// Cell or region name
+        /// </summary>
         public NAME NAME { get; set; }
 
         public PGRP PGRP { get; set; }
 
         public PGRC PGRC { get; set; }
 
+        public PGRD()
+        {
+        }
 
         public PGRD(byte[] rawData) : base(rawData)
         {

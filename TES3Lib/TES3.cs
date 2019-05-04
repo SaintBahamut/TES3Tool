@@ -37,7 +37,7 @@ namespace TES3Lib
                 var name = reader.ReadBytes<string>(header, 4);
                 var size = reader.ReadBytes<int>(header);
 
-                if (filteredGrops.Count > 0 && !filteredGrops.Contains(name))
+                if (!name.Equals("TES3") && filteredGrops.Count > 0 && !filteredGrops.Contains(name))
                 {
                     fileStream.Position += +HeaderSize+size;
                     continue;

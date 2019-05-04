@@ -35,5 +35,6 @@
         LEVI,
         NPC_,   
         CELL,
+        PGRD,
     }
 }

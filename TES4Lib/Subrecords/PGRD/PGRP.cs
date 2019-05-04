@@ -5,21 +5,21 @@ namespace TES4Lib.Subrecords.PGRD
 {
     public class PGRP : Subrecord
     {
-        public GridNode[] GridNodes { get; set; }
+        public GridNode[] Points { get; set; }
 
         public PGRP(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
             int nodeCount = base.Data.Length / 16;
-            GridNodes = new GridNode[nodeCount];
+            Points = new GridNode[nodeCount];
 
             for (int i = 0; i < nodeCount; i++)
             {
-                GridNodes[i].x = reader.ReadBytes<float>(base.Data);
-                GridNodes[i].y = reader.ReadBytes<float>(base.Data);
-                GridNodes[i].z = reader.ReadBytes<float>(base.Data);
-                GridNodes[i].type = reader.ReadBytes<byte>(base.Data);
-                GridNodes[i].filter = reader.ReadBytes<byte[]>(base.Data,3);
+                Points[i].x = reader.ReadBytes<float>(base.Data);
+                Points[i].y = reader.ReadBytes<float>(base.Data);
+                Points[i].z = reader.ReadBytes<float>(base.Data);
+                Points[i].type = reader.ReadBytes<byte>(base.Data);
+                Points[i].filter = reader.ReadBytes<byte[]>(base.Data,3);
             }
             
         }

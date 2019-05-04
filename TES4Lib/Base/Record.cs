@@ -142,9 +142,10 @@ namespace TES4Lib.Base
 
         public static void CopyStream(System.IO.Stream input, System.IO.Stream output)
         {
-            byte[] buffer = new byte[2000];
+            var bufferSize = 14000;
+            byte[] buffer = new byte[bufferSize];
             int len;
-            while ((len = input.Read(buffer, 0, 2000)) > 0)
+            while ((len = input.Read(buffer, 0, bufferSize)) > 0)
             {
                 output.Write(buffer, 0, len);
             }
