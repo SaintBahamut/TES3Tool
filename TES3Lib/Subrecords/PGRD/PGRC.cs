@@ -9,6 +9,12 @@ namespace TES3Lib.Subrecords.PGRD
 {
     public class PGRC : Subrecord
     {
+        /// <summary>
+        /// Edges
+        /// Defines n points that are connected to m-th point from PGRP subrecord
+        /// where ammount of n is defined in PGRP.Point.EdgeCount property of point
+        /// and m is indice of point in PGRP.Point
+        /// </summary>
         public int[] Edges { get; set; }
 
         public PGRC()

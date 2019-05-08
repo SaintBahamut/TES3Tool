@@ -82,6 +82,12 @@ namespace Utility
                 offset += sizeof(byte);
                 return (T)(object)converted;
             }
+            if (t == typeof(bool))
+            {
+                var converted = data.Skip(offset).Take(1).ToArray()[0];
+                offset += sizeof(bool);
+                return (T)Convert.ChangeType(converted, typeof(T));
+            }
             if (t.IsEnum)
             {
                 Type enumValueType = Enum.GetUnderlyingType(t);

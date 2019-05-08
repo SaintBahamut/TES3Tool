@@ -50,11 +50,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\GenderType.cs" />
     <Compile Include="Enums\ArmorType.cs" />
     <Compile Include="Enums\Attributre.cs" />
     <Compile Include="Enums\BodyPart.cs" />
     <Compile Include="Enums\BodyPartType.cs" />
     <Compile Include="Enums\ClothingType.cs" />
+    <Compile Include="Enums\DialogueType.cs" />
     <Compile Include="Enums\Flags\BodyPartFlag.cs" />
     <Compile Include="Enums\Flags\CreatureFlag.cs" />
     <Compile Include="Enums\CreatureType.cs" />
@@ -106,7 +108,6 @@
     <Compile Include="Subrecords\ALCH\TEXT.cs" />
     <Compile Include="Subrecords\APPA\AADT.cs" />
     <Compile Include="Subrecords\ARMO\AODT.cs" />
-    <Compile Include="Subrecords\ARMO\BNAM.cs" />
     <Compile Include="Subrecords\ARMO\CNAM.cs" />
     <Compile Include="Subrecords\ARMO\ENAM.cs" />
     <Compile Include="Subrecords\ARMO\INDX.cs" />
@@ -117,7 +118,6 @@
     <Compile Include="Subrecords\BSGN\TNAM.cs" />
     <Compile Include="Subrecords\CELL\INTV.cs" />
     <Compile Include="Subrecords\CLAS\CLDT.cs" />
-    <Compile Include="Subrecords\CLOT\BNAM.cs" />
     <Compile Include="Subrecords\CLOT\CNAM.cs" />
     <Compile Include="Subrecords\CLOT\CTDT.cs" />
     <Compile Include="Subrecords\CLOT\ENAM.cs" />
@@ -125,17 +125,27 @@
     <Compile Include="Subrecords\CONT\CNDT.cs" />
     <Compile Include="Subrecords\CONT\FLAG.cs" />
     <Compile Include="Subrecords\CREA\CNAM.cs" />
+    <Compile Include="Subrecords\DIAL\DATA.cs" />
     <Compile Include="Subrecords\ENCH\ENDT.cs" />
     <Compile Include="Subrecords\ENCH\ENAM.cs" />
     <Compile Include="Subrecords\FACT\INTV.cs" />
     <Compile Include="Subrecords\FACT\FADT.cs" />
-    <Compile Include="Subrecords\FACT\ANAM.cs" />
     <Compile Include="Subrecords\FACT\RNAM.cs" />
     <Compile Include="Subrecords\GLOB\FLTV.cs" />
     <Compile Include="Subrecords\GLOB\FNAM.cs" />
     <Compile Include="Subrecords\GMST\FLTV.cs" />
     <Compile Include="Subrecords\GMST\INTV.cs" />
     <Compile Include="Subrecords\GMST\STRV.cs" />
+    <Compile Include="Subrecords\INFO\DATA.cs" />
+    <Compile Include="Subrecords\INFO\INTV.cs" />
+    <Compile Include="Subrecords\INFO\QSTR.cs" />
+    <Compile Include="Subrecords\INFO\QSTF.cs" />
+    <Compile Include="Subrecords\INFO\QSTN.cs" />
+    <Compile Include="Subrecords\INFO\NNAM.cs" />
+    <Compile Include="Subrecords\INFO\ONAM.cs" />
+    <Compile Include="Subrecords\INFO\PNAM.cs" />
+    <Compile Include="Subrecords\INFO\INAM.cs" />
+    <Compile Include="Subrecords\INFO\SCVR.cs" />
     <Compile Include="Subrecords\LAND\DATA.cs" />
     <Compile Include="Subrecords\LAND\INTV.cs" />
     <Compile Include="Subrecords\LAND\VCLR.cs" />
@@ -157,13 +167,14 @@
     <Compile Include="Subrecords\REFR\CNAM.cs" />
     <Compile Include="Subrecords\REFR\INDX.cs" />
     <Compile Include="Subrecords\REFR\XCHG.cs" />
+    <Compile Include="Subrecords\_Shared\ANAM.cs" />
+    <Compile Include="Subrecords\_Shared\BNAM.cs" />
     <Compile Include="Subrecords\_Shared\NNAM.cs" />
     <Compile Include="Subrecords\LOCK\LKDT.cs" />
     <Compile Include="Subrecords\LTEX\INTV.cs" />
     <Compile Include="Subrecords\LTEX\DATA.cs" />
     <Compile Include="Subrecords\PROB\PBDT.cs" />
     <Compile Include="Subrecords\RACE\RADT.cs" />
-    <Compile Include="Subrecords\REGN\BNAM.cs" />
     <Compile Include="Subrecords\REGN\CNAM.cs" />
     <Compile Include="Subrecords\REGN\SNAM.cs" />
     <Compile Include="Subrecords\REGN\WEAT.cs" />
@@ -175,7 +186,6 @@
     <Compile Include="Subrecords\_Shared\AIDT.cs" />
     <Compile Include="Subrecords\CREA\FLAG.cs" />
     <Compile Include="Subrecords\CREA\NPDT.cs" />
-    <Compile Include="Subrecords\DOOR\ANAM.cs" />
     <Compile Include="Subrecords\INGR\IRDT.cs" />
     <Compile Include="Subrecords\LIGH\LHDT.cs" />
     <Compile Include="Subrecords\MGEF\BSND.cs" />
@@ -197,8 +207,6 @@
     <Compile Include="Subrecords\_Shared\AI_F.cs" />
     <Compile Include="Subrecords\_Shared\AI_T.cs" />
     <Compile Include="Subrecords\_Shared\AI_W.cs" />
-    <Compile Include="Subrecords\NPC_\ANAM.cs" />
-    <Compile Include="Subrecords\NPC_\BNAM.cs" />
     <Compile Include="Subrecords\NPC_\CNAM.cs" />
     <Compile Include="Subrecords\NPC_\CNDT.cs" />
     <Compile Include="Subrecords\_Shared\DNAM.cs" />
@@ -237,8 +245,6 @@
     <Compile Include="Subrecords\CELL\NAM5.cs" />
     <Compile Include="Subrecords\CELL\RGNN.cs" />
     <Compile Include="Subrecords\CELL\WHGT.cs" />
-    <Compile Include="Subrecords\REFR\ANAM.cs" />
-    <Compile Include="Subrecords\REFR\BNAM.cs" />
     <Compile Include="Subrecords\REFR\DATA.cs" />
     <Compile Include="Subrecords\REFR\DELE.cs" />
     <Compile Include="Subrecords\REFR\FLTV.cs" />

@@ -16,7 +16,7 @@ namespace TES3Tool
             ConvertSI();
 
             
-            //MWLoadTest();
+           // MWLoadTest();
 
 
 
@@ -42,7 +42,7 @@ namespace TES3Tool
 
             var tes3 = TES3Load(fileESM, new List<string> { "CELL","PGRD" });
 
-            //tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minigridx.esp");
+            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minigridx.esp");
         }
     }
 }

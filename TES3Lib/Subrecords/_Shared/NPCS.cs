@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using TES3Lib.Base;
@@ -10,6 +11,7 @@ namespace TES3Lib.Subrecords.Shared
     /// <summary>
     /// Spell/Ability/Power Subrecord
     /// </summary>
+    [DebuggerDisplay("{SpellId}")]
     public class NPCS : Subrecord
     {
         private object[] itemIdBytes;

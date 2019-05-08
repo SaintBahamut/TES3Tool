@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using TES3Lib.Base;
@@ -10,14 +11,15 @@ namespace TES3Lib.Subrecords.Shared
     /// <summary>
     /// Inventory item
     /// </summary>
+    [DebuggerDisplay("{ItemId} x {Count}")]
     public class NPCO : Subrecord
     {
         public int Count { get; set; }
+
         public string ItemId { get; set; }
 
         public NPCO()
         {
-
         }
 
         public NPCO(byte[] rawData) : base(rawData)

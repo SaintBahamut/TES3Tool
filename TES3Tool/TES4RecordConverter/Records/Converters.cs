@@ -684,7 +684,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     }
                 }
 
-                mwDOOR.SNAM = new TES3Lib.Subrecords.Shared.SNAM { SoundName = BaseId };
+                mwDOOR.SNAM = new TES3Lib.Subrecords.Shared.SNAM { SoundEditorId = BaseId };
             }
 
             if (!IsNull(obDOOR.ANAM))//if has sound convert it as well
@@ -704,7 +704,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     }
                 }
 
-                mwDOOR.ANAM = new TES3Lib.Subrecords.DOOR.ANAM { SoundNameClose = BaseId };
+                mwDOOR.ANAM = new TES3Lib.Subrecords.Shared.ANAM { EditorId = BaseId };
             }
 
             return mwDOOR;
@@ -881,7 +881,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     }
                 }
 
-                LIGH.SNAM = new TES3Lib.Subrecords.Shared.SNAM { SoundName = BaseId };
+                LIGH.SNAM = new TES3Lib.Subrecords.Shared.SNAM { SoundEditorId = BaseId };
             }
 
             return LIGH;
@@ -1117,7 +1117,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 };
                 mwREFR.DNAM = new TES3Lib.Subrecords.Shared.DNAM
                 {
-                    InteriorCellName = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at later stages of conversion
+                    EditorId = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at later stages of conversion
                 };
 
                 DoorReferences.Add(mwREFR);
@@ -1269,20 +1269,20 @@ namespace TES3Tool.TES4RecordConverter.Records
             var mwPGRD = new TES3Lib.Records.PGRD();
 
             bool isExterior = !mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell);
-            int offsetX = isExterior ? Config.cellShiftX : 0;
-            int offsetY = isExterior ? Config.cellShiftY : 0;
+            int offsetX = isExterior ? Config.cellShiftX*Config.mwCellSize : 0;
+            int offsetY = isExterior ? Config.cellShiftY* Config.mwCellSize : 0;
 
 
             mwPGRD.DATA = new TES3Lib.Subrecords.PGRD.DATA
             {
-                GridX = isExterior ? mwCELL.DATA.GridX + offsetX : 0,
-                GridY = isExterior ? mwCELL.DATA.GridY + offsetY : 0,
+                GridX = isExterior ? mwCELL.DATA.GridX : 0,
+                GridY = isExterior ? mwCELL.DATA.GridY : 0,
                 Granularity = 256, //just insert whatever, might work
                 Points = obPGRD.DATA.NumberOfNodes
             };
 
             mwPGRD.NAME = new TES3Lib.Subrecords.Shared.NAME();
-            if (!IsNull(mwCELL.NAME))
+            if (!IsNull(mwCELL.NAME) && !mwCELL.NAME.EditorId.Equals("\0"))
             {
                 mwPGRD.NAME.EditorId = mwCELL.NAME.EditorId;
             }
@@ -1302,7 +1302,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 mwPGRD.PGRP.Points[i].X = Convert.ToInt32(obPGRD.PGRP.Points[i].X) + offsetX;
                 mwPGRD.PGRP.Points[i].Y = Convert.ToInt32(obPGRD.PGRP.Points[i].Y) + offsetY;
                 mwPGRD.PGRP.Points[i].Z = Convert.ToInt32(obPGRD.PGRP.Points[i].Z);
-                mwPGRD.PGRP.Points[i].IsUserPoint = 0;
+                mwPGRD.PGRP.Points[i].IsUserPoint = 1;
                 mwPGRD.PGRP.Points[i].EdgeCount = obPGRD.PGRP.Points[i].EdgeCount;
                 mwPGRD.PGRP.Points[i].Unknown1 = 0;
                 mwPGRD.PGRP.Points[i].Unknown2 = 0;

@@ -5,21 +5,21 @@ using Utility;
 namespace TES3Lib.Subrecords.Shared
 {
     /// <summary>
-    /// EditorId of sound reference
+    /// EditorId of reference or text data
     /// </summary>
     [DebuggerDisplay("{EditorId}")]
-    public class SNAM : Subrecord
+    public class ANAM : Subrecord
     {
-        public string SoundEditorId { get; set; }
+        public string EditorId { get; set; }
 
-        public SNAM()
+        public ANAM()
         {
         }
 
-        public SNAM(byte[] rawData) : base(rawData)
+        public ANAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            SoundEditorId = reader.ReadBytes<string>(base.Data, base.Size);
+            EditorId = reader.ReadBytes<string>(base.Data, base.Size);
         }
     }
 }

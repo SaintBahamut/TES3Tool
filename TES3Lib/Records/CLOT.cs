@@ -23,6 +23,11 @@ namespace TES3Lib.Records
 
         public ITEX ITEX { get; set; }
 
+        /// <summary>
+        /// INDX - body part index
+        /// BNAM - male mody part
+        /// CNAM - female body part
+        /// </summary>
         public List<(INDX INDX, BNAM BNAM, CNAM CNAM)> BPSL { get; set; }
 
         public ENAM ENAM { get; set; }

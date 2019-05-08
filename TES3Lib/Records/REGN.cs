@@ -13,6 +13,9 @@ namespace TES3Lib.Records
 
         public WEAT WEAT { get; set; }
 
+        /// <summary>
+        /// Id of creature that wokes player when resting
+        /// </summary>
         public BNAM BNAM { get; set; }
 
         public CNAM CNAM { get; set; }

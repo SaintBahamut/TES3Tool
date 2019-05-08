@@ -19,7 +19,7 @@ namespace TES3Tool.TES4RecordConverter
 
             ConvertInteriorCells(tes4);
             ConvertExteriorCells(tes4);
-                   
+
             UpdateDoorReferences();
 
             var tes3 = new TES3Lib.TES3();
@@ -103,13 +103,13 @@ namespace TES3Tool.TES4RecordConverter
                 Console.WriteLine("no CELL records");
                 return;
             }
-            
+
             foreach (var cellBlock in cellGroupsTop.Groups)
             {
                 ProcessInteriorSubBlocks(cellBlock);
             }
 
-            
+
         }
 
         private static void ConvertExteriorCells(TES4Lib.TES4 tes4)
@@ -153,11 +153,16 @@ namespace TES3Tool.TES4RecordConverter
                     var convertedCell = ConvertCELL(wrldCell);
                     var wrldCellChildren = worldChildren.Groups.FirstOrDefault(x => x.Type.Equals(GroupLabel.CellChildren));
                     ConvertCellChildren(ref convertedCell, wrldCellChildren, wrld.FormId);
-
                     DistributeWorldSpaceReferecnes(convertedCell);
-
                 }
-       
+
+                //merge path grids: mabye some other time
+                //foreach (var exteriorCellPathGrid in ExteriorPathGrids)
+                //{
+                //    var mergedGrid = MergeExteriorPathGrids(exteriorCellPathGrid.Value);
+                //    ConvertedRecords["PGRD"].Add(new ConvertedRecordData("PGRD", "PGRD", "PGRD", mergedGrid));
+                //}
+
             }
         }
 
@@ -168,7 +173,7 @@ namespace TES3Tool.TES4RecordConverter
                 int cellGrindX = (int)(cellReference.DATA.XPos / Config.mwCellSize);
                 int cellGrindY = (int)(cellReference.DATA.YPos / Config.mwCellSize);
 
-                ConvertedRecordData targetConvertedCell = ConvertedRecords["CELL"].FirstOrDefault(x => 
+                ConvertedRecordData targetConvertedCell = ConvertedRecords["CELL"].FirstOrDefault(x =>
                     (x.Record as TES3Lib.Records.CELL).DATA.GridX.Equals(cellGrindX) && (x.Record as TES3Lib.Records.CELL).DATA.GridY.Equals(cellGrindY));
 
                 if (!IsNull(targetConvertedCell))
@@ -188,6 +193,55 @@ namespace TES3Tool.TES4RecordConverter
                     Console.WriteLine($"target cell at coordinates {cellGrindX}.{cellGrindY} not found");
                 }
             }
+        }
+
+        private static TES3Lib.Records.PGRD MergeExteriorPathGrids(List<ConvertedExteriorPathgrid> pathGrids)
+        {
+            var mergedPGRD = new TES3Lib.Records.PGRD() { DATA = new TES3Lib.Subrecords.PGRD.DATA() };
+            mergedPGRD.DATA.Granularity = pathGrids[0].PathGrid.DATA.Granularity;
+            mergedPGRD.DATA.GridX = pathGrids[0].PathGrid.DATA.GridX;
+            mergedPGRD.DATA.GridY = pathGrids[0].PathGrid.DATA.GridY;
+
+
+            var points = new List<TES3Lib.Subrecords.PGRD.PGRP.Point>();
+
+            var edges = new List<int>();
+            int offset = 0;
+
+            foreach (var subGrid in pathGrids)
+            {
+                if (IsNull(subGrid.PathGrid.PGRC)) continue;
+
+                offset = points.Count;
+                points.AddRange(subGrid.PathGrid.PGRP.Points);
+                edges.AddRange(Array.ConvertAll(subGrid.PathGrid.PGRC.Edges, edge => edge + offset).ToList());
+            }
+
+
+            mergedPGRD.PGRP = new TES3Lib.Subrecords.PGRD.PGRP { Points = points.ToArray() };
+            mergedPGRD.PGRC = new TES3Lib.Subrecords.PGRD.PGRC { Edges = edges.ToArray() };
+            mergedPGRD.DATA.Points = (short)points.Count;
+
+            var cell = ConvertedRecords["CELL"].FirstOrDefault( x => 
+            (x.Record as TES3Lib.Records.CELL).DATA.GridX.Equals(mergedPGRD.DATA.GridX) &&
+            (x.Record as TES3Lib.Records.CELL).DATA.GridY.Equals(mergedPGRD.DATA.GridY)).Record as TES3Lib.Records.CELL;
+
+            mergedPGRD.NAME = new TES3Lib.Subrecords.Shared.NAME();
+
+            if (!IsNull(cell.NAME) && !cell.NAME.EditorId.Equals("\0"))
+            {
+                mergedPGRD.NAME.EditorId = cell.NAME.EditorId;
+            }
+            else if (!IsNull(cell.RGNN))
+            {
+                mergedPGRD.NAME.EditorId = cell.RGNN.RegionName;
+            }
+            else
+            {
+                mergedPGRD.NAME.EditorId = "Wilderness\0";
+            }
+
+            return mergedPGRD;
         }
 
         private static void ProcessInteriorSubBlocks(Group interiorSubBlock)
@@ -211,7 +265,7 @@ namespace TES3Tool.TES4RecordConverter
 
                         Console.WriteLine($"BEGIN CONVERTING \"{convertedCell.NAME.EditorId}\" CELL");
 
-                        ConvertCellChildren(ref convertedCell, cellChildren, cellFormId);                      
+                        ConvertCellChildren(ref convertedCell, cellChildren, cellFormId);
 
                         foreach (var item in ConvertedRecords["CELL"])
                         {
@@ -239,7 +293,7 @@ namespace TES3Tool.TES4RecordConverter
                 {
                     bool cellMerge = false;
                     string cellFormId = exteriorCell.FormId;
-                    var convertedCell = ConvertCELL(exteriorCell);             
+                    var convertedCell = ConvertCELL(exteriorCell);
 
                     // resolve if this cell at this grid already exist
                     foreach (var alreadyConvertedCell in ConvertedRecords["CELL"])
@@ -284,7 +338,7 @@ namespace TES3Tool.TES4RecordConverter
         {
             foreach (var childrenType in cellChildren.Groups)
             {
-                if(IsNull(mwCELL.NAM0))
+                if (IsNull(mwCELL.NAM0))
                 {
                     mwCELL.NAM0 = new TES3Lib.Subrecords.CELL.NAM0 { ReferenceCount = 1 };
                 }
@@ -348,10 +402,20 @@ namespace TES3Tool.TES4RecordConverter
                             var obPGRD = obRef as TES4Lib.Records.PGRD;
                             var mwPGRD = ConvertPGRD(obPGRD, mwCELL);
                             ConvertedRecords["PGRD"].Add(new ConvertedRecordData(originalCellFormId, "CELL", mwCELL.NAME.EditorId, mwPGRD));
-
                             continue;
                         }
-                        
+                        //else
+                        //{
+                        //    var coordinates = $"{mwPGRD.DATA.GridX},{mwPGRD.DATA.GridY}";
+
+                        //    if (!ExteriorPathGrids.ContainsKey(coordinates))
+                        //    {
+                        //        ExteriorPathGrids.Add(coordinates, new List<ConvertedExteriorPathgrid>());
+                        //    }
+
+                        //    ExteriorPathGrids[coordinates].Add(new ConvertedExteriorPathgrid(mwPGRD, obPGRD.PGRI));
+                        //    continue;
+                        //}
                     }
                 }
             }

@@ -14,8 +14,14 @@ namespace TES3Lib.Records
 {
     public class FACT : Record
     {
+        /// <summary>
+        /// Faction id
+        /// </summary>
         public NAME NAME { get; set; }
 
+        /// <summary>
+        /// Faction name
+        /// </summary>
         public FNAM FNAM { get; set; }
 
         public List<RNAM> RNAM { get; set; }

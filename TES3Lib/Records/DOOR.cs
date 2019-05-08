@@ -1,5 +1,4 @@
 ﻿using TES3Lib.Base;
-using TES3Lib.Subrecords.DOOR;
 using TES3Lib.Subrecords.Shared;
 
 namespace TES3Lib.Records

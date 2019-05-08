@@ -1,15 +1,16 @@
-﻿using TES3Lib.Base;
+﻿using System.Diagnostics;
+using TES3Lib.Base;
 using Utility;
 
 namespace TES3Lib.Subrecords.Shared
 {
     /// <summary>
-    /// Target cell name
-    /// Cell name for coordinates from DODT record, (interior or travel service)
+    /// EditorId of reference
     /// </summary>
+    [DebuggerDisplay("{EditorId}")]
     public class DNAM : Subrecord
     {
-        public string InteriorCellName { get; set; }
+        public string EditorId { get; set; }
 
         public DNAM()
         {
@@ -18,7 +19,7 @@ namespace TES3Lib.Subrecords.Shared
         public DNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            InteriorCellName = reader.ReadBytes<string>(base.Data, base.Size);
+            EditorId = reader.ReadBytes<string>(base.Data, base.Size);
         }
     }
 }

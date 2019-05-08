@@ -11,6 +11,8 @@ namespace TES3Tool.TES4RecordConverter.Records
     {
         internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
 
+        internal static Dictionary<string, List<ConvertedExteriorPathgrid>> ExteriorPathGrids = new Dictionary<string, List<ConvertedExteriorPathgrid>>();
+
         internal static List<TES3Lib.Records.REFR> DoorReferences = new List<TES3Lib.Records.REFR>();
 
         internal static List<ConvertedCellReference> CellReferences = new List<ConvertedCellReference>();
@@ -19,14 +21,14 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             string template = "begin Sound__PLACEHOLDER_\r\n\r\nif(CellChanged == 0)\r\n\tif(GetSoundPlaying \"_PLACEHOLDER_\" == 0 )\r\n\t\tPlayLoopSound3DVP \"_PLACEHOLDER_\", 1.0, 1.0\r\n\tendif\r\nendif\r\n\r\nend";
             return template.Replace("_PLACEHOLDER_", SoundEditorId);
-        }  
+        }
 
         internal static void UpdateDoorReferences()
         {
             Parallel.ForEach(DoorReferences, doorREFR =>
             {
                 var reference = CellReferences
-               .FirstOrDefault(x => x.ReferenceFormId.Equals(doorREFR.DNAM.InteriorCellName));
+               .FirstOrDefault(x => x.ReferenceFormId.Equals(doorREFR.DNAM.EditorId));
 
                 if (IsNull(reference))
                 {
@@ -34,7 +36,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 }
 
                 var record = ConvertedRecords["CELL"]
-                .FirstOrDefault(x => x.OriginFormId.Contains(reference.ParentCellFormId)) ;
+                .FirstOrDefault(x => x.OriginFormId.Contains(reference.ParentCellFormId));
 
                 if (IsNull(record))
                 {
@@ -45,7 +47,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
                 //Here we can try support outliners
 
-                if(!cell.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell))
+                if (!cell.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell))
                 {
 
                     float shiftX = (Config.cellShiftX * Config.mwCellSize);
@@ -56,8 +58,8 @@ namespace TES3Tool.TES4RecordConverter.Records
                 }
                 else
                 {
-                    doorREFR.DNAM.InteriorCellName = cell.NAME.EditorId;
-                }            
+                    doorREFR.DNAM.EditorId = cell.NAME.EditorId;
+                }
             });
         }
 
@@ -71,7 +73,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             var group = ConvertedRecords.AsParallel()
                 .FirstOrDefault(x => x.Value.Exists(y => y.OriginFormId.Equals(formId)));
             var result = !IsNull(group.Key) ? group.Value.AsParallel().FirstOrDefault(x => x.OriginFormId.Equals(formId)) : null;
-            BaseId = !IsNull(result) ?  result.EditorId : string.Empty;
+            BaseId = !IsNull(result) ? result.EditorId : string.Empty;
 
             return BaseId;
         }
@@ -107,6 +109,10 @@ namespace TES3Tool.TES4RecordConverter.Records
             .Replace("Common", "Comm")
             .Replace("Strength", "Str")
             .Replace("HeavyArmor", "HArmor")
+            .Replace("Dementia", "De")
+            .Replace("Mania", "Ma")
+            .Replace("Interior", "In")
+            .Replace("Exterior", "Ex")
             .Replace("HandToHand", "HH");
         }
 
@@ -119,9 +125,9 @@ namespace TES3Tool.TES4RecordConverter.Records
             .Replace("Test", "Ts")
             .Replace("Custom", "Cus")
             .Replace("Atronach", "Atr")
-            .Replace("Dementia", "Dem");
+            .Replace("Dementia", "De")
+            .Replace("Mania", "Ma");
         }
-
 
         internal static string CreatureIdFormater(string sourceEditorId)
         {
@@ -165,7 +171,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return recordDisplayName;
 
             int diff = idSize - 32;
-            return recordDisplayName.Replace("\0", "").Remove(recordDisplayName.Length-diff-1,diff)+"\0";
+            return recordDisplayName.Replace("\0", "").Remove(recordDisplayName.Length - diff - 1, diff) + "\0";
         }
 
         internal static string CellNameFormatter(string recordDisplayName)
@@ -175,7 +181,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return recordDisplayName;
 
             int diff = idSize - 64;
-            return recordDisplayName.Replace("\0", "").Remove(recordDisplayName.Length-1- diff, diff) + "\0";
+            return recordDisplayName.Replace("\0", "").Remove(recordDisplayName.Length - 1 - diff, diff) + "\0";
         }
 
         internal static string SoundIdFormater(string sourceEditorId)
@@ -185,7 +191,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return $"s{sourceEditorId}";
 
             int diff = idSize - 31;
-            string path =  $"s{sourceEditorId.Remove(0, diff)}";
+            string path = $"s{sourceEditorId.Remove(0, diff)}";
             return path;
         }
 
@@ -231,6 +237,18 @@ namespace TES3Tool.TES4RecordConverter.Records
             ParentCellFormId = parentCellFormId;
             ReferenceFormId = referenceFormId;
             Reference = reference;
+        }
+    }
+
+    public class ConvertedExteriorPathgrid
+    {
+        public TES3Lib.Records.PGRD PathGrid;
+        public TES4Lib.Subrecords.PGRD.PGRI InterCellConnections;
+
+        public ConvertedExteriorPathgrid(TES3Lib.Records.PGRD pathGrid, TES4Lib.Subrecords.PGRD.PGRI interCellConnections)
+        {
+            PathGrid = pathGrid;
+            InterCellConnections = interCellConnections;
         }
     }
 }
