@@ -25,7 +25,7 @@ namespace TES4Lib.Subrecords.NPC_
             var reader = new ByteReader();
             FormId = reader.ReadFormId(base.Data);
             Rank = reader.ReadBytes<byte>(base.Data);
-            Flag = reader.ReadBytes<byte[]>(base.Data);
+            Flag = reader.ReadBytes<byte[]>(base.Data, 3);
         }
     }
 }

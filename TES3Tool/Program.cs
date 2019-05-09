@@ -13,10 +13,11 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-            ConvertSI();
+            //ConvertSI();
 
-            
-           // MWLoadTest();
+            OblivionLoadTest();
+
+            // MWLoadTest();
 
 
 
@@ -24,8 +25,8 @@ namespace TES3Tool
             Console.ReadLine();
         }
 
-       public static void ConvertSI()
-       {
+        public static void ConvertSI()
+        {
             string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm";
 
             var stat = TES4Load(fileESM, new List<string> {
@@ -40,9 +41,15 @@ namespace TES3Tool
         {
             string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minigrid.esp";
 
-            var tes3 = TES3Load(fileESM, new List<string> { "CELL","PGRD" });
+            var tes3 = TES3Load(fileESM, new List<string> { "CELL", "PGRD" });
 
             tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minigridx.esp");
+        }
+
+        public static void OblivionLoadTest()
+        {
+            string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm";
+            var tes4 = TES4Load(file, new List<string> {"NPC_"});
         }
     }
 }

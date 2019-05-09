@@ -1,6 +1,6 @@
 ﻿namespace TES4Lib.Enums.Flags
 {
-    public enum NPCFlag : ulong
+    public enum NPCFlag : int
     {
         Female = 0x000001,
         Essential = 0x000002,

@@ -37,7 +37,7 @@ namespace TES4Lib.Records
         public ICON ICON { get; set; }
 
         /// <summary>
-        /// Climate if not NONE
+        /// FormId of climate record reference
         /// </summary>
         public CNAM CNAM { get; set; }
 

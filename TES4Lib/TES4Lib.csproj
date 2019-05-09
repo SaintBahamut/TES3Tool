@@ -143,6 +143,17 @@
     <Compile Include="Records\WEAP.cs" />
     <Compile Include="Records\WRLD.cs" />
     <Compile Include="Records\WTHR.cs" />
+    <Compile Include="Subrecords\NPC_\FGTS.cs" />
+    <Compile Include="Subrecords\NPC_\FGGA.cs" />
+    <Compile Include="Subrecords\NPC_\FGGS.cs" />
+    <Compile Include="Subrecords\NPC_\DATA.cs" />
+    <Compile Include="Subrecords\NPC_\HLCR.cs" />
+    <Compile Include="Subrecords\NPC_\ENAM.cs" />
+    <Compile Include="Subrecords\NPC_\LNAM.cs" />
+    <Compile Include="Subrecords\NPC_\HNAM.cs" />
+    <Compile Include="Subrecords\NPC_\FNAM.cs" />
+    <Compile Include="Subrecords\NPC_\ZNAM.cs" />
+    <Compile Include="Subrecords\NPC_\PKID.cs" />
     <Compile Include="Subrecords\NPC_\RNAM.cs" />
     <Compile Include="Subrecords\PGRD\DATA.cs" />
     <Compile Include="Subrecords\PGRD\PGAG.cs" />
@@ -169,7 +180,6 @@
     <Compile Include="Subrecords\CREA\SNAM.cs" />
     <Compile Include="Subrecords\CREA\NIFT.cs" />
     <Compile Include="Subrecords\LVLC\TNAM.cs" />
-    <Compile Include="Subrecords\WRLD\CNAM.cs" />
     <Compile Include="Subrecords\WRLD\DATA.cs" />
     <Compile Include="Subrecords\WRLD\MNAM.cs" />
     <Compile Include="Subrecords\WRLD\NAM0.cs" />
@@ -177,6 +187,7 @@
     <Compile Include="Subrecords\WRLD\NAM9.cs" />
     <Compile Include="Subrecords\WRLD\SNAM.cs" />
     <Compile Include="Subrecords\WRLD\WNAM.cs" />
+    <Compile Include="Subrecords\_Shared\CNAM.cs" />
     <Compile Include="Subrecords\_Shared\LVLO.cs" />
     <Compile Include="Subrecords\_Shared\LVLD.cs" />
     <Compile Include="Subrecords\_Shared\LVLF.cs" />
@@ -209,7 +220,7 @@
     <Compile Include="Subrecords\CREA\CSDT.cs" />
     <Compile Include="Subrecords\CREA\DATA.cs" />
     <Compile Include="Records\INAM.cs" />
-    <Compile Include="Subrecords\CREA\KFFZ.cs" />
+    <Compile Include="Subrecords\_Shared\KFFZ.cs" />
     <Compile Include="Subrecords\CREA\NAM0.cs" />
     <Compile Include="Subrecords\CREA\NAM1.cs" />
     <Compile Include="Subrecords\CREA\NIFZ.cs" />

@@ -12,7 +12,7 @@ namespace TES4Lib.Subrecords.Shared
     public class EDID : Subrecord
     {
         /// <summary>
-        /// Editor name of record
+        /// EditorId
         /// </summary>
         public string EditorId { get; set; }
 

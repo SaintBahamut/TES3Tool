@@ -76,6 +76,9 @@ namespace TES4Lib.Records
 
         public NAM1 NAM1 { get; set; }
 
+        /// <summary>
+        /// Optional Animation List for Creature
+        /// </summary>
         public KFFZ KFFZ { get; set; }
 
         public CREA(byte[] rawData) : base(rawData)

@@ -3,10 +3,10 @@ using System.Linq;
 using TES4Lib.Base;
 using Utility;
 
-namespace TES4Lib.Subrecords.CREA
+namespace TES4Lib.Subrecords.Shared
 {
     /// <summary>
-    /// Optional Animation List creature uses
+    /// Optional Animation List for Actor
     /// </summary>
     public class KFFZ : Subrecord
     {
