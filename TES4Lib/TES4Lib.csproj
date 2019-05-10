@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Enums\ApparatusType.cs" />
     <Compile Include="Enums\CreatureType.cs" />
+    <Compile Include="Enums\Flags\FactionFlag.cs" />
     <Compile Include="Enums\Flags\AmmoFlag.cs" />
     <Compile Include="Enums\Flags\BookFlag.cs" />
     <Compile Include="Enums\Flags\AlchemyFlag.cs" />
@@ -143,6 +144,13 @@
     <Compile Include="Records\WEAP.cs" />
     <Compile Include="Records\WRLD.cs" />
     <Compile Include="Records\WTHR.cs" />
+    <Compile Include="Subrecords\FACT\INAM.cs" />
+    <Compile Include="Subrecords\FACT\FNAM.cs" />
+    <Compile Include="Subrecords\FACT\MNAM.cs" />
+    <Compile Include="Subrecords\FACT\RNAM.cs" />
+    <Compile Include="Subrecords\FACT\CNAM.cs" />
+    <Compile Include="Subrecords\FACT\DATA.cs" />
+    <Compile Include="Subrecords\FACT\XNAM.cs" />
     <Compile Include="Subrecords\NPC_\FGTS.cs" />
     <Compile Include="Subrecords\NPC_\FGGA.cs" />
     <Compile Include="Subrecords\NPC_\FGGS.cs" />

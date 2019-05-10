@@ -61,30 +61,13 @@ namespace TES4Lib.Base
 
                 try
                 {
-                    PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
-                    if (subrecordProp.PropertyType.IsGenericType)
-                    {
-                        var listType = subrecordProp.PropertyType.GetGenericArguments()[0];
-                        if (IsNull(subrecordProp.GetValue(this)))
-                        {
-                            var IListRef = typeof(List<>);
-                            Type[] IListParam = { listType };
-                            object subRecordList = Activator.CreateInstance(IListRef.MakeGenericType(IListParam));
-                            subrecordProp.SetValue(this, subRecordList);
-                        }
-                        object sub = Activator.CreateInstance(listType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
-
-                        subrecordProp.GetValue(this).GetType().GetMethod("Add").Invoke(subrecordProp.GetValue(this), new[] { sub });
-                        continue;
-                    }
-                    object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
-                    subrecordProp.SetValue(this, subrecord);
-
                     if (subrecordName.Equals("OFST") && !Name.Equals("HEDR"))
                     {
                         //better not go there
                         break;
                     }
+
+                    ReadSubrecords(readerData, subrecordName, subrecordSize);
                 }
                 catch (Exception e)
                 {
@@ -92,6 +75,28 @@ namespace TES4Lib.Base
                     break;
                 }
             }
+        }
+
+        protected void ReadSubrecords(ByteReader readerData, string subrecordName, int subrecordSize)
+        {
+            PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
+            if (subrecordProp.PropertyType.IsGenericType)
+            {
+                var listType = subrecordProp.PropertyType.GetGenericArguments()[0];
+                if (IsNull(subrecordProp.GetValue(this)))
+                {
+                    var IListRef = typeof(List<>);
+                    Type[] IListParam = { listType };
+                    object subRecordList = Activator.CreateInstance(IListRef.MakeGenericType(IListParam));
+                    subrecordProp.SetValue(this, subRecordList);
+                }
+                object sub = Activator.CreateInstance(listType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
+
+                subrecordProp.GetValue(this).GetType().GetMethod("Add").Invoke(subrecordProp.GetValue(this), new[] { sub });
+                return;
+            }
+            object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
+            subrecordProp.SetValue(this, subrecord);
         }
 
         protected string GetSubrecordName(ByteReader reader)

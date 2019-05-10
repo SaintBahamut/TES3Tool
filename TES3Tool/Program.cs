@@ -30,8 +30,8 @@ namespace TES3Tool
             string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm";
 
             var stat = TES4Load(fileESM, new List<string> {
-                "STAT","WRLD","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLC","LVLI","CELL",
-                "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA","DOOR"
+                "STAT","WRLD","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLC","LVLI","CELL","NPC_",
+                "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA","DOOR","FACT"
             });
             var testEX = ConvertInteriorsAndExteriors(stat);
             testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\SI.esp");
@@ -49,7 +49,7 @@ namespace TES3Tool
         public static void OblivionLoadTest()
         {
             string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm";
-            var tes4 = TES4Load(file, new List<string> {"NPC_"});
+            var tes4 = TES4Load(file, new List<string> { "FACT" });
         }
     }
 }
