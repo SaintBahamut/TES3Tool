@@ -4,7 +4,7 @@ using Utility;
 namespace TES4Lib.Subrecords.CREA
 {
     /// <summary>
-    /// Creature sound data 2: chence to play
+    /// Creature sound data 2: chance to play
     /// </summary>
     public class CSDC : Subrecord
     {

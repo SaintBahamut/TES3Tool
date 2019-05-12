@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TES4Lib.Base;
 using TES4Lib.Subrecords.CREA;
 using TES4Lib.Subrecords.Shared;
+using Utility;
 using BNAM = TES4Lib.Subrecords.CREA.BNAM;
 using SNAM = TES4Lib.Subrecords.CREA.SNAM;
 
@@ -54,17 +56,18 @@ namespace TES4Lib.Records
 
         public ZNAM ZNAM { get; set; }
 
+        /// <summary>
+        /// Creature inherits sounds from other creature
+        /// </summary>
         public CSCR CSCR { get; set; }
 
-        #region should make these 3 one list but i dont really need those
-
-        public List<CSDT> CSDT { get; set; }
-
-        public List<CSDI> CSDI { get; set; }
-
-        public List<CSDC> CSDC { get; set; }
-
-        #endregion
+        /// <summary>
+        /// Creature sounds
+        /// CSDT - Type
+        /// CSDI - Chance
+        /// CSDC - SoundFormId
+        /// </summary>
+        public List<(CSDT CSDT, CSDI CSDI, CSDC CSDC)> SNDS { get; set; }
 
         public BNAM BNAM { get; set; }
 
@@ -84,6 +87,45 @@ namespace TES4Lib.Records
         public CREA(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
+        }
+
+        protected override void BuildSubrecords()
+        {
+            var readerData = new ByteReader();
+            SNDS = new List<(CSDT CSDT, CSDI CSDI, CSDC CSDC)>();
+            while (Data.Length != readerData.offset)
+            {
+                var subrecordName = GetSubrecordName(readerData);
+                var subrecordSize = GetSubrecordSize(readerData);
+
+                if (subrecordName.Equals("CSDT"))
+                {
+                    SNDS.Add((new CSDT(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)), null, null));
+                    continue;
+                }
+                if (subrecordName.Equals("CSDI"))
+                {
+                    int index = SNDS.Count - 1;
+                    SNDS[index] = (SNDS[index].CSDT, new CSDI(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)), SNDS[index].CSDC);
+                    continue;
+                }
+                if (subrecordName.Equals("CSDC"))
+                {
+                    int index = SNDS.Count - 1;
+                    SNDS[index] = (SNDS[index].CSDT, SNDS[index].CSDI, new CSDC(readerData.ReadBytes<byte[]>(Data, (int)subrecordSize)));
+                    continue;
+                }
+
+                try
+                {
+                    ReadSubrecords(readerData, subrecordName, subrecordSize);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"error in building {this.GetType().ToString()} ar subrecord {subrecordName} eighter not implemented or borked {e}");
+                    break;
+                }
+            }
         }
     }
 }

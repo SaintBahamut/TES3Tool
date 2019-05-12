@@ -74,6 +74,7 @@
         ResistShock = 68,
         Vampirism = 69,
         Darkness = 70,
-        ResistWaterDamage = 71
+        ResistWaterDamage = 71,
+        NONE = 255,
     }
 }

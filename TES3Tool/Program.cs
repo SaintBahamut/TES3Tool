@@ -49,7 +49,7 @@ namespace TES3Tool
         public static void OblivionLoadTest()
         {
             string file = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm";
-            var tes4 = TES4Load(file, new List<string> { "FACT" });
+            var tes4 = TES4Load(file, new List<string> { "FACT","RACE" });
         }
     }
 }

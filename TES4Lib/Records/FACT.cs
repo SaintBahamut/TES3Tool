@@ -95,10 +95,5 @@ namespace TES4Lib.Records
                 }
             }
         }
-
-        private bool IsNull(object v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

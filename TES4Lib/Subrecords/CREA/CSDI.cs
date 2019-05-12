@@ -11,12 +11,12 @@ namespace TES4Lib.Subrecords.CREA
         /// <summary>
         /// FormId referencing a SOUN record
         /// </summary>
-        public string SoundFormFormId { get; set; }
+        public string SoundFormId { get; set; }
 
         public CSDI(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            SoundFormFormId = reader.ReadFormId(base.Data);
+            SoundFormId = reader.ReadFormId(base.Data);
         }
     }
 }

@@ -150,7 +150,14 @@
     <Compile Include="Subrecords\FACT\RNAM.cs" />
     <Compile Include="Subrecords\FACT\CNAM.cs" />
     <Compile Include="Subrecords\FACT\DATA.cs" />
-    <Compile Include="Subrecords\FACT\XNAM.cs" />
+    <Compile Include="Subrecords\RACE\ATTR.cs" />
+    <Compile Include="Subrecords\RACE\UNAM.cs" />
+    <Compile Include="Subrecords\RACE\PNAM.cs" />
+    <Compile Include="Subrecords\RACE\DATA.cs" />
+    <Compile Include="Subrecords\RACE\CNAM.cs" />
+    <Compile Include="Subrecords\RACE\DNAM.cs" />
+    <Compile Include="Subrecords\RACE\VNAM.cs" />
+    <Compile Include="Subrecords\_Shared\XNAM.cs" />
     <Compile Include="Subrecords\NPC_\FGTS.cs" />
     <Compile Include="Subrecords\NPC_\FGGA.cs" />
     <Compile Include="Subrecords\NPC_\FGGS.cs" />
