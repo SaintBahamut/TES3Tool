@@ -2,10 +2,7 @@
 using static TES4Lib.TES4;
 using static TES3Lib.TES3;
 using static TES3Tool.TES4RecordConverter.Oblivion2Morrowind;
-using static TES4Lib.Base.Group;
-using System.Threading;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TES3Tool
 {
@@ -13,11 +10,11 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-            //ConvertSI();
+          // ConvertSI();
 
-            OblivionLoadTest();
+           //OblivionLoadTest();
 
-            // MWLoadTest();
+            MWLoadTest();
 
 
 
@@ -30,8 +27,10 @@ namespace TES3Tool
             string fileESM = "D:\\Program Files\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm";
 
             var stat = TES4Load(fileESM, new List<string> {
-                "STAT","WRLD","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","LVLC","LVLI","CELL","NPC_",
-                "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO","CLOT","CREA","DOOR","FACT"
+                "STAT","WRLD","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT",
+                "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO",
+                "CLOT","CREA","DOOR","FACT","CLAS","LVLC","LVLI","CELL","NPC_",
+                "RACE",
             });
             var testEX = ConvertInteriorsAndExteriors(stat);
             testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\SI.esp");
@@ -39,11 +38,38 @@ namespace TES3Tool
 
         public static void MWLoadTest()
         {
-            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minigrid.esp";
+            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\x.esp";
 
-            var tes3 = TES3Load(fileESM, new List<string> { "CELL", "PGRD" });
+            var tes3 = TES3Load(fileESM, new List<string> { "RACE"});
 
-            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\minigridx.esp");
+
+            //foreach (var item in tes3.Records)
+            //{
+            //    if (item.Name == "BODY")
+            //    {
+            //        TES3Lib.Records.BODY body = item as TES3Lib.Records.BODY;
+            //        if(body.FNAM != null &&
+            //            body.BYDT.PartType == TES3Lib.Enums.BodyPartType.Skin &&
+            //                body.BYDT.IsVampire == 0 &&
+            //                    body.BYDT.BodyPart == TES3Lib.Enums.BodyPart.Head
+
+                        
+            //            )
+            //        {
+            //            var race = body.FNAM.Name;
+            //            var gender = body.BYDT.Flags.Contains(TES3Lib.Enums.Flags.BodyPartFlag.Female) ? "F" : "M";
+            //            var id = body.NAME.EditorId;
+                        
+            //            Console.WriteLine($"MWRaceFaces[\"{race}{gender}\"].Add(\"{id.TrimEnd('\0')}\\0\");");
+
+            //        }
+            //        //string race = body.
+
+
+            //    }
+            //}
+
+            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\x2.esp");
         }
 
         public static void OblivionLoadTest()

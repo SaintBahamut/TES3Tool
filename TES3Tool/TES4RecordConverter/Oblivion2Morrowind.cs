@@ -374,7 +374,7 @@ namespace TES3Tool.TES4RecordConverter
                         if (IsNull(obACRE.NAME)) continue;
                         var ReferenceBaseFormId = obACRE.NAME.BaseFormId;
 
-                        var BaseId = GetBaseIdFromFormId(ReferenceBaseFormId);
+                        var BaseId = GetBaseId(ReferenceBaseFormId);
                         if (string.IsNullOrEmpty(BaseId)) continue;
 
                         mwREFR = ConvertACRE(obACRE, BaseId, mwCELL.NAM0.ReferenceCount, true);
@@ -387,6 +387,18 @@ namespace TES3Tool.TES4RecordConverter
 
                     if (referenceTypeName.Equals("ACHR"))
                     {
+                        var obACHR = obRef as TES4Lib.Records.ACHR;
+                        if (IsNull(obACHR.NAME)) continue;
+                        var ReferenceBaseFormId = obACHR.NAME.BaseFormId;
+
+                        var BaseId = GetBaseId(ReferenceBaseFormId);
+                        if (string.IsNullOrEmpty(BaseId)) continue;
+
+                        mwREFR = ConvertACHR(obACHR, BaseId, mwCELL.NAM0.ReferenceCount, true);
+                        CellReferences.Add(new ConvertedCellReference(originalCellFormId, obACHR.FormId, mwREFR)); //for tracking
+
+                        mwCELL.REFR.Add(mwREFR);
+                        mwCELL.NAM0.ReferenceCount++;
                         continue;
                     }
 

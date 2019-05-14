@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TES4Lib.Base;
+﻿using TES4Lib.Base;
 using Utility;
 
 namespace TES4Lib.Subrecords.ACHR
@@ -18,8 +15,8 @@ namespace TES4Lib.Subrecords.ACHR
         public XHRS(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            ParentFormId = BitConverter.ToString(reader.ReadBytes<byte[]>(base.Data, FORMID_LENGTH).Reverse().ToArray()).Replace("-", "");
-            Flags = reader.ReadBytes<uint>(base.Data);
+            ParentFormId = reader.ReadFormId(base.Data);
+            //Flags = reader.ReadBytes<uint>(base.Data);
         }
     }
 }

@@ -8,7 +8,7 @@
         ENCH,
         CLAS,
         //FACT,
-        //RACE,
+        RACE,
         SOUN,
         ALCH,
         //SKIL,

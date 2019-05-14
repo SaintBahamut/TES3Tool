@@ -14,7 +14,7 @@ namespace TES4Lib.Subrecords.Shared
         public XESP(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            ParentFormId = BitConverter.ToString(reader.ReadBytes<byte[]>(base.Data, FORMID_LENGTH).Reverse().ToArray()).Replace("-", "");
+            ParentFormId = reader.ReadFormId(base.Data);
             Flags = reader.ReadBytes<uint>(base.Data);
         }
     }

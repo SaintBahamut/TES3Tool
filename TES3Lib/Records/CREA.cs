@@ -10,9 +10,14 @@ using Utility;
 using TES3Lib.Enums.Flags;
 using static Utility.Common;
 using System.Collections;
+using System.Diagnostics;
 
 namespace TES3Lib.Records
 {
+    /// <summary>
+    /// Creature Record
+    /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class CREA : Record
     {
         public NAME NAME { get; set; }
@@ -62,7 +67,11 @@ namespace TES3Lib.Records
         public override void BuildSubrecords()
         {
             var reader = new ByteReader();
-        
+
+            NPCO = new List<NPCO>();
+            NPCS = new List<NPCS>();
+            TravelService = new List<(DODT coordinates, DNAM cell)>();
+
             while (Data.Length != reader.offset)
             {
                 var subrecordName = GetRecordName(reader);

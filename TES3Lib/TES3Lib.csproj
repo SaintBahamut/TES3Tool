@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\Flags\RaceFlags.cs" />
     <Compile Include="Enums\GenderType.cs" />
     <Compile Include="Enums\ArmorType.cs" />
     <Compile Include="Enums\Attributre.cs" />
@@ -75,7 +76,6 @@
     <Compile Include="Enums\GlobalVariableType.cs" />
     <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\PathGridNodeType.cs" />
-    <Compile Include="Enums\RaceFlags.cs" />
     <Compile Include="Enums\Skill.cs" />
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Spell.cs" />

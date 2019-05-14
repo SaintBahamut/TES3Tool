@@ -1,6 +1,8 @@
-﻿using TES4Lib.Base;
+﻿using System;
+using TES4Lib.Base;
 using TES4Lib.Subrecords.ACHR;
 using TES4Lib.Subrecords.Shared;
+using Utility;
 
 namespace TES4Lib.Records
 {
@@ -24,8 +26,33 @@ namespace TES4Lib.Records
 
         public ACHR(byte[] rawData) : base(rawData)
         {
-            IsImplemented = false;
             BuildSubrecords();
+        }
+
+        /// <summary>
+        /// Builds SubRecords
+        /// </summary>
+        protected virtual void BuildSubrecords()
+        {
+            if (!IsImplemented) return;
+
+            var readerData = new ByteReader();
+            while (Data.Length != readerData.offset)
+            {
+                string subrecordName = GetSubrecordName(readerData);
+                int subrecordSize = GetSubrecordSize(readerData);
+
+                try
+                {
+
+                    ReadSubrecords(readerData, subrecordName, subrecordSize);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
+                    break;
+                }
+            }
         }
     }
 }

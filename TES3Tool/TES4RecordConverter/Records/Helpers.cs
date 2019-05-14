@@ -17,6 +17,26 @@ namespace TES3Tool.TES4RecordConverter.Records
 
         internal static List<ConvertedCellReference> CellReferences = new List<ConvertedCellReference>();
 
+        internal static bool IsStandardMWRace(string EditorId)
+        {
+            switch (EditorId)
+            {
+                case ("Dark Elf"):
+                case ("Wood Elf"):
+                case ("High Elf"):
+                case ("Imperial"):
+                case ("Breton"):
+                case ("Nord"):
+                case ("Redguard"):
+                case ("Orc"):
+                case ("Khajiit"):
+                case ("Argonian"):
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         internal static string GenerateSoundScript(string SoundEditorId)
         {
             string template = "begin Sound__PLACEHOLDER_\r\n\r\nif(CellChanged == 0)\r\n\tif(GetSoundPlaying \"_PLACEHOLDER_\" == 0 )\r\n\t\tPlayLoopSound3DVP \"_PLACEHOLDER_\", 1.0, 1.0\r\n\tendif\r\nendif\r\n\r\nend";
@@ -94,7 +114,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return $"{Config.convertedRootFolder}\\{containingFolder}\\{newFileName}";
         }
 
-        static string NameShortnernerMapper(string name)
+        static string EditorIdShortener(string name)
         {
             return name.Replace("Standard", "Std")
             .Replace("Restore", "Rest")
@@ -113,12 +133,8 @@ namespace TES3Tool.TES4RecordConverter.Records
             .Replace("Mania", "Ma")
             .Replace("Interior", "In")
             .Replace("Exterior", "Ex")
-            .Replace("HandToHand", "HH");
-        }
-
-        static string CreatureNameShortnernerMapper(string name)
-        {
-            return name.Replace("Standard", "Std")
+            .Replace("HandToHand", "HH")
+            .Replace("Standard", "Std")
             .Replace("Creature", "Cr")
             .Replace("Grummite", "Grum")
             .Replace("Blackroot", "Br")
@@ -126,7 +142,15 @@ namespace TES3Tool.TES4RecordConverter.Records
             .Replace("Custom", "Cus")
             .Replace("Atronach", "Atr")
             .Replace("Dementia", "De")
-            .Replace("Mania", "Ma");
+            .Replace("Mania", "Ma")
+            .Replace("DarkSeducer", "Seducer")
+            .Replace("GoldenSaint", "Saint")
+            .Replace("KnightOfOrder", "KOF")
+            .Replace("GenericOfficer", "GenOff")
+            .Replace("Breton", "Br")
+            .Replace("HighElf", "He")
+            .Replace("Female", "Fe")
+            .Replace("Male", "Ma");
         }
 
         internal static string CreatureIdFormater(string sourceEditorId)
@@ -135,7 +159,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             if (idSize <= 24)
                 return sourceEditorId;
 
-            var result = CreatureNameShortnernerMapper(sourceEditorId);
+            var result = EditorIdShortener(sourceEditorId);
 
             idSize = result.Count();
             if (result.Length <= 24)
@@ -146,14 +170,13 @@ namespace TES3Tool.TES4RecordConverter.Records
             return result.Remove(0, diff);
         }
 
-
         internal static string EditorIdFormater(string sourceEditorId)
         {
             int idSize = sourceEditorId.Count();
             if (idSize <= 32)
                 return sourceEditorId;
 
-            var result = NameShortnernerMapper(sourceEditorId);
+            var result = EditorIdShortener(sourceEditorId);
 
             idSize = result.Count();
             if (result.Length <= 32)
@@ -203,9 +226,11 @@ namespace TES3Tool.TES4RecordConverter.Records
         static string GetDefaultIdFromFormId(string formId)
         {
             string mwEditorId = string.Empty;
+            var dupa = Config.ACTIPath;
             Config.OblivionMorrowindRecordsMap.TryGetValue(formId, out mwEditorId);
             return mwEditorId;
         }
+
     }
 
     public class ConvertedRecordData
@@ -251,4 +276,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             InterCellConnections = interCellConnections;
         }
     }
+
+
+
 }

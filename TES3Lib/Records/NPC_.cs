@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,6 +14,10 @@ using static Utility.Common;
 
 namespace TES3Lib.Records
 {
+    /// <summary>
+    /// NPC Record
+    /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class NPC_ : Record
     {
         #region subrecords
@@ -37,7 +42,10 @@ namespace TES3Lib.Records
         /// Head model: required even if empty
         /// </summary>
         public BNAM BNAM { get; set; }
-
+        
+        /// <summary>
+        /// Class name
+        /// </summary>
         public CNAM CNAM { get; set; }
 
         /// <summary>
@@ -74,6 +82,10 @@ namespace TES3Lib.Records
         public XSCL XSCL { get; set; }
         #endregion
 
+        public NPC_()
+        {
+        }
+
         public NPC_(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
@@ -82,6 +94,11 @@ namespace TES3Lib.Records
         public override void BuildSubrecords()
         {
             var reader = new ByteReader();
+
+            NPCO = new List<NPCO>();
+            NPCS = new List<NPCS>();
+            TravelService = new List<(DODT coordinates, DNAM cell)>();
+
             while (Data.Length != reader.offset)
             {
                 var subrecordName = GetRecordName(reader);
@@ -117,7 +134,7 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building CREA subrecord {subrecordName} , something is borkeeeed {e}");
+                    Console.WriteLine($"error in building NPC_ subrecord {subrecordName} , something is borkeeeed {e}");
                     break;
                 }
             }

@@ -69,6 +69,7 @@
     <Compile Include="TES4RecordConverter\Oblivion2Morrowind.cs" />
     <Compile Include="TES4RecordConverter\Records\Converters.cs" />
     <Compile Include="TES4RecordConverter\Records\Helpers.cs" />
+    <Compile Include="TES4RecordConverter\Records\TypeConverters.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

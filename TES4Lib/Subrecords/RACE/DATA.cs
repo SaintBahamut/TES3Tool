@@ -10,7 +10,7 @@ namespace TES4Lib.Subrecords.RACE
     /// </summary>
     public class DATA : Subrecord
     {
-        public List<(ActorValue, byte)> SkillBoosts { get; set; }
+        public SkillBonus[] SkillBoosts { get; set; }
 
         public short Unknown { get; set; }
 
@@ -28,11 +28,12 @@ namespace TES4Lib.Subrecords.RACE
         {
             var reader = new ByteReader();
 
-            SkillBoosts = new List<(ActorValue, byte)>();
+            SkillBoosts = new SkillBonus[7];
 
             for (int i = 0; i < 7; i++)
             {
-                SkillBoosts.Add(((ActorValue)reader.ReadBytes<byte>(base.Data), reader.ReadBytes<byte>(base.Data)));
+                SkillBoosts[i].Skill = (ActorValue)reader.ReadBytes<byte>(base.Data);
+                SkillBoosts[i].Bonus = reader.ReadBytes<byte>(base.Data);
             }
 
             Unknown = reader.ReadBytes<short>(base.Data);
@@ -41,6 +42,12 @@ namespace TES4Lib.Subrecords.RACE
             MaleWeight = reader.ReadBytes<float>(base.Data);
             FemaleWeight = reader.ReadBytes<float>(base.Data);
             IsPlayable = reader.ReadBytes<bool>(base.Data);
+        }
+
+        public struct SkillBonus
+        {
+            public ActorValue Skill;
+            public byte Bonus;
         }
     }
 }

@@ -85,15 +85,10 @@ namespace TES3Lib.Base
                     Type enumType = property.PropertyType.GetGenericArguments()[0];
                     Type enumValueType = Enum.GetUnderlyingType(enumType);
 
-                    uint flag = 0;
-                    foreach (Enum flagElement in value as IEnumerable)
-                    {
-                        flag = flag | Convert.ToUInt32(flagElement);
-                    }
-                    data.AddRange(ByteWriter.ToBytes(flag, enumValueType));
+                    data.AddRange(ByteWriter.ToBytes(SerializeFlag(value), enumValueType));
                     continue;
                 }
-           
+
                 data.AddRange(ByteWriter.ToBytes(value, property.PropertyType));          
             }
 
@@ -101,6 +96,17 @@ namespace TES3Lib.Base
                .Concat(BitConverter.GetBytes(data.Count()))
                .Concat(data).ToArray();
             return serialized;
+        }
+
+        protected uint SerializeFlag(object value)
+        {
+            uint flag = 0;
+            foreach (Enum flagElement in value as IEnumerable)
+            {
+                flag = flag | Convert.ToUInt32(flagElement);
+            }
+
+            return flag;
         }
     }
 }
