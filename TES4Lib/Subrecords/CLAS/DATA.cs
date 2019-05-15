@@ -11,6 +11,10 @@ namespace TES4Lib.Subrecords.CLAS
     /// </summary>
     public class DATA : Subrecord
     {
+        public ActorValue PrimaryAttribute1 { get; set; }
+
+        public ActorValue PrimaryAttribute2 { get; set; }
+
         public Specialization Specialization { get; set; }
 
         public ActorValue[] MajorSkills { get; set; }
@@ -26,6 +30,9 @@ namespace TES4Lib.Subrecords.CLAS
         public DATA(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
+
+            PrimaryAttribute1 = (ActorValue)reader.ReadBytes<int>(base.Data);
+            PrimaryAttribute2 = (ActorValue)reader.ReadBytes<int>(base.Data);
             Specialization = (Specialization)reader.ReadBytes<int>(base.Data);
 
             MajorSkills = new ActorValue[7];
@@ -36,8 +43,12 @@ namespace TES4Lib.Subrecords.CLAS
 
             Flags = reader.ReadFlagBytes<ClassFlag>(base.Data);
             Services = reader.ReadFlagBytes<ServicesFlag>(base.Data);
-            SkillTrained = reader.ReadBytes<Skill>(base.Data);
-            MaxTrainingLevel = reader.ReadBytes<byte>(base.Data);
+
+            if (base.Size > 48)
+            {
+                SkillTrained = reader.ReadBytes<Skill>(base.Data);
+                MaxTrainingLevel = reader.ReadBytes<byte>(base.Data);
+            }         
         }
     }
 }

@@ -7,16 +7,34 @@ using Utility;
 
 namespace TES3Lib.Records
 {
+    /// <summary>
+    /// TES3 Race record
+    /// </summary>
     public class RACE: Record
     {
+        /// <summary>
+        /// Race EditorId
+        /// </summary>
         public NAME NAME { get; set; }
 
+        /// <summary>
+        /// Race Display Name
+        /// </summary>
         public FNAM FNAM { get; set; }
 
+        /// <summary>
+        /// Attributes and skill bonuses
+        /// </summary>
         public RADT RADT { get; set; }
 
-        public List<NPCS> NPCS = new List<NPCS>();
+        /// <summary>
+        /// Racial spells and powers
+        /// </summary>
+        public List<NPCS> NPCS { get; set; }
 
+        /// <summary>
+        /// Races description
+        /// </summary>
         public DESC DESC { get; set; }
 
         public RACE()
@@ -26,33 +44,6 @@ namespace TES3Lib.Records
         public RACE(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
-        }
-
-        public override void BuildSubrecords()
-        {
-            var reader = new ByteReader();
-            while (Data.Length != reader.offset)
-            {
-                var subrecordName = GetRecordName(reader);
-                var subrecordSize = GetRecordSize(reader);
-                try
-                {
-                    if (subrecordName.Equals("NPCS"))
-                    {
-                        NPCS.Add(new NPCS(reader.ReadBytes<byte[]>(Data, subrecordSize)));
-                        continue;
-                    }
-
-                    var subrecordProp = this.GetType().GetProperty(subrecordName);
-                    var subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { reader.ReadBytes<byte[]>(Data, subrecordSize) });
-                    subrecordProp.SetValue(this, subrecord);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"error in building CREA subrecord {subrecordName} , something is borkeeeed {e}");
-                    break;
-                }
-            }
         }
     }
 }

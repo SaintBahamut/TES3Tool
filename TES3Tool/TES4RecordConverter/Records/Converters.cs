@@ -200,11 +200,19 @@ namespace TES3Tool.TES4RecordConverter.Records
                 var mwNPC = ConvertNPC((TES4Lib.Records.NPC_)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwNPC.GetType().Name, mwNPC.NAME.EditorId, mwNPC);
             }
+
             //RACE
             if (recordType.Equals("RACE"))
             {
                 var mwRACE = ConvertRACE((TES4Lib.Records.RACE)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwRACE.GetType().Name, mwRACE.NAME.EditorId, mwRACE);
+            }
+
+            //CLASS
+            if (recordType.Equals("CLAS"))
+            {
+                var mwCLAS = ConvertCLAS((TES4Lib.Records.CLAS)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwCLAS.GetType().Name, mwCLAS.NAME.EditorId, mwCLAS);
             }
 
             return null;
@@ -275,6 +283,36 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwRACE;
         }
 
+        private static TES3Lib.Records.CLAS ConvertCLAS(TES4Lib.Records.CLAS obCLAS)
+        {
+            var mwCLAS = new TES3Lib.Records.CLAS
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = CreatureIdFormater(obCLAS.EDID.EditorId) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCLAS.FULL) ? obCLAS.FULL.DisplayName : string.Empty) },
+                DESC = new TES3Lib.Subrecords.Shared.DESC {  Description = obCLAS.DESC.Description },
+                CLDT = new TES3Lib.Subrecords.CLAS.CLDT
+                {
+                    PrimaryAttribute1 = CastActorValueToAttributeMW(obCLAS.DATA.PrimaryAttribute1),
+                    PrimaryAttribute2 = CastActorValueToAttributeMW(obCLAS.DATA.PrimaryAttribute2),
+                    Specialization = (TES3Lib.Enums.Specialization)obCLAS.DATA.Specialization,
+                    IsPlayable = obCLAS.DATA.Flags.Contains(ClassFlag.Playable) ? 1 : 0,
+                    Services = CastServicesToMW(obCLAS.DATA.Services),
+                    Major1 = CastActorValueToSkillMW(obCLAS.DATA.MajorSkills[0]),
+                    Major2 = CastActorValueToSkillMW(obCLAS.DATA.MajorSkills[1]),
+                    Major3 = CastActorValueToSkillMW(obCLAS.DATA.MajorSkills[2]),
+                    Major4 = CastActorValueToSkillMW(obCLAS.DATA.MajorSkills[3]),
+                    Major5 = CastActorValueToSkillMW(obCLAS.DATA.MajorSkills[4]),
+                    Minor1 = CastActorValueToSkillMW(obCLAS.DATA.MajorSkills[5]),
+                    Minor2 = CastActorValueToSkillMW(obCLAS.DATA.MajorSkills[6]),
+                    Minor3 = TES3Lib.Enums.Skill.ShortBlade,
+                    Minor4 = TES3Lib.Enums.Skill.Axe,
+                    Minor5 = TES3Lib.Enums.Skill.Unarmored,
+                }
+            };
+
+            return mwCLAS;
+        }
+
         private static TES3Lib.Records.NPC_ ConvertNPC(TES4Lib.Records.NPC_ obNPC)
         {
             var mwNPC = new TES3Lib.Records.NPC_
@@ -284,7 +322,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 ANAM = new TES3Lib.Subrecords.Shared.ANAM { EditorId = "\0" },
                 KNAM = new TES3Lib.Subrecords.NPC_.KNAM { HairModel = "\0" },
                 BNAM = new TES3Lib.Subrecords.Shared.BNAM { EditorId = "\0" },
-                CNAM = new TES3Lib.Subrecords.NPC_.CNAM { ClassName = "Adventurer\0" },
+                CNAM = new TES3Lib.Subrecords.NPC_.CNAM { ClassName = "Warrior\0" },
                 FLAG = new TES3Lib.Subrecords.NPC_.FLAG { Flags = CastNPCFlagsToMW(obNPC.ACBS.Flags) },
                 NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>(),
                 NPCS = new List<TES3Lib.Subrecords.Shared.NPCS>(),
@@ -299,8 +337,8 @@ namespace TES3Tool.TES4RecordConverter.Records
               
             };
 
-            string ClassName = GetBaseId(obNPC.RNAM.RaceFormId);
-            if (string.IsNullOrEmpty(ClassName))
+            string ClassName = GetBaseId(obNPC.CNAM.FormId);
+            if (!string.IsNullOrEmpty(ClassName))
             {
                 mwNPC.CNAM.ClassName = ClassName;
             }
@@ -1121,7 +1159,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             {
                 MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obACTI.MODL.ModelPath, TES3Tool.Config.ACTIPath) },
                 NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = EditorIdFormater(obACTI.EDID.EditorId) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = !IsNull(obACTI.FULL) ? NameFormater(obACTI.FULL.DisplayName) : "" },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = !IsNull(obACTI.FULL) ? NameFormater(obACTI.FULL.DisplayName) : "\0" },
             };
         }
 
@@ -1328,44 +1366,6 @@ namespace TES3Tool.TES4RecordConverter.Records
                 };
 
                 DoorReferences.Add(mwREFR);
-
-                //if (!isExterior) //for now lets not break compatibility
-                //{
-                //    TES4Lib.Base.Record record;
-                //    TES4Lib.TES4.TES4RecordIndex.TryGetValue(obREFR.XTEL.DestinationDoorReference, out record);
-
-                //    if (IsNull(record)) //if record is null it means its exterior cell
-                //    {
-                //        float shiftX = (Config.cellShiftX * Config.mwCellSize);
-                //        float shiftY = (Config.cellShiftY * Config.mwCellSize);
-                //        mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
-                //        {
-                //            PositionX = obREFR.XTEL.DestLocX + shiftX,
-                //            PositionY = obREFR.XTEL.DestLocY + shiftY,
-                //            PositionZ = obREFR.XTEL.DestLocZ,
-                //            RotationX = obREFR.XTEL.DestRotX,
-                //            RotationY = obREFR.XTEL.DestRotY,
-                //            RotationZ = obREFR.XTEL.DestRotZ
-                //        };
-                //    }
-                //    else
-                //    {
-                //        mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
-                //        {
-                //            PositionX = obREFR.XTEL.DestLocX,
-                //            PositionY = obREFR.XTEL.DestLocY,
-                //            PositionZ = obREFR.XTEL.DestLocZ,
-                //            RotationX = obREFR.XTEL.DestRotX,
-                //            RotationY = obREFR.XTEL.DestRotY,
-                //            RotationZ = obREFR.XTEL.DestRotZ
-                //        };
-                //        mwREFR.DNAM = new TES3Lib.Subrecords.Shared.DNAM
-                //        {
-                //            InteriorCellName = obREFR.XTEL.DestinationDoorReference //pass only formId, we will get cell names at later stages of conversion
-                //        };
-                //        DoorReferences.Add(mwREFR);
-                //    }
-                //}
             }
 
             if (!IsNull(obREFR.XLOC))
@@ -1429,7 +1429,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwREFR;
         }
 
-        public static TES3Lib.Records.REFR ConvertACRE(TES4Lib.Records.ACRE obACRE, string baseId, int refrNumber, bool isExterior = false)
+        public static TES3Lib.Records.REFR ConvertACRE(TES4Lib.Records.ACRE obACRE, string baseId, int refrNumber, bool IsInteriorCell)
         {
             var mwREFR = new TES3Lib.Records.REFR();
 
@@ -1456,8 +1456,8 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             if (!IsNull(obACRE.DATA))
             {
-                int offsetX = isExterior ? (Config.mwCellSize * Config.cellShiftX) : 0;
-                int offsetY = isExterior ? (Config.mwCellSize * Config.cellShiftY) : 0;
+                int offsetX = IsInteriorCell ? 0 : (Config.mwCellSize * Config.cellShiftX);
+                int offsetY = IsInteriorCell ? 0 : (Config.mwCellSize * Config.cellShiftY);
 
                 mwREFR.DATA = new TES3Lib.Subrecords.REFR.DATA();
                 mwREFR.DATA.XPos = obACRE.DATA.LocX + offsetX;
@@ -1471,7 +1471,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwREFR;
         }
 
-        public static TES3Lib.Records.REFR ConvertACHR(TES4Lib.Records.ACHR obACHR, string baseId, int refrNumber, bool isExterior = false)
+        public static TES3Lib.Records.REFR ConvertACHR(TES4Lib.Records.ACHR obACHR, string baseId, int refrNumber, bool IsInteriorCell)
         {
             var mwREFR = new TES3Lib.Records.REFR();
 
@@ -1498,16 +1498,18 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             if (!IsNull(obACHR.DATA))
             {
-                int offsetX = isExterior ? (Config.mwCellSize * Config.cellShiftX) : 0;
-                int offsetY = isExterior ? (Config.mwCellSize * Config.cellShiftY) : 0;
+                int offsetX = IsInteriorCell ? 0 : (Config.mwCellSize * Config.cellShiftX);
+                int offsetY = IsInteriorCell ? 0 : (Config.mwCellSize * Config.cellShiftY);
 
-                mwREFR.DATA = new TES3Lib.Subrecords.REFR.DATA();
-                mwREFR.DATA.XPos = obACHR.DATA.LocX + offsetX;
-                mwREFR.DATA.YPos = obACHR.DATA.LocY + offsetY;
-                mwREFR.DATA.ZPos = obACHR.DATA.LocZ;
-                mwREFR.DATA.XRotate = obACHR.DATA.RotX;
-                mwREFR.DATA.YRotate = obACHR.DATA.RotY;
-                mwREFR.DATA.ZRotate = obACHR.DATA.RotZ;
+                mwREFR.DATA = new TES3Lib.Subrecords.REFR.DATA
+                {
+                    XPos = obACHR.DATA.XPos + offsetX,
+                    YPos = obACHR.DATA.YPos + offsetY,
+                    ZPos = obACHR.DATA.ZPos,
+                    XRotate = obACHR.DATA.RotX,
+                    YRotate = obACHR.DATA.RotY,
+                    ZRotate = obACHR.DATA.RotZ
+                };
             }
 
             return mwREFR;

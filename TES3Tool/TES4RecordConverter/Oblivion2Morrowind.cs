@@ -377,7 +377,7 @@ namespace TES3Tool.TES4RecordConverter
                         var BaseId = GetBaseId(ReferenceBaseFormId);
                         if (string.IsNullOrEmpty(BaseId)) continue;
 
-                        mwREFR = ConvertACRE(obACRE, BaseId, mwCELL.NAM0.ReferenceCount, true);
+                        mwREFR = ConvertACRE(obACRE, BaseId, mwCELL.NAM0.ReferenceCount, mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell));
                         CellReferences.Add(new ConvertedCellReference(originalCellFormId, obACRE.FormId, mwREFR)); //for tracking
 
                         mwCELL.REFR.Add(mwREFR);
@@ -394,7 +394,7 @@ namespace TES3Tool.TES4RecordConverter
                         var BaseId = GetBaseId(ReferenceBaseFormId);
                         if (string.IsNullOrEmpty(BaseId)) continue;
 
-                        mwREFR = ConvertACHR(obACHR, BaseId, mwCELL.NAM0.ReferenceCount, true);
+                        mwREFR = ConvertACHR(obACHR, BaseId, mwCELL.NAM0.ReferenceCount, mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell));
                         CellReferences.Add(new ConvertedCellReference(originalCellFormId, obACHR.FormId, mwREFR)); //for tracking
 
                         mwCELL.REFR.Add(mwREFR);

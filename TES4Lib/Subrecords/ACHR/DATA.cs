@@ -10,9 +10,9 @@ namespace TES4Lib.Subrecords.ACHR
     /// </summary>
     public class DATA : Subrecord
     {
-        public float LocX { get; set; }
-        public float LocY { get; set; }
-        public float LocZ { get; set; }
+        public float XPos { get; set; }
+        public float YPos { get; set; }
+        public float ZPos { get; set; }
         public float RotX { get; set; }
         public float RotY { get; set; }
         public float RotZ { get; set; }
@@ -21,9 +21,9 @@ namespace TES4Lib.Subrecords.ACHR
         public DATA(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            LocX = reader.ReadBytes<float>(base.Data);
-            LocY = reader.ReadBytes<float>(base.Data);
-            LocZ = reader.ReadBytes<float>(base.Data);
+            XPos = reader.ReadBytes<float>(base.Data);
+            YPos = reader.ReadBytes<float>(base.Data);
+            ZPos = reader.ReadBytes<float>(base.Data);
             RotX = reader.ReadBytes<float>(base.Data);
             RotY = reader.ReadBytes<float>(base.Data);
             RotZ = reader.ReadBytes<float>(base.Data);

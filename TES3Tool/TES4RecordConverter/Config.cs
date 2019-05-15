@@ -88,7 +88,7 @@ namespace TES3Tool
                 {"000191C0","Orc"},
                 {"00000D43","Redguard"},
                 {"000223C8","Wood Elf"},
-                //{"00000019","Vampire Race"},
+                {"00000019","Imperial"},//oblivion vampire
                 //{"0005308E","Sheogorath"},
                 //{"0001208F","Golden Saint"},
                 //{"0001208E","Dark Seducer"},

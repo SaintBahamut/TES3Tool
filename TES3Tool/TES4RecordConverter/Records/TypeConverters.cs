@@ -556,6 +556,31 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
         }
 
+        public static TES3Lib.Enums.Attribute CastActorValueToAttributeMW(TES4Lib.Enums.ActorValue actorValue)
+        {
+            switch (actorValue)
+            {
+                case ActorValue.Strength:
+                    return TES3Lib.Enums.Attribute.Strength;
+                case ActorValue.Intelligence:
+                    return TES3Lib.Enums.Attribute.Intelligence;
+                case ActorValue.Willpower:
+                    return TES3Lib.Enums.Attribute.Willpower;
+                case ActorValue.Agility:
+                    return TES3Lib.Enums.Attribute.Agility;
+                case ActorValue.Speed:
+                    return TES3Lib.Enums.Attribute.Speed;
+                case ActorValue.Endurance:
+                    return TES3Lib.Enums.Attribute.Endurance;
+                case ActorValue.Personality:
+                    return TES3Lib.Enums.Attribute.Personality;
+                case ActorValue.Luck:
+                    return TES3Lib.Enums.Attribute.Luck;
+                default:
+                    return TES3Lib.Enums.Attribute.Strength;             
+            }
+        }
+
         public static TES3Lib.Enums.Skill CastSkillToMW(TES4Lib.Enums.Skill skill)
         {
             var rnd = new Random(DateTime.Now.Millisecond).Next(0, 2);
@@ -794,6 +819,6 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
         }
 
-       
+
     }
 }

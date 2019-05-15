@@ -1,14 +1,20 @@
-﻿using TES3Lib.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TES3Lib.Base;
 using TES3Lib.Enums;
+using TES3Lib.Enums.Flags;
 using Utility;
+using Attribute = TES3Lib.Enums.Attribute;
 
 namespace TES3Lib.Subrecords.CLAS
 {
     public class CLDT : Subrecord
     {
-        public Attribute Attribute1 { get; set; }
+        public Attribute PrimaryAttribute1 { get; set; }
 
-        public Attribute Attribute2 { get; set; }
+        public Attribute PrimaryAttribute2 { get; set; }
 
         public Specialization Specialization { get; set; }
 
@@ -38,28 +44,7 @@ namespace TES3Lib.Subrecords.CLAS
         /// </summary>
         public int IsPlayable { get; set; }
 
-        /// <summary>
-        /// NPC Service  autocalc flags
-        /// 0x00001 = Weapon
-		///	0x00002 = Armor
-		///	0x00004 = Clothing
-		///	0x00008 = Books
-		///	0x00010 = Ingrediant
-		///	0x00020 = Picks
-		///	0x00040 = Probes
-		///	0x00080 = Lights
-		///	0x00100 = Apparatus
-		///	0x00200 = Repair
-		///	0x00400 = Misc
-		///	0x00800 = Spells
-		///	0x01000 = Magic Items
-		///	0x02000 = Potions
-		///	0x04000 = Training
-		///	0x08000 = Spellmaking
-		///	0x10000 = Enchanting
-		///	0x20000 = Repair Item
-        /// </summary>
-        public int AutoCalcFlags { get; set; }
+        public HashSet<ServicesFlag> Services { get; set; }
 
         public CLDT()
         {
@@ -68,8 +53,9 @@ namespace TES3Lib.Subrecords.CLAS
         public CLDT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Attribute1 = (Attribute)reader.ReadBytes<int>(base.Data);
-            Attribute2 = (Attribute)reader.ReadBytes<int>(base.Data);
+            PrimaryAttribute1 = (Attribute)reader.ReadBytes<int>(base.Data);
+            PrimaryAttribute2 = (Attribute)reader.ReadBytes<int>(base.Data);
+            Specialization = (Specialization)reader.ReadBytes<int>(base.Data);
             Minor1 = (Skill)reader.ReadBytes<int>(base.Data);
             Major1 = (Skill)reader.ReadBytes<int>(base.Data);
             Minor2 = (Skill)reader.ReadBytes<int>(base.Data);
@@ -81,49 +67,33 @@ namespace TES3Lib.Subrecords.CLAS
             Minor5 = (Skill)reader.ReadBytes<int>(base.Data);
             Major5 = (Skill)reader.ReadBytes<int>(base.Data);
             IsPlayable = reader.ReadBytes<int>(base.Data);
-            AutoCalcFlags = reader.ReadBytes<int>(base.Data);
+            Services = reader.ReadFlagBytes<ServicesFlag>(base.Data);
         }
 
-        #region flags handling
-        //flag checkers
-        public bool IsDealingWeapons() => 0 != (AutoCalcFlags & 0x00001);
-        public bool IsDealingArmor() => 0 != (AutoCalcFlags & 0x00002);
-        public bool IsDealingClothing() => 0 != (AutoCalcFlags & 0x00004);
-        public bool IsDealingBooks() => 0 != (AutoCalcFlags & 0x00008);
-        public bool IsDealingIngredients() => 0 != (AutoCalcFlags & 0x00010);
-        public bool IsDealingPicks() => 0 != (AutoCalcFlags & 0x00020);
-        public bool IsDealingProbes() => 0 != (AutoCalcFlags & 0x00040);
-        public bool IsDealingLights() => 0 != (AutoCalcFlags & 0x00080);
-        public bool IsDealingApparatus() => 0 != (AutoCalcFlags & 0x00100);
-        public bool IsDealingRepair() => 0 != (AutoCalcFlags & 0x00200);
-        public bool IsDealingMisc() => 0 != (AutoCalcFlags & 0x00400);
-        public bool IsDealingSpells() => 0 != (AutoCalcFlags & 0x00800);
-        public bool IsDealingMagicItems() => 0 != (AutoCalcFlags & 0x01000);
-        public bool IsDealingPotions() => 0 != (AutoCalcFlags & 0x02000);
-        public bool IsTrainer() => 0 != (AutoCalcFlags & 0x04000);
-        public bool IsSpellmaker() => 0 != (AutoCalcFlags & 0x08000);
-        public bool IsEnchanter() => 0 != (AutoCalcFlags & 0x10000);
-        public bool IsRepairer() => 0 != (AutoCalcFlags & 0x20000);
+        public override byte[] SerializeSubrecord()
+        {
+            List<byte> data = new List<byte>();
 
-        //flag setters TODO: make idempotent
-        public void SetDealingWeapons() => AutoCalcFlags = (AutoCalcFlags & 0x00001);
-        public void SetDealingArmor() => AutoCalcFlags = (AutoCalcFlags & 0x00002);
-        public void SetDealingClothing() => AutoCalcFlags = (AutoCalcFlags & 0x00004);
-        public void SetDealingBooks() => AutoCalcFlags = (AutoCalcFlags & 0x00008);
-        public void SetDealingIngredients() => AutoCalcFlags = (AutoCalcFlags & 0x00010);
-        public void SetDealingPicks() => AutoCalcFlags = (AutoCalcFlags & 0x00020);
-        public void SetDealingProbes() => AutoCalcFlags = (AutoCalcFlags & 0x00040);
-        public void SetDealingLights() => AutoCalcFlags = (AutoCalcFlags & 0x00080);
-        public void SetDealingApparatus() => AutoCalcFlags = (AutoCalcFlags & 0x00100);
-        public void SetDealingRepair() => AutoCalcFlags = (AutoCalcFlags & 0x00200);
-        public void SetDealingMisc() => AutoCalcFlags = (AutoCalcFlags & 0x00400);
-        public void SetDealingSpells() => AutoCalcFlags = (AutoCalcFlags & 0x00800);
-        public void SetDealingMagicItems() => AutoCalcFlags = (AutoCalcFlags & 0x01000);
-        public void SetDealingPotions() => AutoCalcFlags = (AutoCalcFlags & 0x02000);
-        public void SetTrainer() => AutoCalcFlags = (AutoCalcFlags & 0x04000);
-        public void SetSpellmaker() => AutoCalcFlags = (AutoCalcFlags & 0x08000);
-        public void SetEnchanter() => AutoCalcFlags = (AutoCalcFlags & 0x10000);
-        public void SetRepairer() => AutoCalcFlags = (AutoCalcFlags & 0x20000);
-        #endregion
+            data.AddRange(ByteWriter.ToBytes(PrimaryAttribute1, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(PrimaryAttribute2, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Specialization, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Minor1, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Major1, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Minor2, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Major2, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Minor3, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Major3, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Minor4, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Major4, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Minor5, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(Major5, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(IsPlayable, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(SerializeFlag(Services), typeof(int)));
+
+            var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
+               .Concat(BitConverter.GetBytes(data.Count()))
+               .Concat(data).ToArray();
+            return serialized;
+        }
     }
 }

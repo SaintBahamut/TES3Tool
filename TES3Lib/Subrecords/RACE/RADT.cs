@@ -79,8 +79,8 @@ namespace TES3Lib.Subrecords.RACE
 
             for (int i = 0; i < 7; i++)
             {
-                data.AddRange(ByteWriter.ToBytes(SkillBonuses[i].Skill, typeof(Skill)));
-                data.AddRange(ByteWriter.ToBytes(SkillBonuses[i].Bonus, typeof(int)));
+                data.AddRange(SkillBonuses[i].Skill.Equals(Skill.Unused) ? new byte[] { 255, 255, 255, 255 } : ByteWriter.ToBytes((int)SkillBonuses[i].Skill, typeof(int)));
+                data.AddRange(ByteWriter.ToBytes((int)SkillBonuses[i].Bonus, typeof(int)));
             }
             data.AddRange(ByteWriter.ToBytes(Male.Strength, typeof(int)));
             data.AddRange(ByteWriter.ToBytes(Female.Strength, typeof(int)));
