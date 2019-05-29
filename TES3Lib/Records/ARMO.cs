@@ -81,7 +81,7 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} either not implemented or borked {e}");
                     break;
                 }
             }
@@ -123,6 +123,11 @@ namespace TES3Lib.Records
                 .Concat(BitConverter.GetBytes(Header))
                 .Concat(BitConverter.GetBytes(SerializeFlag()))
                 .Concat(data).ToArray();
+        }
+
+        public override string GetEditorId()
+        {
+            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

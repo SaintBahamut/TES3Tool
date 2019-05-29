@@ -123,5 +123,17 @@ namespace TES3Lib.Records
             }
             return this.DATA.GridX.Equals(cell.DATA.GridX) && this.DATA.GridY.Equals(cell.DATA.GridY);
         }
+
+        public override string GetEditorId()
+        {
+            if (DATA.Flags.Contains(CellFlag.IsInteriorCell))
+            {
+                return !IsNull(NAME) ? NAME.EditorId : null;
+            }
+            else
+            {
+                return $"({DATA.GridX},{DATA.GridY})";
+            }
+        }
     }
 }

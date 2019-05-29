@@ -8,6 +8,7 @@ using TES3Lib.Enums.Flags;
 using TES3Lib.Subrecords.LEVC;
 using TES3Lib.Subrecords.Shared;
 using Utility;
+using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -115,6 +116,11 @@ namespace TES3Lib.Records
                 .Concat(BitConverter.GetBytes(Header))
                 .Concat(BitConverter.GetBytes(flagSerialized))
                 .Concat(data).ToArray();
+        }
+
+        public override string GetEditorId()
+        {
+            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

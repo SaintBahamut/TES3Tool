@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -66,6 +67,11 @@ namespace TES3Lib.Records
                     break;
                 }
             }
+        }
+
+        public override string GetEditorId()
+        {
+            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

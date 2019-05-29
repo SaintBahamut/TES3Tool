@@ -1,6 +1,7 @@
 ﻿using TES3Lib.Base;
 using TES3Lib.Subrecords.Shared;
 using TES3Lib.Subrecords.MGEF;
+using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -35,6 +36,11 @@ namespace TES3Lib.Records
         public MGEF(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
+        }
+
+        public override string GetEditorId()
+        {
+            return !IsNull(INDX) ? $"MagicEffect#{INDX.EffectId}" : null;
         }
     }
 }

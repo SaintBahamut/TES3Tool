@@ -2,6 +2,7 @@
 using TES3Lib.Subrecords.Shared;
 using TES3Lib.Subrecords.GLOB;
 using FNAM = TES3Lib.Subrecords.GLOB.FNAM;
+using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -23,6 +24,11 @@ namespace TES3Lib.Records
         public GLOB(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
+        }
+
+        public override string GetEditorId()
+        {
+            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

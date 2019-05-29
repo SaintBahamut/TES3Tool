@@ -179,5 +179,10 @@ namespace TES3Lib.Base
         }
 
         protected bool IsEndOfData(ByteReader reader) => (reader.offset == Data.Length);
+
+        public virtual string GetEditorId()
+        {
+            return null;
+        }
     }
 }

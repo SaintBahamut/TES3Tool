@@ -1,6 +1,7 @@
 ﻿using TES3Lib.Base;
 using TES3Lib.Subrecords.Shared;
 using TES3Lib.Subrecords.CLAS;
+using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -21,6 +22,11 @@ namespace TES3Lib.Records
         public CLAS(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
+        }
+
+        public override string GetEditorId()
+        {
+            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }
