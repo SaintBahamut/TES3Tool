@@ -47,7 +47,7 @@ namespace TES3Lib.Subrecords.FACT
             FavoredSkills = new Skill[6];
             for (int i = 0; i < FavoredSkills.Length; i++)
             {
-                FavoredSkills[i] = (Skill)reader.ReadBytes<int>(base.Data);
+                FavoredSkills[i] = (Skill)reader.ReadBytes<int>(rawData, sizeof(int));
             }
 
             Unknown = reader.ReadBytes<int>(base.Data);

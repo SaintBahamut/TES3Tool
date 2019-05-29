@@ -7,10 +7,10 @@ namespace TES3Lib.Records
     public class DOOR : Record
     {
         public NAME NAME { get; set; }
-        public FNAM FNAM { get; set; }
         public MODL MODL { get; set; }
-        public SCIP SCIP { get; set; }
+        public FNAM FNAM { get; set; }
         public SCRI SCRI { get; set; }
+        public SCIP SCIP { get; set; }
 
         /// <summary>
         /// Door open sound

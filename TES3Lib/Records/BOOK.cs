@@ -18,9 +18,9 @@ namespace TES3Lib.Records
 
         public BKDT BKDT { get; set; }
 
-        public ITEX ITEX { get; set; }
-
         public SCRI SCRI { get; set; }
+
+        public ITEX ITEX { get; set; }
 
         public TEXT TEXT { get; set; }
 

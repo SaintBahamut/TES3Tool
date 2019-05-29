@@ -19,6 +19,8 @@ namespace TES3Lib.Records
 
         public FNAM FNAM { get; set; }
 
+        public SCRI SCRI { get; set; }
+
         public AODT AODT { get; set; }
 
         public ITEX ITEX { get; set; }
@@ -29,8 +31,6 @@ namespace TES3Lib.Records
         /// CNAM - female body part
         /// </summary>
         public List<(INDX INDX, BNAM BNAM, CNAM CNAM)> BPSL { get; set; }
-
-        public SCRI SCRI { get; set; }
 
         public ENAM ENAM { get; set; }
 

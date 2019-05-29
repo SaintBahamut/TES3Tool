@@ -13,7 +13,7 @@ namespace TES3Lib.Records
 
         public SNAM SNAM { get; set; }
 
-        public CNAM CAME { get; set; }
+        public CNAM CNAM { get; set; }
 
         public SNDG(byte[] rawData) : base(rawData)
         {

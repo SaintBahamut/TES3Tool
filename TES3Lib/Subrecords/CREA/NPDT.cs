@@ -79,7 +79,7 @@ namespace TES3Lib.Subrecords.CREA
             Combat = reader.ReadBytes<int>(base.Data);
             Magic = reader.ReadBytes<int>(base.Data);
             Stealth = reader.ReadBytes<int>(base.Data);
-            AttackMax1 = reader.ReadBytes<int>(base.Data);
+            AttackMin1 = reader.ReadBytes<int>(base.Data);
             AttackMax1 = reader.ReadBytes<int>(base.Data);
             AttackMin2 = reader.ReadBytes<int>(base.Data);
             AttackMax2 = reader.ReadBytes<int>(base.Data);

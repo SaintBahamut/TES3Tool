@@ -38,10 +38,9 @@ namespace TES3Lib.Subrecords.SKILL
                                .ToList();
 
             List<byte> data = new List<byte>();
-            data.AddRange(ByteWriter.ToBytes(Attribute, typeof(Attribute)));
+            data.AddRange(ByteWriter.ToBytes(Attribute, typeof(int)));
             data.AddRange(ByteWriter.ToBytes(Specialization, typeof(Specialization)));
-
-            UseValue = new float[4];
+            
             for (int i = 0; i < UseValue.Length; i++)
             {
                 data.AddRange(ByteWriter.ToBytes(UseValue[i], typeof(float)));
