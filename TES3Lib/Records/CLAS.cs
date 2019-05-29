@@ -24,9 +24,9 @@ namespace TES3Lib.Records
             BuildSubrecords();
         }
 
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
-        }
+        //public override string GetEditorId()
+        //{
+        //    return !IsNull(NAME) ? NAME.EditorId : null;
+        //}
     }
 }

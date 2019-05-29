@@ -82,7 +82,7 @@ namespace TES3Lib.Records
                 data.AddRange(subrecord.SerializeSubrecord());
             }
 
-            if (IsNull(Masters) && Masters.Count > 0)
+            if (!IsNull(Masters) && Masters.Count > 0)
             {
                 foreach (var master in Masters)
                 {
