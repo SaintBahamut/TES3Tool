@@ -117,12 +117,6 @@ namespace TES3Lib.Base
                     break;
                 }
             }
-
-            var id = this.GetEditorId();
-            if (!IsNull(id))
-            {
-                Console.WriteLine(id);
-            }
         }
 
         public virtual byte[] SerializeRecord()
