@@ -363,6 +363,11 @@ namespace TES3Tool.TES4RecordConverter
                         mwREFR = ConvertREFR(obREFR, BaseId, mwCELL.NAM0.ReferenceCount, mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell));
                         CellReferences.Add(new ConvertedCellReference(originalCellFormId, obREFR.FormId, mwREFR)); //for tracking
 
+                        // disable exterior statics as requested, remove when SI mod will be finished
+                        if (!mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell))
+                            if (ConvertedRecords.ContainsKey("STAT") && ConvertedRecords["STAT"].Any(x => x.EditorId.Equals(BaseId)))
+                                continue;
+
                         mwCELL.REFR.Add(mwREFR);
                         mwCELL.NAM0.ReferenceCount++;
                         continue;
@@ -453,15 +458,10 @@ namespace TES3Tool.TES4RecordConverter
                     ESMFlag = 0,
                     Version = 1.3f,
                 },
-                MAST = new TES3Lib.Subrecords.TES3.MAST
-                {
-                    Filename = "Morrowind.esm\0",
-                },
-                DATA = new TES3Lib.Subrecords.TES3.DATA
-                {
-                    MasterDataSize = 6666 //should not break but fix that later
-                }
             };
+            header.Masters = new List<(TES3Lib.Subrecords.TES3.MAST MAST, TES3Lib.Subrecords.TES3.DATA DATA)>();
+            header.Masters.Add((new TES3Lib.Subrecords.TES3.MAST { Filename = "Morrowind.esm\0" }, new TES3Lib.Subrecords.TES3.DATA { MasterDataSize = 6666 }));
+
             return header;
         }
 

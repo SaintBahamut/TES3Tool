@@ -8,9 +8,13 @@ using TES3Lib.Subrecords.REFR;
 using Utility;
 using System.Collections;
 using TES3Lib.Enums.Flags;
+using TES3Lib.Subrecords.Shared;
 
 namespace TES3Lib.Base
 {
+    /// <summary>
+    /// Base class for TES3 Record
+    /// </summary>
     abstract public class Record
     {
         #region Fields
@@ -62,6 +66,10 @@ namespace TES3Lib.Base
             Flags = new HashSet<RecordFlag>();
         }
 
+        /// <summary>
+        /// Reads record from raw bytes
+        /// </summary>
+        /// <param name="rawData">Byte array of record data</param>
         public Record(byte[] rawData)
         {
             RawData = rawData;
@@ -109,6 +117,12 @@ namespace TES3Lib.Base
                     break;
                 }
             }
+
+            var id = this.GetEditorId();
+            if (!IsNull(id))
+            {
+                Console.WriteLine(id);
+            }
         }
 
         public virtual byte[] SerializeRecord()
@@ -142,7 +156,7 @@ namespace TES3Lib.Base
                     continue;
                 }
                 var subrecord = (Subrecord)property.GetValue(this);
-                if (subrecord == null) continue;
+                if (IsNull(subrecord)) continue;
                 data.AddRange(subrecord.SerializeSubrecord());
             }
 
@@ -180,9 +194,36 @@ namespace TES3Lib.Base
 
         protected bool IsEndOfData(ByteReader reader) => (reader.offset == Data.Length);
 
+        /// <summary>
+        /// Get EditorId of record if exists
+        /// </summary>
         public virtual string GetEditorId()
         {
+            PropertyInfo name = this.GetType().GetProperty("NAME");
+            if (!IsNull(name))
+            {
+                var NAME = (NAME)name.GetValue(this);
+                return NAME.EditorId;
+            }
+
             return null;
+        }
+
+        /// <summary>
+        /// Compares EditorId of records if NAME subrecord is present
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            PropertyInfo name = this.GetType().GetProperty("NAME");
+            if (!IsNull(name))
+            {
+                var NAME1 = (NAME)name.GetValue(this);
+                var NAME2 = (NAME)obj.GetType().GetProperty("NAME").GetValue(obj);
+
+                return NAME1.EditorId.Equals(NAME2.EditorId);
+            }
+
+            return base.Equals(obj);
         }
     }
 }

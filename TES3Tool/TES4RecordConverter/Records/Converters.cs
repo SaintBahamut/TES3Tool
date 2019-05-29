@@ -1347,8 +1347,6 @@ namespace TES3Tool.TES4RecordConverter.Records
             //    mwREFR.DELE = new TES3Lib.Subrecords.REFR.DELE();
             //}
 
-            // TODO:if planning exterior support this needs to be modified, because it expects only interiors to be present, so if
-            // no cell found, door leads to exterior space
             if (!IsNull(obREFR.XTEL))
             {
                 mwREFR.DODT = new TES3Lib.Subrecords.Shared.DODT
