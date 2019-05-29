@@ -363,6 +363,11 @@ namespace TES3Tool.TES4RecordConverter
                         mwREFR = ConvertREFR(obREFR, BaseId, mwCELL.NAM0.ReferenceCount, mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell));
                         CellReferences.Add(new ConvertedCellReference(originalCellFormId, obREFR.FormId, mwREFR)); //for tracking
 
+                        // disable exterior statics as requested, remove when SI mod will be finished
+                        if (!mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell))
+                            if (ConvertedRecords.ContainsKey("STAT") && ConvertedRecords["STAT"].Any(x => x.EditorId.Equals(BaseId)))
+                                continue;
+
                         mwCELL.REFR.Add(mwREFR);
                         mwCELL.NAM0.ReferenceCount++;
                         continue;

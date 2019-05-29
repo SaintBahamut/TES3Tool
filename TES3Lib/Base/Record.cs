@@ -12,6 +12,9 @@ using TES3Lib.Subrecords.Shared;
 
 namespace TES3Lib.Base
 {
+    /// <summary>
+    /// Base class for TES3 Record
+    /// </summary>
     abstract public class Record
     {
         #region Fields
@@ -63,6 +66,10 @@ namespace TES3Lib.Base
             Flags = new HashSet<RecordFlag>();
         }
 
+        /// <summary>
+        /// Reads record from raw bytes
+        /// </summary>
+        /// <param name="rawData">Byte array of record data</param>
         public Record(byte[] rawData)
         {
             RawData = rawData;
@@ -212,8 +219,10 @@ namespace TES3Lib.Base
             {
                 var NAME1 = (NAME)name.GetValue(this);
                 var NAME2 = (NAME)obj.GetType().GetProperty("NAME").GetValue(obj);
+
                 return NAME1.EditorId.Equals(NAME2.EditorId);
             }
+
             return base.Equals(obj);
         }
     }
