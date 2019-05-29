@@ -14,6 +14,7 @@ namespace TES3Lib
     {
         const int HeaderSize = 16;
         public List<Record> Records { get; set; }
+        public string Path { get; set; }
 
         public TES3()
         {
@@ -24,7 +25,7 @@ namespace TES3Lib
         {
             if (filteredGrops == null) filteredGrops = new List<string>(); 
        
-            var TES3 = new TES3();
+            var TES3 = new TES3() { Path = filePath };
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
         
             var header = new byte[HeaderSize];
