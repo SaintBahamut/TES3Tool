@@ -17,6 +17,7 @@ namespace TES3Lib.Records
         public ITEX ITEX { get; set; }
         public MODL MODL { get; set; }
         public SNAM SNAM { get; set; }
+        public SCRI SCRI { get; set; }
 
         public LIGH()
         {

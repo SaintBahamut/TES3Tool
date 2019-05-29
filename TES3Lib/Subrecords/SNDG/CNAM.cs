@@ -2,18 +2,18 @@
 using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.ARMO
+namespace TES3Lib.Subrecords.SNDG
 {
     /// <summary>
     /// Female part name
     /// </summary>
-    [DebuggerDisplay("{FemalePartName}")]
+    [DebuggerDisplay("{CreatureName}")]
     public class CNAM : Subrecord
     {
         /// <summary>
         /// Female tagged bodpart id
         /// </summary>
-        public string FemalePartName { get; set; }
+        public string CreatureName { get; set; }
 
         public CNAM()
         {
@@ -23,7 +23,7 @@ namespace TES3Lib.Subrecords.ARMO
         public CNAM(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            FemalePartName = reader.ReadBytes<string>(base.Data, base.Size);
+            CreatureName = reader.ReadBytes<string>(base.Data, base.Size);
         }
     }
 }
