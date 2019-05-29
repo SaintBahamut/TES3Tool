@@ -51,9 +51,6 @@ namespace TES3Lib
                 int index = TES3.Records.Count - 1;
                 tasks.Add(new Task(() => RecordBuildTask(name, data, TES3.Records, index)));
                 tasks[index].Start();
-               
-
-                Console.WriteLine(name);
             }
 
             Task.WaitAll(tasks.ToArray());

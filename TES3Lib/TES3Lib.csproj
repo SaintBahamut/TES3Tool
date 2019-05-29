@@ -167,6 +167,8 @@
     <Compile Include="Subrecords\REFR\CNAM.cs" />
     <Compile Include="Subrecords\REFR\INDX.cs" />
     <Compile Include="Subrecords\REFR\XCHG.cs" />
+    <Compile Include="Subrecords\SNDG\CNAM.cs" />
+    <Compile Include="Subrecords\SNDG\DATA.cs" />
     <Compile Include="Subrecords\_Shared\ANAM.cs" />
     <Compile Include="Subrecords\_Shared\BNAM.cs" />
     <Compile Include="Subrecords\_Shared\NNAM.cs" />

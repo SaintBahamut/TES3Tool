@@ -39,6 +39,8 @@ namespace TES3Lib.Records
         public override void BuildSubrecords()
         {
             var reader = new ByteReader();
+
+            NPCO = new List<NPCO>();
  
             while (Data.Length != reader.offset)
             {

@@ -11,13 +11,13 @@ namespace TES3Lib.Records
 
         public MODL MODL { get; set; }
 
+        public TEXT TEXT { get; set; }
+
         public FNAM FNAM { get; set; }
 
         public ALDT ALDT { get; set; }
 
         public List<ENAM> ENAM { get; set; }
-
-        public TEXT TEXT { get; set; }
 
         public SCRI SCRI { get; set; }
 

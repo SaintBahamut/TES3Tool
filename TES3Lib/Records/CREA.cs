@@ -40,15 +40,15 @@ namespace TES3Lib.Records
 
         public CNAM CNAM { get; set; }
 
-        public List<AI_W> AI_W { get; set; }
+        public AI_W AI_W { get; set; }
 
-        public List<AI_T> AI_T { get; set; }
+        public AI_T AI_T { get; set; }
 
-        public List<AI_F> AI_F { get; set; }
+        public AI_F AI_F { get; set; }
 
-        public List<AI_E> AI_E { get; set; }
+        public AI_E AI_E { get; set; }
 
-        public List<AI_A> AI_A { get; set; }
+        public AI_A AI_A { get; set; }
 
         public List<(DODT coordinates, DNAM cell)> TravelService = new List<(DODT coordinates, DNAM cell)>();
 
@@ -76,6 +76,7 @@ namespace TES3Lib.Records
             {
                 var subrecordName = GetRecordName(reader);
                 var subrecordSize = GetRecordSize(reader);
+
                 try
                 {
                     if (subrecordName.Equals("DODT"))
