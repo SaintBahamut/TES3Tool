@@ -203,7 +203,7 @@ namespace TES3Lib.Base
         }
 
         /// <summary>
-        /// Compares records EditorId of records if NAME subrecord is present
+        /// Compares EditorId of records if NAME subrecord is present
         /// </summary>
         public override bool Equals(object obj)
         {
