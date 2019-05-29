@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TES3Lib.Base;
 using TES3Lib.Subrecords.RACE;
 using TES3Lib.Subrecords.Shared;
-using Utility;
+using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -44,6 +44,11 @@ namespace TES3Lib.Records
         public RACE(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
+        }
+
+        public override string GetEditorId()
+        {
+            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

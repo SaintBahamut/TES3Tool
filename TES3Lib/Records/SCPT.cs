@@ -1,5 +1,6 @@
 ﻿using TES3Lib.Base;
 using TES3Lib.Subrecords.SCPT;
+using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -24,6 +25,11 @@ namespace TES3Lib.Records
         public SCPT(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
+        }
+
+        public override string GetEditorId()
+        {
+            return !IsNull(SCHD) ? SCHD.Name : null;
         }
     }
 }

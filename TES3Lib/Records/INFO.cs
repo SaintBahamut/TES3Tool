@@ -4,6 +4,7 @@ using TES3Lib.Subrecords.INFO;
 using TES3Lib.Subrecords.NPC_;
 using TES3Lib.Subrecords.Shared;
 using NNAM = TES3Lib.Subrecords.INFO.NNAM;
+using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -108,8 +109,13 @@ namespace TES3Lib.Records
             BuildSubrecords();
         }
 
+        public override string GetEditorId()
+        {
+            return !IsNull(NAME) ? NAME.EditorId : null;
+        }
+
         // TODO deserializer/serializer
 
- 
+
     }
 }
