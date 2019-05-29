@@ -24,14 +24,19 @@ namespace TES3Lib.Records
 
         public NAME NAME { get; set; }
 
-        public FNAM FNAM { get; set; }
-
         public MODL MODL { get; set; }
+
+        public FNAM FNAM { get; set; }
 
         /// <summary>
         /// Race name: required even if empty
         /// </summary>
         public RNAM RNAM { get; set; }
+
+        /// <summary>
+        /// Class name
+        /// </summary>
+        public CNAM CNAM { get; set; }
 
         /// <summary>
         /// Faction name: required even if empty
@@ -42,11 +47,6 @@ namespace TES3Lib.Records
         /// Head model: required even if empty
         /// </summary>
         public BNAM BNAM { get; set; }
-        
-        /// <summary>
-        /// Class name
-        /// </summary>
-        public CNAM CNAM { get; set; }
 
         /// <summary>
         /// Hair model: required even if empty

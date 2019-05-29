@@ -11,7 +11,7 @@ namespace TES3Lib.Subrecords.MGEF
         public INDX(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            EffectId = (MagicEffect)reader.ReadBytes<int>(base.Data);
+            EffectId = (MagicEffect)reader.ReadBytes<short>(base.Data);
         }
     }
 }

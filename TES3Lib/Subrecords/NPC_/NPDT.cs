@@ -97,9 +97,8 @@ namespace TES3Lib.Subrecords.NPC_
 
         public override byte[] SerializeSubrecord()
         {
-            
             List<byte> data = new List<byte>();
-            if(this.Size.Equals(12))
+            if(Skills == null)
             {
                 data = this.Data.ToList();
             }

@@ -8,7 +8,7 @@ namespace Utility
         public static byte[] ToBytes(object data, Type type)
         {
             if (type == typeof(byte[])) return (byte[])data;
-            if (type == typeof(byte)) return new byte[] { (byte)data };
+            if (type == typeof(byte)) return new byte[] { Convert.ToByte(data) };
             if (type == typeof(bool)) return new byte[] { (byte)data };
             if (type == typeof(int)) return BitConverter.GetBytes(Convert.ToInt32(data));
             if (type == typeof(float)) return BitConverter.GetBytes((float)data);

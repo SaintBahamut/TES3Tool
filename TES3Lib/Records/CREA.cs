@@ -24,21 +24,23 @@ namespace TES3Lib.Records
 
         public MODL MODL { get; set; }
 
+        public CNAM CNAM { get; set; }
+
         public FNAM FNAM { get; set; }
+
+        public SCRI SCRI { get; set; }
 
         public NPDT NPDT { get; set; }
 
         public FLAG FLAG { get; set; }
 
-        public SCRI SCRI { get; set; }
+        public XSCL XSCL { get; set; }
 
         public List<NPCO> NPCO { get; set; }
 
         public List<NPCS> NPCS { get; set; }
 
         public AIDT AIDT { get; set; }
-
-        public CNAM CNAM { get; set; }
 
         public AI_W AI_W { get; set; }
 
@@ -51,8 +53,6 @@ namespace TES3Lib.Records
         public AI_A AI_A { get; set; }
 
         public List<(DODT coordinates, DNAM cell)> TravelService = new List<(DODT coordinates, DNAM cell)>();
-
-        public XSCL XSCL { get; set; }
 
         public CREA()
         {
