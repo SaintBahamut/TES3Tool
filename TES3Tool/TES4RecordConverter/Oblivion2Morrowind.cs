@@ -453,15 +453,10 @@ namespace TES3Tool.TES4RecordConverter
                     ESMFlag = 0,
                     Version = 1.3f,
                 },
-                MAST = new TES3Lib.Subrecords.TES3.MAST
-                {
-                    Filename = "Morrowind.esm\0",
-                },
-                DATA = new TES3Lib.Subrecords.TES3.DATA
-                {
-                    MasterDataSize = 6666 //should not break but fix that later
-                }
             };
+            header.Masters = new List<(TES3Lib.Subrecords.TES3.MAST MAST, TES3Lib.Subrecords.TES3.DATA DATA)>();
+            header.Masters.Add((new TES3Lib.Subrecords.TES3.MAST { Filename = "Morrowind.esm\0" }, new TES3Lib.Subrecords.TES3.DATA { MasterDataSize = 6666 }));
+
             return header;
         }
 
