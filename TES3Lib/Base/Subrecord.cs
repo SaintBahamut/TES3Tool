@@ -108,5 +108,27 @@ namespace TES3Lib.Base
 
             return flag;
         }
+
+        public override bool Equals(object obj)
+        {
+            var properties = GetType()
+                .GetProperties(BindingFlags.Public |
+                               BindingFlags.Instance |
+                               BindingFlags.DeclaredOnly)
+                               .OrderBy(x => x.MetadataToken)
+                               .ToList();
+
+            foreach (PropertyInfo property in properties)
+            {
+                var thisValue = property.GetValue(this);
+                var objValue = obj != null ? property.GetValue(obj) : null;
+                if (!thisValue.Equals(objValue))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
