@@ -12,27 +12,55 @@ using TES3Lib.Subrecords.Shared;
 
 namespace TES3Lib.Records
 {
+    /// <summary>
+    /// Cell record
+    /// </summary>
     public class CELL : Record
     {
         /// <summary>
-        /// Cell name
+        /// EditorId (Cell name)
         /// </summary>
         public NAME NAME { get; set; }
 
+        /// <summary>
+        /// Cell grid data and flags
+        /// </summary>
         public DATA DATA { get; set; }
 
+        /// <summary>
+        /// Cell region
+        /// </summary>
         public RGNN RGNN { get; set; }
 
+        /// <summary>
+        /// Water level (?)
+        /// </summary>
         public INTV INTV { get; set; }
 
+        /// <summary>
+        /// Number of references in cell
+        /// </summary>
         public NAM0 NAM0 { get; set; }
 
+        /// <summary>
+        /// Map color
+        /// Dont really know what this does
+        /// </summary>
         public NAM5 NAM5 { get; set; }
 
+        /// <summary>
+        /// Interior water level
+        /// </summary>
         public WHGT WHGT { get; set; }
 
+        /// <summary>
+        /// Light setting
+        /// </summary>
         public AMBI AMBI { get; set; }
 
+        /// <summary>
+        /// Cell references
+        /// </summary>
         public List<REFR> REFR { get; set; }
 
         public CELL()
@@ -74,7 +102,7 @@ namespace TES3Lib.Records
                     {
                         Console.WriteLine(NAME.EditorId);
                     }
-                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} either not implemented or borked {e}");
                     break;
                 }
             }

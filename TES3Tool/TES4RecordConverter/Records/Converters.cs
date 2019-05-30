@@ -6,8 +6,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using TES4Lib.Records;
-using TES3Lib.Enums;
-using TES4Lib.Enums;
 using TES3Lib.Enums.Flags;
 using TES4Lib.Enums.Flags;
 
@@ -619,7 +617,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     Type = CastClothingTypeToMW(obCLOT.BMDT.BodySlots),
                     Weight = obCLOT.DATA.Weight,
                     Value = (short)obCLOT.DATA.Value,
-                    EnchancmentPoints = 10,
+                    EnchancementPoints = 10,
                 }
             };
 
@@ -972,7 +970,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obFLOR.MODL.ModelPath, TES3Tool.Config.FLORPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obFLOR.FULL.DisplayName) },
                 CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = 0 },
-                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 0x0008 | 0x0001 | 0x0002 },
+                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = new HashSet<ContainerFlag> { ContainerFlag.Organic, ContainerFlag.Respawns, ContainerFlag.DefaultUnknown } },
                 NPCO = new List<TES3Lib.Subrecords.Shared.NPCO>()
             };
 
@@ -1032,7 +1030,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obCONT.MODL.ModelPath, Config.CONTPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obCONT.FULL) ? obCONT.FULL.DisplayName : "") },
                 CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = obCONT.DATA.Weight },
-                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = 8 }
+                FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = new HashSet<ContainerFlag> { ContainerFlag.DefaultUnknown } }
             };
 
             if (obCONT.CNTO.Count > 0)

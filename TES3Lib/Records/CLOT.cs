@@ -8,30 +8,57 @@ using TES3Lib.Subrecords.CLOT;
 using TES3Lib.Subrecords.Shared;
 using static Utility.Common;
 using Utility;
+using System.Diagnostics;
 
 namespace TES3Lib.Records
 {
+    /// <summary>
+    /// Clothing Record
+    /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class CLOT : Record
     {
+        /// <summary>
+        /// EditorId
+        /// </summary>
         public NAME NAME { get; set; }
 
+        /// <summary>
+        /// Model
+        /// </summary>
         public MODL MODL { get; set; }
 
+        /// <summary>
+        /// Display name
+        /// </summary>
         public FNAM FNAM { get; set; }
 
+        /// <summary>
+        /// Clothing properties
+        /// </summary>
         public CTDT CTDT { get; set; }
 
+        /// <summary>
+        /// Icon
+        /// </summary>
         public ITEX ITEX { get; set; }
 
         /// <summary>
+        /// Body parts used by cloth
         /// INDX - body part index
         /// BNAM - male mody part
         /// CNAM - female body part
         /// </summary>
         public List<(INDX INDX, BNAM BNAM, CNAM CNAM)> BPSL { get; set; }
 
+        /// <summary>
+        /// Enhancement
+        /// </summary>
         public ENAM ENAM { get; set; }
 
+        /// <summary>
+        /// Script
+        /// </summary>
         public SCRI SCRI { get; set; }
 
         public CLOT()

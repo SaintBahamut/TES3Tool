@@ -1,4 +1,6 @@
-﻿using TES3Lib.Base;
+﻿using System.Collections.Generic;
+using TES3Lib.Base;
+using TES3Lib.Enums.Flags;
 using Utility;
 
 namespace TES3Lib.Subrecords.CONT
@@ -8,22 +10,16 @@ namespace TES3Lib.Subrecords.CONT
     /// </summary>
     public class FLAG : Subrecord
     {
-        /// <summary>
-        ///	0x0001  = Organic
-        ///	0x0002	= Respawns, organic only
-        ///	0x0008	= Default, unknown
-        /// </summary>
-        public int Flags { get; set; }
+        public HashSet<ContainerFlag> Flags { get; set; }
 
         public FLAG()
         {
-
         }
 
         public FLAG(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Flags = reader.ReadBytes<int>(base.Data);
+            Flags = reader.ReadFlagBytes<ContainerFlag>(base.Data);
         }
     }
 }

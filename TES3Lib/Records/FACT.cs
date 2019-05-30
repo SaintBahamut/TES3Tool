@@ -9,25 +9,41 @@ using TES3Lib.Subrecords.Shared;
 using static Utility.Common;
 using Utility;
 using TES3Lib.Enums.Flags;
+using System.Diagnostics;
 
 namespace TES3Lib.Records
 {
+    /// <summary>
+    /// Faction Record
+    /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class FACT : Record
     {
         /// <summary>
-        /// Faction id
+        /// EditorId
         /// </summary>
         public NAME NAME { get; set; }
 
         /// <summary>
-        /// Faction name
+        /// Display name
         /// </summary>
         public FNAM FNAM { get; set; }
 
+        /// <summary>
+        /// List of ranks
+        /// </summary>
         public List<RNAM> RNAM { get; set; }
 
+        /// <summary>
+        /// Faction attributes and skills
+        /// </summary>
         public FADT FADT { get; set; }
 
+        /// <summary>
+        /// Faction Attitudes towards other factions
+        /// ANAM - EditorId
+        /// INTV - Disposition modifier
+        /// </summary>
         public List<(ANAM name, INTV value)> FactionsAttitudes = new List<(ANAM name, INTV value)>();
 
         public FACT()
@@ -61,25 +77,7 @@ namespace TES3Lib.Records
                         continue;
                     }
 
-                    //standard generic reader builder below, dont change
-                    PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);               
-                    if (subrecordProp.PropertyType.IsGenericType)
-                    {
-                        var listType = subrecordProp.PropertyType.GetGenericArguments()[0];
-                        if (IsNull(subrecordProp.GetValue(this)))
-                        {
-                            var IListRef = typeof(List<>);                   
-                            Type[] IListParam = { listType };
-                            object subRecordList = Activator.CreateInstance(IListRef.MakeGenericType(IListParam));
-                            subrecordProp.SetValue(this, subRecordList);
-                        }
-                        object sub = Activator.CreateInstance(listType, new object[] { reader.ReadBytes<byte[]>(Data, subrecordSize) });
-
-                        subrecordProp.GetValue(this).GetType().GetMethod("Add").Invoke(subrecordProp.GetValue(this), new[] { sub });
-                        continue;
-                    }
-                    object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { reader.ReadBytes<byte[]>(Data, subrecordSize) });
-                    subrecordProp.SetValue(this, subrecord);
+                    ReadSubrecords(reader, subrecordName, subrecordSize);
                 }
                 catch (Exception e)
                 {

@@ -5,7 +5,7 @@ using Utility;
 namespace TES3Lib.Subrecords.Shared
 {
     /// <summary>
-    /// Attached script id
+    /// Script
     /// </summary>
     [DebuggerDisplay("{ScriptName}")]
     public class SCIP : Subrecord

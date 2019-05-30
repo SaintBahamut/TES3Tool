@@ -85,44 +85,43 @@ namespace TES3Lib.Base
         {
             if (!IsImplemented) return;
 
-            var readerData = new ByteReader();
-            while (Data.Length != readerData.offset)
+            var reader = new ByteReader();
+            while (Data.Length != reader.offset)
             {
-                string subrecordName = GetRecordName(readerData);
-                int subrecordSize = GetRecordSize(readerData);
+                string subrecordName = GetRecordName(reader);
+                int subrecordSize = GetRecordSize(reader);
                 try
                 {
-                    PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
-                    if (subrecordProp.PropertyType.IsGenericType)
-                    {
-                        var listType = subrecordProp.PropertyType.GetGenericArguments()[0];
-                        if (IsNull(subrecordProp.GetValue(this)))
-                        {
-                            var IListRef = typeof(List<>);
-                            Type[] IListParam = { listType };
-                            object subRecordList = Activator.CreateInstance(IListRef.MakeGenericType(IListParam));
-                            subrecordProp.SetValue(this, subRecordList);
-                        }
-                        object sub = Activator.CreateInstance(listType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
-
-                        subrecordProp.GetValue(this).GetType().GetMethod("Add").Invoke(subrecordProp.GetValue(this), new[] { sub });
-                        continue;
-                    }
-                    object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
-                    subrecordProp.SetValue(this, subrecord);
+                    ReadSubrecords(reader, subrecordName, subrecordSize);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} either not implemented or borked {e}");
                     break;
                 }
             }
+        }
 
-            var id = this.GetEditorId();
-            if (!IsNull(id))
+        protected void ReadSubrecords(ByteReader readerData, string subrecordName, int subrecordSize)
+        {
+            PropertyInfo subrecordProp = this.GetType().GetProperty(subrecordName);
+            if (subrecordProp.PropertyType.IsGenericType)
             {
-                Console.WriteLine(id);
+                var listType = subrecordProp.PropertyType.GetGenericArguments()[0];
+                if (IsNull(subrecordProp.GetValue(this)))
+                {
+                    var IListRef = typeof(List<>);
+                    Type[] IListParam = { listType };
+                    object subRecordList = Activator.CreateInstance(IListRef.MakeGenericType(IListParam));
+                    subrecordProp.SetValue(this, subRecordList);
+                }
+                object sub = Activator.CreateInstance(listType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
+
+                subrecordProp.GetValue(this).GetType().GetMethod("Add").Invoke(subrecordProp.GetValue(this), new[] { sub });
+                return;
             }
+            object subrecord = Activator.CreateInstance(subrecordProp.PropertyType, new object[] { readerData.ReadBytes<byte[]>(Data, subrecordSize) });
+            subrecordProp.SetValue(this, subrecord);
         }
 
         public virtual byte[] SerializeRecord()

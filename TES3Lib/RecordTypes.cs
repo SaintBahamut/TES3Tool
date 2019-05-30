@@ -1,5 +1,8 @@
 ﻿namespace TES3Lib
 {
+    /// <summary>
+    /// Represents record order in ESM/ESP
+    /// </summary>
     public enum RecordTypes
     {
         TES3,
