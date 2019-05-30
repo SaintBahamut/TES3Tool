@@ -4,7 +4,7 @@ using Utility;
 namespace TES3Lib.Subrecords.LTEX
 {
     /// <summary>
-    /// Not realy know, numebrs seem increment for next entries from 0
+    /// Not realy know, numbers seem increment for next entries from 0
     /// </summary>
     public class INTV : Subrecord
     {

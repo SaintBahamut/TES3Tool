@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,18 +14,36 @@ using static Utility.Common;
 namespace TES3Lib.Records
 {
     /// <summary>
-    /// Leveled cretures
+    /// Leveled creatures Record
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class LEVC : Record
     {
+        /// <summary>
+        /// EditorId
+        /// </summary>
         public NAME NAME { get; set; }
 
+        /// <summary>
+        /// Flags
+        /// </summary>
         public DATA DATA { get; set; }
 
+        /// <summary>
+        /// Chance
+        /// </summary>
         public NNAM NNAM { get; set; }
 
+        /// <summary>
+        /// Numer of entries on CRIT List
+        /// </summary>
         public INDX INDX { get; set; }
 
+        /// <summary>
+        /// List of actors
+        /// CNAM - Creature/NPC EditorId
+        /// INTV - PC level for previous CNAM
+        /// </summary>
         public List<(CNAM CNAM, INTV INTV)> CRIT { get; set; }
 
         public LEVC()
@@ -68,7 +87,7 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} either not implemented or borked {e}");
                     break;
                 }
             }

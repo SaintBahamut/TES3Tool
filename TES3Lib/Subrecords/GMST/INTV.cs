@@ -8,7 +8,7 @@ namespace TES3Lib.Subrecords.GMTS
     /// </summary>
     public class INTV : Subrecord
     {
-        public float IntegerValue { get; set; }
+        public int IntegerValue { get; set; }
 
         public INTV()
         {

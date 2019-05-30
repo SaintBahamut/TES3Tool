@@ -40,7 +40,7 @@ namespace TES3Tool
         {
             string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Morrowind.esm";
 
-            var tes3 = TES3Load(fileESM, new List<string> { "DOOR"});
+            var tes3 = TES3Load(fileESM, new List<string> { "LIGH"});
 
 
             //foreach (var item in tes3.Records)

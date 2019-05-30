@@ -2,20 +2,34 @@
 using TES3Lib.Subrecords.Shared;
 using TES3Lib.Subrecords.GMTS;
 using static Utility.Common;
+using System.Diagnostics;
 
 namespace TES3Lib.Records
 {
     /// <summary>
-    /// Game settings record
+    /// Game settings Record
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class GMST : Record
     {
+        /// <summary>
+        /// EditorId
+        /// </summary>
         public NAME NAME { get; set; }
 
+        /// <summary>
+        /// String value
+        /// </summary>
         public STRV STRV { get; set; }
 
+        /// <summary>
+        /// Integer value
+        /// </summary>
         public INTV INTV { get; set; }
 
+        /// <summary>
+        /// Float value
+        /// </summary>
         public FLTV FLTV { get; set; }
 
         public GMST()

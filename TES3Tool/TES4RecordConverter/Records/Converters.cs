@@ -1102,7 +1102,6 @@ namespace TES3Tool.TES4RecordConverter.Records
                     Radius = obLIGH.DATA.Radius,
                     Flags = CastLightFlagsToMW(obLIGH.DATA.Flags)
                 },
-                SCPT = null,
                 ITEX = !IsNull(obLIGH.ICON) ? new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obLIGH.ICON.IconFilePath, Config.LIGHPath) } : null,
                 MODL = !IsNull(obLIGH.MODL) ? new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obLIGH.MODL.ModelPath, Config.LIGHPath) } : null,
             };
