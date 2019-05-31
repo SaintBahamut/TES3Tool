@@ -12,7 +12,6 @@ namespace TES3Lib.Subrecords.MISC
 
         public ENAM()
         {
-
         }
 
         public ENAM(byte[] rawData) : base(rawData)

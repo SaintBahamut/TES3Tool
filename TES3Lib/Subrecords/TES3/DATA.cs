@@ -9,7 +9,6 @@ namespace TES3Lib.Subrecords.TES3
 
         public DATA()
         {
-
         }
 
         public DATA(byte[] rawData) : base(rawData)

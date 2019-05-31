@@ -5,12 +5,10 @@ namespace TES3Lib.Subrecords.TES3
 {
     public class MAST : Subrecord
     {
-        // variable size
         public string Filename { get; set; }
 
         public MAST()
         {
-
         }
 
         public MAST(byte[] rawData) : base(rawData)

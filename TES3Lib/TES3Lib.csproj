@@ -76,6 +76,7 @@
     <Compile Include="Enums\MagicEffect.cs" />
     <Compile Include="Enums\PathGridNodeType.cs" />
     <Compile Include="Enums\Skill.cs" />
+    <Compile Include="Enums\SoundGenType.cs" />
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Spell.cs" />
     <Compile Include="Enums\SpellSchool.cs" />

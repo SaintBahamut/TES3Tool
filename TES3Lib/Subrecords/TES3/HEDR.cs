@@ -18,17 +18,14 @@ namespace TES3Lib.Subrecords.TES3
         /// </summary>
         public int ESMFlag { get; set; }
 
-        //32 bytes
         public string CompanyName { get; set; }
 
-        //256 bytes
         public string Description { get; set; }
 
         public int NumRecords { get; set; }
 
         public HEDR()
         {
-
         }
 
         public HEDR(byte[] rawData) : base(rawData)
@@ -61,6 +58,6 @@ namespace TES3Lib.Subrecords.TES3
                .Concat(BitConverter.GetBytes(data.Count()))
                .Concat(data).ToArray();
             return serialized;
-    }
+        }
     }
 }

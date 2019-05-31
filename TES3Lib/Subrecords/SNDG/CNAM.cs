@@ -5,19 +5,15 @@ using Utility;
 namespace TES3Lib.Subrecords.SNDG
 {
     /// <summary>
-    /// Female part name
+    /// Creature name that uses this sound
     /// </summary>
     [DebuggerDisplay("{CreatureName}")]
     public class CNAM : Subrecord
     {
-        /// <summary>
-        /// Female tagged bodpart id
-        /// </summary>
         public string CreatureName { get; set; }
 
         public CNAM()
         {
-
         }
 
         public CNAM(byte[] rawData) : base(rawData)
