@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using static Utility.Common;
 
 namespace Utility
 {
@@ -13,13 +14,19 @@ namespace Utility
             if (type == typeof(int)) return BitConverter.GetBytes(Convert.ToInt32(data));
             if (type == typeof(float)) return BitConverter.GetBytes((float)data);
             if (type == typeof(short)) return BitConverter.GetBytes((short)data);
-            if (type == typeof(string)) return Encoding.ASCII.GetBytes((string)data);
+            if (type == typeof(string)) return WriteStringBytes((string)data);
             if (type == typeof(long)) return BitConverter.GetBytes((long)data);
             if (type == typeof(ulong)) return BitConverter.GetBytes((ulong)data);
             if (type == typeof(uint)) return BitConverter.GetBytes((uint)data);
             if (type.IsEnum) return ToBytes(data, type.GetEnumUnderlyingType());
    
             throw new Exception($"Unsupported conversion type of type {type}");
+        }
+
+        private static byte[] WriteStringBytes(string encodedString)
+        {
+            Encoding encoding = Encoding.GetEncoding(TEXT_ENCODING_CODE);
+            return encoding.GetBytes(encodedString);
         }
     }
 }

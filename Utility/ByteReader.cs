@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using static Utility.Common;
 
 namespace Utility
 {
@@ -72,7 +73,7 @@ namespace Utility
             }
             if (t == typeof(string) && bytesToRead != null)
             {
-                var converted = Encoding.ASCII.GetString(data.Skip(offset).Take((bytesToRead.Value)).ToArray());
+                var converted = ReadStringBytes(data.Skip(offset).Take((bytesToRead.Value)).ToArray());
                 offset += bytesToRead.Value;
                 return (T)Convert.ChangeType(converted, typeof(T));
             }
@@ -127,6 +128,12 @@ namespace Utility
             }
 
             throw new Exception("Wrong input params");
+        }
+
+        public string ReadStringBytes(byte[] bytes)
+        {
+            Encoding encoding = Encoding.GetEncoding(TEXT_ENCODING_CODE);
+            return encoding.GetString(bytes);
         }
 
         /// <summary>
