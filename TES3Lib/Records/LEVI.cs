@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -15,16 +16,34 @@ namespace TES3Lib.Records
     /// <summary>
     /// Leveled items
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class LEVI : Record
     {
+        /// <summary>
+        /// EditorId
+        /// </summary>
         public NAME NAME { get; set; }
 
+        /// <summary>
+        /// Flags
+        /// </summary>
         public DATA DATA { get; set; }
 
+        /// <summary>
+        /// Chance
+        /// </summary>
         public NNAM NNAM { get; set; }
 
+        /// <summary>
+        /// Numer of entries on ITEM List
+        /// </summary>
         public INDX INDX { get; set; }
 
+        /// <summary>
+        /// List of items
+        /// INAM - Item EditorId
+        /// INTV - PC level for previous INAM
+        /// </summary>
         public List<(INAM INAM, INTV INTV)> ITEM { get; set; }
 
         public LEVI()
@@ -68,7 +87,7 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} eighter not implemented or borked {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} either not implemented or borked {e}");
                     break;
                 }
             }

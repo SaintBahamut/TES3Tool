@@ -3,7 +3,6 @@ using TES3Lib.Base;
 using TES3Lib.Enums;
 using TES3Lib.Enums.Flags;
 using Utility;
-using static Utility.Common;
 
 namespace TES3Lib.Subrecords.SPEL
 {
@@ -16,11 +15,6 @@ namespace TES3Lib.Subrecords.SPEL
 
         public int SpellCost { get; set; }
 
-        /// <summary>
-        /// 0x0001 = AutoCalc
-		///	0x0002 = PC Start
-		///	0x0004 = Always Succeeds
-        /// </summary>
         public HashSet<SpellFlag> Flags { get; set; }
 
         public SPDT()

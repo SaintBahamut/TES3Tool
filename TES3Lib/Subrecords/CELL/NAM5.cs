@@ -3,9 +3,8 @@ using Utility;
 
 namespace TES3Lib.Subrecords.CELL
 {
-
     /// <summary>
-    /// Exterior only
+    /// Map color
     /// </summary>
     public class NAM5 : Subrecord
     {

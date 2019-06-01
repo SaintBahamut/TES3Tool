@@ -53,11 +53,11 @@ namespace TES4Lib.Base
         {
             if (!IsImplemented) return;
 
-            var readerData = new ByteReader();
-            while (Data.Length != readerData.offset)
+            var reader = new ByteReader();
+            while (Data.Length != reader.offset)
             {
-                string subrecordName = GetSubrecordName(readerData);
-                int subrecordSize = GetSubrecordSize(readerData);            
+                string subrecordName = GetSubrecordName(reader);
+                int subrecordSize = GetSubrecordSize(reader);            
 
                 try
                 {
@@ -67,7 +67,7 @@ namespace TES4Lib.Base
                         break;
                     }
 
-                    ReadSubrecords(readerData, subrecordName, subrecordSize);
+                    ReadSubrecords(reader, subrecordName, subrecordSize);
                 }
                 catch (Exception e)
                 {

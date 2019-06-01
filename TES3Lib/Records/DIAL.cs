@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using TES3Lib.Base;
 using TES3Lib.Subrecords.DIAL;
 using TES3Lib.Subrecords.Shared;
@@ -7,8 +8,9 @@ using static Utility.Common;
 namespace TES3Lib.Records
 {
     /// <summary>
-    /// Dialogue/journals topic 
+    /// Dialogue/journals topic Record
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class DIAL : Record
     {
         /// <summary>

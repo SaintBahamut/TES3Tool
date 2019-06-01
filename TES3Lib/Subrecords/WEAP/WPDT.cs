@@ -10,35 +10,29 @@ namespace TES3Lib.Subrecords.WEAP
     public class WPDT : Subrecord
     {
         public float Weight { get; set; }
+
         public int Value { get; set; }
 
-        /// <summary>
-        /// Weapon type
-        /// 0 = ShortBladeOneHand
-		///	1 = LongBladeOneHand
-		///	2 = LongBladeTwoClose
-		///	3 = BluntOneHand
-		///	4 = BluntTwoClose
-		///	5 = BluntTwoWide
-		///	6 = SpearTwoWide
-		///	7 = AxeOneHand
-		///	8 = AxeTwoHand
-		///	9 = MarksmanBow
-		///	10 = MarksmanCrossbow
-		///	11 = MarksmanThrown
-		///	12 = Arrow
-		///	13 = Bolt
-        /// </summary>
         public WeaponType Type { get; set; }
+
         public short Health { get; set; }
+
         public float Speed { get; set; }
+
         public float Reach { get; set; }
+
         public short EnchantmentPoints { get; set; }
+
         public byte ChopMin { get; set; }
+
         public byte ChopMax { get; set; }
+
         public byte SlashMin { get; set; }
+
         public byte SlashMax { get; set; }
+
         public byte ThrustMin { get; set; }
+
         public byte ThrustMax { get; set; }
 
         /// <summary>

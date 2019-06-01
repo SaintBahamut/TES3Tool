@@ -10,28 +10,28 @@ namespace TES3Lib.Records
     public class ACTI : Record
     {
         /// <summary>
-        /// Activators EditorId
+        /// EditorId
         /// </summary>
         public NAME NAME { get; set; }
 
         /// <summary>
-        /// Activaors model path
+        /// Model
         /// </summary>
         public MODL MODL { get; set; }
 
         /// <summary>
-        /// Activators display name
+        /// Display name
         /// </summary>
         public FNAM FNAM { get; set; }
 
+
         /// <summary>
-        /// Activators attached script
+        /// Script
         /// </summary>
         public SCRI SCRI { get; set; }
 
         public ACTI()
         {
-
         }
 
         public ACTI(byte[] rawData) : base(rawData)

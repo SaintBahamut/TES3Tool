@@ -8,30 +8,57 @@ using System.Reflection;
 using System.Linq;
 using System.Text;
 using static Utility.Common;
+using System.Diagnostics;
 
 namespace TES3Lib.Records
 {
+    /// <summary>
+    /// Armor Record
+    /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class ARMO : Record
     {
+        /// <summary>
+        /// EditorId
+        /// </summary>
         public NAME NAME { get; set; }
 
+        /// <summary>
+        /// Model
+        /// </summary>
         public MODL MODL { get; set; }
 
+        /// <summary>
+        /// Display name
+        /// </summary>
         public FNAM FNAM { get; set; }
 
+        /// <summary>
+        /// Script
+        /// </summary>
         public SCRI SCRI { get; set; }
 
+        /// <summary>
+        /// Armor properties
+        /// </summary>
         public AODT AODT { get; set; }
 
+        /// <summary>
+        /// Icon
+        /// </summary>
         public ITEX ITEX { get; set; }
 
         /// <summary>
+        /// Body parts used by armor
         /// INDX - body part index
         /// BNAM - male mody part
         /// CNAM - female body part
         /// </summary>
         public List<(INDX INDX, BNAM BNAM, CNAM CNAM)> BPSL { get; set; }
 
+        /// <summary>
+        /// Enhancement
+        /// </summary>
         public ENAM ENAM { get; set; }
 
         public ARMO()

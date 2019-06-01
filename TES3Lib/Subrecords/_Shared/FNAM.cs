@@ -6,6 +6,7 @@ namespace TES3Lib.Subrecords.Shared
 {
     /// <summary>
     /// Display name of object
+    /// Used in BODY record to assign body part to race
     /// </summary>
     [DebuggerDisplay("{Name}")]
     public class FNAM : Subrecord

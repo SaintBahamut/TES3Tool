@@ -20,43 +20,93 @@ namespace TES3Lib.Records
     [DebuggerDisplay("{NAME.EditorId}")]
     public class CREA : Record
     {
+        /// <summary>
+        /// EditorId
+        /// </summary>
         public NAME NAME { get; set; }
 
+        /// <summary>
+        /// Model
+        /// </summary>
         public MODL MODL { get; set; }
 
+        /// <summary>
+        /// Sound set
+        /// </summary>
         public CNAM CNAM { get; set; }
 
+        /// <summary>
+        /// Display name
+        /// </summary>
         public FNAM FNAM { get; set; }
 
+        /// <summary>
+        /// Script
+        /// </summary>
         public SCRI SCRI { get; set; }
 
+        /// <summary>
+        /// Stats
+        /// </summary>
         public NPDT NPDT { get; set; }
 
+        /// <summary>
+        /// Flags
+        /// </summary>
         public FLAG FLAG { get; set; }
 
+        /// <summary>
+        /// Scale
+        /// </summary>
         public XSCL XSCL { get; set; }
 
+        /// <summary>
+        /// Items held
+        /// </summary>
         public List<NPCO> NPCO { get; set; }
 
+        /// <summary>
+        /// Spells
+        /// </summary>
         public List<NPCS> NPCS { get; set; }
 
+        /// <summary>
+        /// Creature behavior
+        /// </summary>
         public AIDT AIDT { get; set; }
 
+        /// <summary>
+        /// AI Wander
+        /// </summary>
         public AI_W AI_W { get; set; }
 
+        /// <summary>
+        /// AI Travel
+        /// </summary>
         public AI_T AI_T { get; set; }
 
+        /// <summary>
+        /// AI Follow
+        /// </summary>
         public AI_F AI_F { get; set; }
 
+        /// <summary>
+        /// AI Escort
+        /// </summary>
         public AI_E AI_E { get; set; }
 
+        /// <summary>
+        /// AI Activate
+        /// </summary>
         public AI_A AI_A { get; set; }
 
+        /// <summary>
+        /// Travel service destinations
+        /// </summary>
         public List<(DODT coordinates, DNAM cell)> TravelService = new List<(DODT coordinates, DNAM cell)>();
 
         public CREA()
         {
-
         }
 
         public CREA(byte[] rawData) : base(rawData)
@@ -108,7 +158,7 @@ namespace TES3Lib.Records
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"error in building CREA subrecord {subrecordName} , something is borkeeeed {e}");
+                    Console.WriteLine($"error in building {this.GetType().ToString()} on {subrecordName} either not implemented or borked {e}");
                     break;
                 }
             }
