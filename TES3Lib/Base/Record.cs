@@ -208,6 +208,11 @@ namespace TES3Lib.Base
             return null;
         }
 
+        public byte[] GetRawLoadedBytes()
+        {
+            return RawData;
+        }
+
         /// <summary>
         /// Compares EditorId of records if NAME subrecord is present
         /// </summary>
