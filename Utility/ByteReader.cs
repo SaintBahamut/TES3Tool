@@ -86,7 +86,6 @@ namespace Utility
                 {
                     return (T)(object)rawString;
                 }
-
             }
             if (t == typeof(byte))
             {
@@ -143,8 +142,9 @@ namespace Utility
 
         public string ReadStringBytes(byte[] bytes)
         {
-            Encoding encoding = Encoding.GetEncoding(TEXT_ENCODING_CODE);
-            return encoding.GetString(bytes);
+            var fromEncoding = Encoding.GetEncoding(TEXT_ENCODING_CODE);
+            var toEncoding = Encoding.Unicode;
+            return toEncoding.GetString(Encoding.Convert(fromEncoding, toEncoding, bytes));
         }
 
         /// <summary>
