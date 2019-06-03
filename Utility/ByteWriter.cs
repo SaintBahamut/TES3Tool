@@ -26,7 +26,7 @@ namespace Utility
         private static byte[] WriteStringBytes(string encodedString)
         {
             var fromEncoding = Encoding.Unicode;
-            var toEncoding = Encoding.GetEncoding(TEXT_ENCODING_CODE);
+            var toEncoding = Encoding.GetEncoding(TextEncodingCode);
             return Encoding.Convert(fromEncoding, toEncoding, fromEncoding.GetBytes(encodedString));
         }
     }

@@ -142,7 +142,7 @@ namespace Utility
 
         public string ReadStringBytes(byte[] bytes)
         {
-            var fromEncoding = Encoding.GetEncoding(TEXT_ENCODING_CODE);
+            var fromEncoding = Encoding.GetEncoding(TextEncodingCode);
             var toEncoding = Encoding.Unicode;
             return toEncoding.GetString(Encoding.Convert(fromEncoding, toEncoding, bytes));
         }
