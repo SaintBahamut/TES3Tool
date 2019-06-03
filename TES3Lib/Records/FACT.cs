@@ -129,8 +129,8 @@ namespace TES3Lib.Records
 
                         }
                         data.AddRange(facDisp.ToArray());
-                        continue;
                     }
+                    continue;
                 }
 
                 var subrecord = (Subrecord)property.GetValue(this);
