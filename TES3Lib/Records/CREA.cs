@@ -76,6 +76,11 @@ namespace TES3Lib.Records
         public AIDT AIDT { get; set; }
 
         /// <summary>
+        /// Travel service destinations
+        /// </summary>
+        public List<(DODT coordinates, DNAM cell)> TravelService { get; set; }
+
+        /// <summary>
         /// AI Wander
         /// </summary>
         public AI_W AI_W { get; set; }
@@ -99,11 +104,6 @@ namespace TES3Lib.Records
         /// AI Activate
         /// </summary>
         public AI_A AI_A { get; set; }
-
-        /// <summary>
-        /// Travel service destinations
-        /// </summary>
-        public List<(DODT coordinates, DNAM cell)> TravelService = new List<(DODT coordinates, DNAM cell)>();
 
         public CREA()
         {
@@ -188,6 +188,7 @@ namespace TES3Lib.Records
                         }
                         data.AddRange(travelDest.ToArray());
                     }
+                    continue;
                 }
 
                 if (property.PropertyType.IsGenericType)
