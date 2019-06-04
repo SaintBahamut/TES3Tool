@@ -1,4 +1,5 @@
-﻿using TES3Lib.Base;
+﻿using System.Diagnostics;
+using TES3Lib.Base;
 using TES3Lib.Subrecords.MISC;
 using TES3Lib.Subrecords.Shared;
 using static Utility.Common;
@@ -8,6 +9,7 @@ namespace TES3Lib.Records
     /// <summary>
     /// Misc item Record
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class MISC : Record
     {
         public NAME NAME { get; set; }
@@ -26,11 +28,6 @@ namespace TES3Lib.Records
         public MISC(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

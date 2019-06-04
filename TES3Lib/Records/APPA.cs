@@ -1,4 +1,5 @@
-﻿using TES3Lib.Base;
+﻿using System.Diagnostics;
+using TES3Lib.Base;
 using TES3Lib.Subrecords.APPA;
 using TES3Lib.Subrecords.Shared;
 using static Utility.Common;
@@ -8,6 +9,7 @@ namespace TES3Lib.Records
     /// <summary>
     /// Alchemical apparatus Record
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class APPA : Record
     {
         /// <summary>
@@ -44,11 +46,6 @@ namespace TES3Lib.Records
         public APPA(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

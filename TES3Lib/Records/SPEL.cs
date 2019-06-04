@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -11,6 +12,7 @@ using static Utility.Common;
 
 namespace TES3Lib.Records
 {
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class SPEL : Record
     {
         public NAME NAME { get; set; }

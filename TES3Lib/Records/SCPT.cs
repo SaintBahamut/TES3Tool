@@ -1,4 +1,5 @@
-﻿using TES3Lib.Base;
+﻿using System.Diagnostics;
+using TES3Lib.Base;
 using TES3Lib.Subrecords.SCPT;
 using static Utility.Common;
 
@@ -7,6 +8,7 @@ namespace TES3Lib.Records
     /// <summary>
     /// Script Record
     /// </summary>
+    [DebuggerDisplay("{SCHD.Name}")]
     public class SCPT: Record
     {
         public SCHD SCHD { get; set; }

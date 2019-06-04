@@ -1,9 +1,11 @@
 ﻿using TES3Lib.Base;
 using TES3Lib.Subrecords.Shared;
 using TES3Lib.Subrecords.CLAS;
+using System.Diagnostics;
 
 namespace TES3Lib.Records
 {
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class CLAS: Record
     {
         /// <summary>

@@ -59,10 +59,5 @@ namespace TES3Lib.Records
             NPCO = new List<NPCO>();
             BuildSubrecords();
         }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
-        }
     }
 }

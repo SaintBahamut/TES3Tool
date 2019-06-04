@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,6 +15,7 @@ namespace TES3Lib.Records
     /// <summary>
     /// TES3 Race record
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class RACE: Record
     {
         /// <summary>
@@ -112,11 +114,6 @@ namespace TES3Lib.Records
                 .Concat(BitConverter.GetBytes(Header))
                 .Concat(BitConverter.GetBytes(SerializeFlag()))
                 .Concat(data).ToArray();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }
