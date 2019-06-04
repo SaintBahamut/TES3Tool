@@ -218,7 +218,7 @@ namespace TES3Lib.Base
         /// </summary>
         public override bool Equals(object obj)
         {
-            PropertyInfo name = this.GetType().GetProperty("NAME");
+            PropertyInfo name = GetType().GetProperty("NAME");
             if (!IsNull(name))
             {
                 var NAME1 = (NAME)name.GetValue(this);
@@ -228,6 +228,31 @@ namespace TES3Lib.Base
             }
 
             return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 0;
+
+            var properties = this.GetType()
+                .GetProperties(BindingFlags.Public |
+                               BindingFlags.Instance |
+                               BindingFlags.DeclaredOnly)
+                               .OrderBy(x => x.MetadataToken)
+                               .ToList();
+
+            int i = 1;
+            foreach (PropertyInfo property in properties)
+            {
+                var value = property.GetValue(this);
+                if (value != null)
+                {
+                    hash += i * property.GetValue(this).GetHashCode();
+                }
+                i++;
+            }
+
+            return hash;
         }
     }
 }
