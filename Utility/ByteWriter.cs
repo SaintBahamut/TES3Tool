@@ -9,39 +9,38 @@ namespace Utility
     {
         public static byte[] ToBytes(object data, Type type, SizeInBytesAttribute size = null)
         {
-           
 
+            byte[] bytes;
             if (type == typeof(byte[]))
-                return (byte[])data;
-            if (type == typeof(byte))
-                return new byte[] { Convert.ToByte(data) };
-            if (type == typeof(bool))
-                return new byte[] { (byte)data };
-            if (type == typeof(int))
-                return BitConverter.GetBytes(Convert.ToInt32(data));
-            if (type == typeof(float))
-                return BitConverter.GetBytes((float)data);
-            if (type == typeof(short))
-                return BitConverter.GetBytes((short)data);
-            if (type == typeof(string))
-            {
-                var stringBytes = WriteStringBytes((string)data);
-                if (IsNull(size))
-                    return stringBytes;
+                bytes = (byte[])data;
+            else if (type == typeof(byte))
+                bytes = new byte[] { Convert.ToByte(data) };
+            else if (type == typeof(bool))
+                bytes = new byte[] { (byte)data };
+            else if (type == typeof(int))
+                bytes = BitConverter.GetBytes(Convert.ToInt32(data));
+            else if (type == typeof(float))
+                bytes = BitConverter.GetBytes((float)data);
+            else if (type == typeof(short))
+                bytes = BitConverter.GetBytes((short)data);
+            else if (type == typeof(string))
+                bytes = WriteStringBytes((string)data);             
+            else if (type == typeof(long))
+                bytes = BitConverter.GetBytes((long)data);
+            else if (type == typeof(ulong))
+                bytes = BitConverter.GetBytes((ulong)data);
+            else if (type == typeof(uint))
+                bytes = BitConverter.GetBytes((uint)data);
+            else if (type.IsEnum)
+                bytes = ToBytes(data, type.GetEnumUnderlyingType());
+            else
+                throw new Exception($"Unsupported conversion type of type {type}");
 
-                Array.Resize(ref stringBytes, size.TypeSize);
-                return stringBytes;
-            }              
-            if (type == typeof(long))
-                return BitConverter.GetBytes((long)data);
-            if (type == typeof(ulong))
-                return BitConverter.GetBytes((ulong)data);
-            if (type == typeof(uint))
-                return BitConverter.GetBytes((uint)data);
-            if (type.IsEnum)
-                return ToBytes(data, type.GetEnumUnderlyingType());
-   
-            throw new Exception($"Unsupported conversion type of type {type}");
+            if (IsNull(size))
+                return bytes;
+       
+            Array.Resize(ref bytes, size.TypeSize);
+            return bytes;
         }
 
         private static byte[] WriteStringBytes(string encodedString)
