@@ -32,7 +32,14 @@ namespace TES3Tool.TES4RecordConverter.Records
             //WEAPONS
             if (recordType.Equals("WEAP"))
             {
-                var mwWEAP = ConvertWEAP((TES4Lib.Records.WEAP)obRecord);
+                var wep = (TES4Lib.Records.WEAP)obRecord;
+
+                var mwWEAP = ConvertWEAP(wep);
+
+                //string dd = $"{{\"{wep.MODL.ModelPath}\\0\",\"{mwWEAP.ITEX.IconPath}.NIF\\0\"}}";
+
+                //temporary.Add(dd);
+
                 return new ConvertedRecordData(obRecord.FormId, mwWEAP.GetType().Name, mwWEAP.NAME.EditorId, mwWEAP);
             }
 
@@ -146,7 +153,14 @@ namespace TES3Tool.TES4RecordConverter.Records
             //AMMO
             if (recordType.Equals("AMMO"))
             {
+                var wep = (TES4Lib.Records.AMMO)obRecord;
+
                 var mwWEAP = ConvertAMMO((TES4Lib.Records.AMMO)obRecord);
+
+                string dd = $"{{\"{wep.MODL.ModelPath}\\0\",\"{mwWEAP.ITEX.IconPath}.NIF\\0\"}}";
+
+                temporary.Add(dd);
+           
                 return new ConvertedRecordData(obRecord.FormId, mwWEAP.GetType().Name, mwWEAP.NAME.EditorId, mwWEAP);
             }
 
@@ -689,9 +703,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             var mwWEAP = new TES3Lib.Records.WEAP
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obAMMO.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obAMMO.MODL.ModelPath, Config.WEAPPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obAMMO.FULL) ? obAMMO.FULL.DisplayName : string.Empty) },
-                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obAMMO.ICON.IconFilePath, Config.MISCPath) },
                 WPDT = new TES3Lib.Subrecords.WEAP.WPDT
                 {
                     Weight = obAMMO.DATA.Weight,
@@ -708,6 +720,8 @@ namespace TES3Tool.TES4RecordConverter.Records
                     ThrustMin = 0,
                     ThrustMax = 0,
                 },
+                ITEX = !IsNull(obAMMO.ICON) ? new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obAMMO.ICON.IconFilePath, Config.WEAPPath) } : null,
+                MODL = !IsNull(obAMMO.MODL) ? new TES3Lib.Subrecords.Shared.MODL { ModelPath = WeaponPathFormatter(obAMMO.MODL.ModelPath) } : null,
             };
 
             if (!IsNull(obAMMO.ENAM))
@@ -864,10 +878,8 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             var mwWEAP = new TES3Lib.Records.WEAP
             {
-                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obWEAP.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obWEAP.MODL.ModelPath, Config.WEAPPath) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obWEAP.FULL) ? obWEAP.FULL.DisplayName : string.Empty) },
-                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obWEAP.ICON.IconFilePath, Config.MISCPath) },
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obWEAP.EDID.EditorId) },            
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(!IsNull(obWEAP.FULL) ? obWEAP.FULL.DisplayName : string.Empty) },              
                 WPDT = new TES3Lib.Subrecords.WEAP.WPDT
                 {
                     Weight = obWEAP.DATA.Weight,
@@ -878,6 +890,8 @@ namespace TES3Tool.TES4RecordConverter.Records
                     Reach = obWEAP.DATA.Reach,
                     EnchantmentPoints = !IsNull(obWEAP.ANAM) ? obWEAP.ANAM.EnchantmentPoints : (short)0,
                 },
+                ITEX = !IsNull(obWEAP.ICON) ? new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obWEAP.ICON.IconFilePath, Config.WEAPPath) } : null,
+                MODL = !IsNull(obWEAP.MODL) ? new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obWEAP.MODL.ModelPath, Config.WEAPPath) } : null,
 
             };
 
@@ -1067,11 +1081,10 @@ namespace TES3Tool.TES4RecordConverter.Records
             return new TES3Lib.Records.MISC
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obMISC.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obMISC.MODL.ModelPath, TES3Tool.Config.MISCPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obMISC.FULL.DisplayName) },
                 MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obMISC.DATA.Weight, Value = obMISC.DATA.Value, Unknown = 0 },
-                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obMISC.ICON.IconFilePath, TES3Tool.Config.MISCPath) },
-                SCRI = null,
+                ITEX = !IsNull(obMISC.ICON) ? new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obMISC.ICON.IconFilePath, Config.MISCPath) } : null,
+                MODL = !IsNull(obMISC.MODL) ? new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obMISC.MODL.ModelPath, Config.MISCPath) } : null,
             };
         }
 
@@ -1080,10 +1093,10 @@ namespace TES3Tool.TES4RecordConverter.Records
             return new TES3Lib.Records.MISC
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obKEYM.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obKEYM.MODL.ModelPath, TES3Tool.Config.KEYMPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obKEYM.FULL.DisplayName) },
                 MCDT = new TES3Lib.Subrecords.MISC.MCDT { Weight = obKEYM.DATA.Weight, Value = obKEYM.DATA.Value, Unknown = 0 },
-                ITEX = new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obKEYM.ICON.IconFilePath, TES3Tool.Config.KEYMPath) },
+                ITEX = !IsNull(obKEYM.ICON) ? new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obKEYM.ICON.IconFilePath, Config.KEYMPath) } : null,
+                MODL = !IsNull(obKEYM.MODL) ? new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obKEYM.MODL.ModelPath, Config.KEYMPath) } : null,
             };
         }
 

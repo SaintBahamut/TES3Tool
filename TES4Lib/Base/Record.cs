@@ -6,6 +6,7 @@ using TES4Lib.Enums.Flags;
 using Utility;
 using zlib;
 using static Utility.Common;
+using TES4Lib.Subrecords.Shared;
 
 namespace TES4Lib.Base
 {
@@ -104,6 +105,24 @@ namespace TES4Lib.Base
             var name = reader.ReadBytes<string>(Data, TES4_RECORD_NAME_SIZE);
             reader.ShiftBackBy(TES4_RECORD_NAME_SIZE);
             return name;
+        }
+
+        /// <summary>
+        /// Get EditorId of record if exists
+        /// </summary>
+        public virtual string GetEditorId()
+        {
+            PropertyInfo name = this.GetType().GetProperty("EDID");
+            if (!IsNull(name))
+            {
+                var EDID = (EDID)name.GetValue(this);
+                if (!IsNull(EDID))
+                {
+                    return EDID.EditorId;
+                }             
+            }
+
+            return null;
         }
 
         protected ushort GetSubrecordSize(ByteReader reader)

@@ -14,6 +14,10 @@ namespace TES3Tool.TES4RecordConverter
     {
         public static TES3Lib.TES3 ConvertInteriorsAndExteriors(TES4Lib.TES4 tes4)
         {
+            ConvertRecords(tes4, "SE");
+
+            //temporary.ToList().ForEach(x => Console.WriteLine(x));
+
             ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
             ConvertedRecords.Add("PGRD", new List<ConvertedRecordData>());
 
@@ -434,6 +438,43 @@ namespace TES3Tool.TES4RecordConverter
                         //    continue;
                         //}
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Convert all non hierarchical records from loaded TES4 file
+        /// </summary>
+        /// <param name="tes4">TES4 ESM/ESP with records</param>
+        /// <param name="prefix">optional prefix for records editorId to convert</param>
+        private static void ConvertRecords(TES4Lib.TES4 tes4, string prefix = null)
+        {
+            foreach (TES4Lib.Base.Group group in tes4.Groups)
+            {
+                if (group.Label.Equals("CELL") || group.Label.Equals("DIAL") || group.Label.Equals("WRLD")) continue;
+
+                foreach (TES4Lib.Base.Record record in group.Records)
+                {
+                    string editorId = record.GetEditorId();
+                    if (string.IsNullOrEmpty(editorId) || editorId.Equals("SE14GSEscortList\0")) continue;
+
+                    if (!string.IsNullOrEmpty(prefix))
+                    {
+                       
+                        if (editorId.StartsWith(prefix))
+                        {
+                            ConvertedRecordData mwRecord = ConvertRecord(record);
+                            if (IsNull(mwRecord)) continue;
+                            if (!ConvertedRecords.ContainsKey(mwRecord.Type)) ConvertedRecords.Add(mwRecord.Type, new List<ConvertedRecordData>());
+                            ConvertedRecords[mwRecord.Type].Add(mwRecord);                       
+                        }
+                    }
+                    else
+                    {
+                        ConvertedRecordData mwRecord = ConvertRecord(record);
+                        if (!ConvertedRecords.ContainsKey(mwRecord.Type)) ConvertedRecords.Add(mwRecord.Type, new List<ConvertedRecordData>());
+                        ConvertedRecords[mwRecord.Type].Add(mwRecord);
+                    }              
                 }
             }
         }

@@ -9,6 +9,9 @@ namespace TES3Tool.TES4RecordConverter.Records
 {
     internal static class Helpers
     {
+        //DELET DIS
+        internal static HashSet<String> temporary = new HashSet<string>();
+
         internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
 
         internal static Dictionary<string, List<ConvertedExteriorPathgrid>> ExteriorPathGrids = new Dictionary<string, List<ConvertedExteriorPathgrid>>();
@@ -112,6 +115,16 @@ namespace TES3Tool.TES4RecordConverter.Records
             string newFileName = fileName.Remove(0, diff);
 
             return $"{Config.convertedRootFolder}\\{containingFolder}\\{newFileName}";
+        }
+
+        internal static string WeaponPathFormatter(string sourcePath)
+        {
+            string path = string.Empty;
+            Config.WeaponModelPathMappings.TryGetValue(sourcePath, out path);
+
+            if (string.IsNullOrEmpty(path)) return PathFormater(sourcePath, Config.WEAPPath);
+            return path;
+
         }
 
         static string EditorIdShortener(string name)
