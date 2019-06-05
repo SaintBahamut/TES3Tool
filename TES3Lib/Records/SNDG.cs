@@ -2,9 +2,11 @@
 using TES3Lib.Subrecords.SNDG;
 using TES3Lib.Subrecords.Shared;
 using static Utility.Common;
+using System.Diagnostics;
 
 namespace TES3Lib.Records
 {
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class SNDG : Record
     {
         /// <summary>
@@ -30,11 +32,6 @@ namespace TES3Lib.Records
         public SNDG(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

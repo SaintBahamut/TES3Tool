@@ -32,6 +32,7 @@ namespace TES3Lib.Subrecords.MGEF
         {
             var reader = new ByteReader();
             SpellSchool = (SpellSchool)reader.ReadBytes<int>(base.Data);
+            BaseCost = reader.ReadBytes<float>(base.Data);
             Flags = reader.ReadBytes<int>(base.Data);
             Red = reader.ReadBytes<int>(base.Data); 
             Green = reader.ReadBytes<int>(base.Data);

@@ -1,4 +1,5 @@
-﻿using TES3Lib.Base;
+﻿using System.Diagnostics;
+using TES3Lib.Base;
 using TES3Lib.Subrecords.REPA;
 using TES3Lib.Subrecords.Shared;
 using static Utility.Common;
@@ -8,6 +9,7 @@ namespace TES3Lib.Records
     /// <summary>
     /// Repair item record
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class REPA : Record
     {
         public NAME NAME { get; set; }
@@ -25,11 +27,6 @@ namespace TES3Lib.Records
         public REPA(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

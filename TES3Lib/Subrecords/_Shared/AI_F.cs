@@ -21,7 +21,7 @@ namespace TES3Lib.Subrecords.Shared
         /// <summary>
         /// Unknown (0100?)
         /// </summary>
-        public int Unknown { get; set; }
+        public short Unknown { get; set; }
 
         public AI_F()
         {
@@ -34,8 +34,9 @@ namespace TES3Lib.Subrecords.Shared
             DestinationX = reader.ReadBytes<float>(base.Data);
             DestinationY = reader.ReadBytes<float>(base.Data);
             DestinationZ = reader.ReadBytes<float>(base.Data);
+            Duration = reader.ReadBytes<short>(base.Data);
             CellDestination = reader.ReadBytes<string>(base.Data, 32);
-            Unknown = reader.ReadBytes<int>(base.Data);
+            Unknown = reader.ReadBytes<short>(base.Data);
         }
     }
 }

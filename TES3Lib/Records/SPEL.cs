@@ -1,11 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using TES3Lib.Base;
 using TES3Lib.Subrecords.Shared;
 using TES3Lib.Subrecords.SPEL;
+using Utility;
 using static Utility.Common;
 
 namespace TES3Lib.Records
 {
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class SPEL : Record
     {
         public NAME NAME { get; set; }
@@ -23,11 +30,6 @@ namespace TES3Lib.Records
         public SPEL(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

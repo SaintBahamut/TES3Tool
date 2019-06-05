@@ -100,7 +100,14 @@ namespace TES3Lib.Subrecords.NPC_
             List<byte> data = new List<byte>();
             if(Skills == null)
             {
-                data = this.Data.ToList();
+                data.AddRange(ByteWriter.ToBytes(Level, typeof(short)));
+                data.AddRange(ByteWriter.ToBytes(Disposition, typeof(byte)));
+                data.AddRange(ByteWriter.ToBytes(Reputation, typeof(byte)));
+                data.AddRange(ByteWriter.ToBytes(Rank, typeof(byte)));
+                data.AddRange(ByteWriter.ToBytes(Unknown1, typeof(byte)));
+                data.AddRange(ByteWriter.ToBytes(Unknown2, typeof(byte)));
+                data.AddRange(ByteWriter.ToBytes(Unknown3, typeof(byte)));
+                data.AddRange(ByteWriter.ToBytes(Gold, typeof(int)));
             }
             else
             {

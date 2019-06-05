@@ -1,4 +1,5 @@
-﻿using TES3Lib.Base;
+﻿using System.Diagnostics;
+using TES3Lib.Base;
 using TES3Lib.Subrecords.Shared;
 using static Utility.Common;
 
@@ -7,6 +8,7 @@ namespace TES3Lib.Records
     /// <summary>
     /// Activator Record
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class ACTI : Record
     {
         /// <summary>

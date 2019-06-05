@@ -8,6 +8,6 @@
         /// list of codes
         /// https://docs.microsoft.com/pl-pl/dotnet/api/system.text.encodinginfo?view=netframework-4.8
         /// </summary>
-        internal const int TEXT_ENCODING_CODE = 1252;
+        public static int TextEncodingCode = 1252;
     }
 }

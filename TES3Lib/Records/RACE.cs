@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using TES3Lib.Base;
 using TES3Lib.Subrecords.RACE;
 using TES3Lib.Subrecords.Shared;
+using Utility;
 using static Utility.Common;
 
 namespace TES3Lib.Records
@@ -10,6 +15,7 @@ namespace TES3Lib.Records
     /// <summary>
     /// TES3 Race record
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class RACE: Record
     {
         /// <summary>
@@ -44,11 +50,6 @@ namespace TES3Lib.Records
         public RACE(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

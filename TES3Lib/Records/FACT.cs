@@ -44,7 +44,7 @@ namespace TES3Lib.Records
         /// ANAM - EditorId
         /// INTV - Disposition modifier
         /// </summary>
-        public List<(ANAM name, INTV value)> FactionsAttitudes = new List<(ANAM name, INTV value)>();
+        public List<(ANAM name, INTV value)> FactionsAttitudes { get; set; }
 
         public FACT()
         {
@@ -58,6 +58,10 @@ namespace TES3Lib.Records
         public override void BuildSubrecords()
         {
             var reader = new ByteReader();
+
+            RNAM = new List<RNAM>();
+            FactionsAttitudes = new List<(ANAM name, INTV value)>();
+
             while (Data.Length != reader.offset)
             {
                 var subrecordName = GetRecordName(reader);
@@ -65,13 +69,17 @@ namespace TES3Lib.Records
           
                 try
                 {
-                    if (subrecordName.Equals("ANAM"))
+                    if (subrecordName.Equals("RNAM"))
+                    {
+                        RNAM.Add(new RNAM(reader.ReadBytes<byte[]>(Data, subrecordSize)));
+                        continue;
+                    }
+                    else if (subrecordName.Equals("ANAM"))
                     {
                         FactionsAttitudes.Add((new ANAM(reader.ReadBytes<byte[]>(Data, subrecordSize)), null));
                         continue;
                     }
-
-                    if (subrecordName.Equals("INTV"))
+                    else if (subrecordName.Equals("INTV"))
                     {
                         FactionsAttitudes[FactionsAttitudes.Count - 1] = (FactionsAttitudes[FactionsAttitudes.Count - 1].name, new INTV(reader.ReadBytes<byte[]>(Data, subrecordSize)));
                         continue;
@@ -121,8 +129,8 @@ namespace TES3Lib.Records
 
                         }
                         data.AddRange(facDisp.ToArray());
-                        continue;
                     }
+                    continue;
                 }
 
                 var subrecord = (Subrecord)property.GetValue(this);
@@ -142,11 +150,6 @@ namespace TES3Lib.Records
                 .Concat(BitConverter.GetBytes(Header))
                 .Concat(BitConverter.GetBytes(flagSerialized))
                 .Concat(data).ToArray();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

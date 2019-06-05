@@ -65,6 +65,8 @@ namespace TES3Lib.Records
 
         public AIDT AIDT { get; set; }
 
+        public List<(DODT coordinates, DNAM cell)> TravelService { get; set; }
+
         public AI_W AI_W { get; set; }
 
         public AI_T AI_T { get; set; }
@@ -76,8 +78,6 @@ namespace TES3Lib.Records
         public CNDT CNDT { get; set; }
 
         public AI_A AI_A { get; set; }
-
-        public List<(DODT coordinates, DNAM cell)> TravelService = new List<(DODT coordinates, DNAM cell)>();
 
         public XSCL XSCL { get; set; }
         #endregion
@@ -164,6 +164,7 @@ namespace TES3Lib.Records
                         }
                         data.AddRange(travelDest.ToArray());
                     }
+                    continue;
                 }
 
                 if (property.PropertyType.IsGenericType)
@@ -192,11 +193,6 @@ namespace TES3Lib.Records
                 .Concat(BitConverter.GetBytes(Header))
                 .Concat(BitConverter.GetBytes(flagSerialized))
                 .Concat(data).ToArray();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

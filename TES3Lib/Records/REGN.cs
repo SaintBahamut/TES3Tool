@@ -3,9 +3,11 @@ using TES3Lib.Subrecords.REGN;
 using TES3Lib.Subrecords.Shared;
 using SNAM = TES3Lib.Subrecords.REGN.SNAM;
 using static Utility.Common;
+using System.Diagnostics;
 
 namespace TES3Lib.Records
 {
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class REGN : Record
     {
         public NAME NAME { get; set; }
@@ -26,11 +28,6 @@ namespace TES3Lib.Records
         public REGN(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
-        }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
         }
     }
 }

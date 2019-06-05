@@ -151,10 +151,5 @@ namespace TES3Lib.Records
                 .Concat(BitConverter.GetBytes(SerializeFlag()))
                 .Concat(data).ToArray();
         }
-
-        public override string GetEditorId()
-        {
-            return !IsNull(NAME) ? NAME.EditorId : null;
-        }
     }
 }

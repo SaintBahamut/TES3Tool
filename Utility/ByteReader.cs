@@ -75,7 +75,17 @@ namespace Utility
             {
                 var converted = ReadStringBytes(data.Skip(offset).Take((bytesToRead.Value)).ToArray());
                 offset += bytesToRead.Value;
-                return (T)Convert.ChangeType(converted, typeof(T));
+
+                // Clean up garbage from the end of strings. We still need to preserve null characters so that they serialize correctly.
+                string rawString = (Convert.ChangeType(converted, typeof(T)) as string);
+                if (rawString.Contains('\0'))
+                {
+                    return (T)(object)rawString.Substring(0, rawString.IndexOf('\0')).PadRight(bytesToRead.Value, '\0');
+                }
+                else
+                {
+                    return (T)(object)rawString;
+                }
             }
             if (t == typeof(byte))
             {
@@ -132,8 +142,9 @@ namespace Utility
 
         public string ReadStringBytes(byte[] bytes)
         {
-            Encoding encoding = Encoding.GetEncoding(TEXT_ENCODING_CODE);
-            return encoding.GetString(bytes);
+            var fromEncoding = Encoding.GetEncoding(TextEncodingCode);
+            var toEncoding = Encoding.Unicode;
+            return toEncoding.GetString(Encoding.Convert(fromEncoding, toEncoding, bytes));
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using TES3Lib.Base;
@@ -12,6 +13,7 @@ namespace TES3Lib.Records
     /// <summary>
     /// Cell reference
     /// </summary>
+    [DebuggerDisplay("{NAME.EditorId}")]
     public class REFR
     {
         public FRMR FRMR { get; set; }
