@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using TES3Lib.Base;
 using Utility;
+using Utility.Attributes;
 
 namespace TES3Lib.Subrecords.Shared
 {
@@ -16,6 +17,7 @@ namespace TES3Lib.Subrecords.Shared
     {
         public int Count { get; set; }
 
+        [SizeInBytes(32)]
         public string ItemId { get; set; }
 
         public NPCO()
@@ -29,19 +31,19 @@ namespace TES3Lib.Subrecords.Shared
             ItemId = reader.ReadBytes<string>(base.Data, 32);
         }
 
-        public override byte[] SerializeSubrecord()
-        {
-            List<byte> data = new List<byte>();
-            data.AddRange(ByteWriter.ToBytes(Count, Count.GetType()));
+        //public override byte[] SerializeSubrecord()
+        //{
+        //    List<byte> data = new List<byte>();
+        //    data.AddRange(ByteWriter.ToBytes(Count, Count.GetType()));
 
-            byte[] itemIdBytes = ASCIIEncoding.ASCII.GetBytes(ItemId);
-            Array.Resize(ref itemIdBytes, 32);
-            data.AddRange(itemIdBytes);
+        //    byte[] itemIdBytes = ASCIIEncoding.ASCII.GetBytes(ItemId);
+        //    Array.Resize(ref itemIdBytes, 32);
+        //    data.AddRange(itemIdBytes);
 
-            var serialized = Encoding.ASCII.GetBytes("NPCO")
-               .Concat(BitConverter.GetBytes(data.Count))
-               .Concat(data).ToArray();
-            return serialized;
-        }
+        //    var serialized = Encoding.ASCII.GetBytes("NPCO")
+        //       .Concat(BitConverter.GetBytes(data.Count))
+        //       .Concat(data).ToArray();
+        //    return serialized;
+        //}
     }
 }

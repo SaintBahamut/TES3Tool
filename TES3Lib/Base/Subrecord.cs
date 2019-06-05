@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Utility;
+using Utility.Attributes;
 
 namespace TES3Lib.Base
 {
@@ -78,6 +79,7 @@ namespace TES3Lib.Base
             foreach (PropertyInfo property in properties)
             {
                 object value = property.GetValue(this);
+                var sizeAttribute = property.GetCustomAttributes<SizeInBytesAttribute>().FirstOrDefault();
 
                 //used for flags in subrecords
                 if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(HashSet<>))
@@ -89,7 +91,7 @@ namespace TES3Lib.Base
                     continue;
                 }
 
-                data.AddRange(ByteWriter.ToBytes(value, property.PropertyType));          
+                data.AddRange(ByteWriter.ToBytes(value, property.PropertyType, sizeAttribute));          
             }
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)

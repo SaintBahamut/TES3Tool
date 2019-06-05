@@ -10,11 +10,11 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-           ConvertSI();
+           //ConvertSI();
 
            //OblivionLoadTest();
 
-           //MWLoadTest();
+           MWLoadTest();
 
 
 
@@ -38,9 +38,9 @@ namespace TES3Tool
 
         public static void MWLoadTest()
         {
-            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Morrowind.esm";
+            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\morrowind.esm";
 
-            var tes3 = TES3Load(fileESM, new List<string> { "LIGH"});
+            var tes3 = TES3Load(fileESM, new List<string> { "RACE","SPEL"});
 
 
             //foreach (var item in tes3.Records)
@@ -69,7 +69,7 @@ namespace TES3Tool
             //    }
             //}
 
-            //tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\x2.esp");
+            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\x2.esp");
         }
 
         public static void OblivionLoadTest()

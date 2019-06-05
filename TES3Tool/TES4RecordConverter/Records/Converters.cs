@@ -32,14 +32,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             //WEAPONS
             if (recordType.Equals("WEAP"))
             {
-                var wep = (TES4Lib.Records.WEAP)obRecord;
-
-                var mwWEAP = ConvertWEAP(wep);
-
-                //string dd = $"{{\"{wep.MODL.ModelPath}\\0\",\"{mwWEAP.ITEX.IconPath}.NIF\\0\"}}";
-
-                //temporary.Add(dd);
-
+                var mwWEAP = ConvertWEAP((TES4Lib.Records.WEAP)obRecord);
                 return new ConvertedRecordData(obRecord.FormId, mwWEAP.GetType().Name, mwWEAP.NAME.EditorId, mwWEAP);
             }
 
@@ -153,14 +146,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             //AMMO
             if (recordType.Equals("AMMO"))
             {
-                var wep = (TES4Lib.Records.AMMO)obRecord;
-
                 var mwWEAP = ConvertAMMO((TES4Lib.Records.AMMO)obRecord);
-
-                string dd = $"{{\"{wep.MODL.ModelPath}\\0\",\"{mwWEAP.ITEX.IconPath}.NIF\\0\"}}";
-
-                temporary.Add(dd);
-           
                 return new ConvertedRecordData(obRecord.FormId, mwWEAP.GetType().Name, mwWEAP.NAME.EditorId, mwWEAP);
             }
 
@@ -891,7 +877,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     EnchantmentPoints = !IsNull(obWEAP.ANAM) ? obWEAP.ANAM.EnchantmentPoints : (short)0,
                 },
                 ITEX = !IsNull(obWEAP.ICON) ? new TES3Lib.Subrecords.Shared.ITEX { IconPath = PathFormater(obWEAP.ICON.IconFilePath, Config.WEAPPath) } : null,
-                MODL = !IsNull(obWEAP.MODL) ? new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obWEAP.MODL.ModelPath, Config.WEAPPath) } : null,
+                MODL = !IsNull(obWEAP.MODL) ? new TES3Lib.Subrecords.Shared.MODL { ModelPath = WeaponPathFormatter(obWEAP.MODL.ModelPath) } : null,
 
             };
 
