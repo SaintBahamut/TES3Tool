@@ -107,6 +107,9 @@ namespace TES3Lib.Records
 
         public CREA()
         {
+            NPCO = new List<NPCO>();
+            NPCS = new List<NPCS>();
+            TravelService = new List<(DODT coordinates, DNAM cell)>();
         }
 
         public CREA(byte[] rawData) : base(rawData)

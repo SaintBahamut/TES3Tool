@@ -84,6 +84,9 @@ namespace TES3Lib.Records
 
         public NPC_()
         {
+            NPCO = new List<NPCO>();
+            NPCS = new List<NPCS>();
+            TravelService = new List<(DODT coordinates, DNAM cell)>();
         }
 
         public NPC_(byte[] rawData) : base(rawData)

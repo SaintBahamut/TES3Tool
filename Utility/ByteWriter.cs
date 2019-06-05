@@ -9,7 +9,6 @@ namespace Utility
     {
         public static byte[] ToBytes(object data, Type type, SizeInBytesAttribute size = null)
         {
-
             byte[] bytes;
             if (type == typeof(byte[]))
                 bytes = (byte[])data;

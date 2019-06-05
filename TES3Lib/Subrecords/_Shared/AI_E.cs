@@ -1,5 +1,6 @@
 ﻿using TES3Lib.Base;
 using Utility;
+using Utility.Attributes;
 
 namespace TES3Lib.Subrecords.Shared
 {
@@ -16,6 +17,7 @@ namespace TES3Lib.Subrecords.Shared
 
         public short Duration { get; set; }
 
+        [SizeInBytes(32)]
         public string CellDestination { get; set; }
 
         /// <summary>

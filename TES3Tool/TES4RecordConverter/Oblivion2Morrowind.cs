@@ -460,8 +460,8 @@ namespace TES3Tool.TES4RecordConverter
 
                     if (!string.IsNullOrEmpty(prefix))
                     {
-                       
-                        if (editorId.StartsWith(prefix))
+
+                        if (editorId.StartsWith(prefix) || editorId.StartsWith("XP"))
                         {
                             ConvertedRecordData mwRecord = ConvertRecord(record);
                             if (IsNull(mwRecord)) continue;
