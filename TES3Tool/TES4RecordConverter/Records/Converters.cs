@@ -765,7 +765,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 ENDT = new TES3Lib.Subrecords.ENCH.ENDT
                 {
                     Type = CastEnchantmentTypeToMW(obENCH.ENIT.EnchantmentType),
-                    AutoCalc = (int)obENCH.ENIT.Flags,
+                    AutoCalculate = obENCH.ENIT.Flags.Equals(0) ? true : false,
                     Charge = obENCH.ENIT.Charge,
                     EnchantCost = obENCH.ENIT.EnchantCost,
                 }
@@ -785,8 +785,12 @@ namespace TES3Tool.TES4RecordConverter.Records
                 };
                 enam.Skill = CastActorValueToSkillEffectMW(effect.EFIT.ActorValue, enam.MagicEffect);
                 enam.Attribute = CastActorValueToAttributeEffectMW(effect.EFIT.ActorValue, enam.MagicEffect);
-                mwENCH.ENAM.Add(enam);
+
+                if(!enam.MagicEffect.Equals(TES3Lib.Enums.MagicEffect.None))
+                    mwENCH.ENAM.Add(enam);
             }
+
+            if (mwENCH.ENAM.Count.Equals(0)) return null;
 
             return mwENCH;
         }

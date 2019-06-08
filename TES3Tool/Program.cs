@@ -10,7 +10,7 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-           ConvertSI();
+           //ConvertSI();
 
            //OblivionLoadTest();
 
@@ -38,9 +38,9 @@ namespace TES3Tool
 
         public static void MWLoadTest()
         {
-            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\morrowind.esm";
+            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\ench_test.ESP";
 
-            var tes3 = TES3Load(fileESM, new List<string> { "RACE","SPEL"});
+            var tes3 = TES3Load(fileESM, new List<string> { "ENCH"});
 
 
             //foreach (var item in tes3.Records)

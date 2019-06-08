@@ -15,7 +15,7 @@ namespace Utility
             else if (type == typeof(byte))
                 bytes = new byte[] { Convert.ToByte(data) };
             else if (type == typeof(bool))
-                bytes = new byte[] { (byte)data };
+                bytes = new byte[] { Convert.ToByte(data) };
             else if (type == typeof(int))
                 bytes = BitConverter.GetBytes(Convert.ToInt32(data));
             else if (type == typeof(float))

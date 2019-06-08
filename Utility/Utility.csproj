@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\SizeAttribute.cs" />
+    <Compile Include="Attributes\SizeInBytesAttribute.cs" />
     <Compile Include="ByteReader.cs" />
     <Compile Include="ByteWriter.cs" />
     <Compile Include="Common.cs" />
