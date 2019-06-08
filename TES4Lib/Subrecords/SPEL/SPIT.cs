@@ -1,6 +1,8 @@
-﻿using TES4Lib.Base;
+﻿using System.Collections.Generic;
+using TES4Lib.Base;
+using TES4Lib.Enums;
+using TES4Lib.Enums.Flags;
 using Utility;
-using static Utility.Common;
 
 namespace TES4Lib.Subrecords.SPEL
 {
@@ -15,15 +17,15 @@ namespace TES4Lib.Subrecords.SPEL
 
         public SpellLevel SpellLevel { get; set; }
 
-        public int Flags { get; set; }
+        public HashSet<SpellFlag> Flags { get; set; }
 
         public SPIT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Type = (SpellType)reader.ReadBytes<int>(base.Data);
+            Type = reader.ReadBytes<SpellType>(base.Data);
             SpellCost = reader.ReadBytes<int>(base.Data);
-            SpellLevel = (SpellLevel)reader.ReadBytes<int>(base.Data);
-            Flags = reader.ReadBytes<int>(base.Data);
+            SpellLevel = reader.ReadBytes<SpellLevel>(base.Data);
+            Flags = reader.ReadFlagBytes<SpellFlag>(base.Data);
         }
     }
 }

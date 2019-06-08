@@ -66,6 +66,7 @@
     <Compile Include="Enums\Flags\NpcFlag.cs" />
     <Compile Include="Enums\Flags\RecordFlag.cs" />
     <Compile Include="Enums\Flags\ServicesFlag.cs" />
+    <Compile Include="Enums\Flags\SpellFlag.cs" />
     <Compile Include="Enums\Flags\WorldSpaceFlag.cs" />
     <Compile Include="Enums\GroupLabel.cs" />
     <Compile Include="Enums\MagicEffect.cs" />

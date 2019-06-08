@@ -11,7 +11,7 @@ namespace TES3Lib.Subrecords.SPEL
     /// </summary>
     public class SPDT : Subrecord
     {
-        public Spell Type { get; set; }
+        public SpellType Type { get; set; }
 
         public int SpellCost { get; set; }
 
@@ -25,7 +25,7 @@ namespace TES3Lib.Subrecords.SPEL
         public SPDT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-            Type = reader.ReadBytes<Spell>(base.Data);
+            Type = reader.ReadBytes<SpellType>(base.Data);
             SpellCost = reader.ReadBytes<int>(base.Data);
             Flags = reader.ReadFlagBytes<SpellFlag>(base.Data);
         }

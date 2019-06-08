@@ -1,6 +1,6 @@
 ﻿namespace TES3Lib.Enums
 {
-    public enum Spell : int
+    public enum SpellType : int
     {
         Spell = 0,
         Ability = 1,

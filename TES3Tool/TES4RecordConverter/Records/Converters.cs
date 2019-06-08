@@ -137,6 +137,14 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwENCH.GetType().Name, mwENCH.NAME.EditorId, mwENCH);
             }
 
+            //SPELLS
+            if (recordType.Equals("SPELL"))
+            {
+                var mwSPEL = ConvertSPEL((TES4Lib.Records.SPEL)obRecord);
+                if (mwSPEL.ENAM.Count.Equals(0)) return null;
+                return new ConvertedRecordData(obRecord.FormId, mwSPEL.GetType().Name, mwSPEL.NAME.EditorId, mwSPEL);
+            }
+
             //ALCHEMY
             if (recordType.Equals("ALCH"))
             {
@@ -215,6 +223,41 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             return null;
+        }
+
+        private static TES3Lib.Records.SPEL ConvertSPEL(TES4Lib.Records.SPEL obSPEL)
+        {
+            var mwSPEL = new TES3Lib.Records.SPEL
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obSPEL.EDID.EditorId) },
+                SPDT = new TES3Lib.Subrecords.SPEL.SPDT
+                {
+                    Type = CastSpellTypeToMW(obSPEL.SPIT.Type),
+                    SpellCost = obSPEL.SPIT.SpellCost,
+                    Flags = CastSpellFlagToMW(obSPEL.SPIT.Flags)
+                }
+            };
+
+            mwSPEL.ENAM = new List<TES3Lib.Subrecords.SPEL.ENAM>();
+            foreach (var effect in obSPEL.EFFECT)
+            {
+                var enam = new TES3Lib.Subrecords.SPEL.ENAM
+                {
+                    MagicEffect = CastMagicEffectToMW(effect.EFIT.MagicEffect),
+                    Area = effect.EFIT.Area,
+                    Duration = effect.EFIT.Duration,
+                    SpellRange = (TES3Lib.Enums.SpellRange)((int)effect.EFIT.SpellRange),
+                    MinMagnitude = effect.EFIT.Magnitude / 2,
+                    MaxMagnitude = effect.EFIT.Magnitude
+                };
+                enam.Skill = CastActorValueToSkillEffectMW(effect.EFIT.ActorValue, enam.MagicEffect);
+                enam.Attribute = CastActorValueToAttributeEffectMW(effect.EFIT.ActorValue, enam.MagicEffect);
+
+                if (!enam.MagicEffect.Equals(TES3Lib.Enums.MagicEffect.None))
+                    mwSPEL.ENAM.Add(enam);
+            }
+
+            return mwSPEL;
         }
 
         private static TES3Lib.Records.RACE ConvertRACE(TES4Lib.Records.RACE obRACE)

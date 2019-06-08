@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using TES4Lib.Base;
+using TES4Lib.Enums;
 using Utility;
 
 namespace TES4Lib.Subrecords.MGEF

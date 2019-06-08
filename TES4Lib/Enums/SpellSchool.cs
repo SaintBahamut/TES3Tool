@@ -1,4 +1,4 @@
-﻿namespace TES4Lib
+﻿namespace TES4Lib.Enums
 {
     public enum SpellSchool : int
     {

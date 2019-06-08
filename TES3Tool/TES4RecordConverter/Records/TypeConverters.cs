@@ -671,6 +671,44 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
         }
 
+        public static TES3Lib.Enums.SpellType CastSpellTypeToMW(TES4Lib.Enums.SpellType spellType)
+        {
+            switch (spellType)
+            {
+                case TES4Lib.Enums.SpellType.Spell:
+                    return TES3Lib.Enums.SpellType.Spell;
+                case TES4Lib.Enums.SpellType.Disease:
+                    return TES3Lib.Enums.SpellType.Disease;
+                case TES4Lib.Enums.SpellType.Power:
+                    return TES3Lib.Enums.SpellType.Power;
+                case TES4Lib.Enums.SpellType.LesserPower:
+                    return TES3Lib.Enums.SpellType.Power;
+                case TES4Lib.Enums.SpellType.Ability:
+                    return TES3Lib.Enums.SpellType.Ability;
+                case TES4Lib.Enums.SpellType.Poision:
+                    return TES3Lib.Enums.SpellType.Spell;
+                default:
+                    return TES3Lib.Enums.SpellType.Spell;
+            }
+        }
+
+        public static HashSet<TES3Lib.Enums.Flags.SpellFlag> CastSpellFlagToMW(HashSet<TES4Lib.Enums.Flags.SpellFlag> obFlag)
+        {
+            var mwFlags = new HashSet<TES3Lib.Enums.Flags.SpellFlag>();
+
+            if (!obFlag.Contains(TES4Lib.Enums.Flags.SpellFlag.ManualSpellCost))
+            {
+                mwFlags.Add(TES3Lib.Enums.Flags.SpellFlag.AutoCalc);
+            }
+
+            if(obFlag.Contains(TES4Lib.Enums.Flags.SpellFlag.PlayerStartSpell))
+            {
+                mwFlags.Add(TES3Lib.Enums.Flags.SpellFlag.PlayerStartSpell);
+            }
+
+            return mwFlags;
+        }
+
         public static HashSet<TES3Lib.Enums.Flags.ServicesFlag> CastServicesToMW(HashSet<TES4Lib.Enums.Flags.ServicesFlag> obFlag)
         {
             var mwFlags = new HashSet<TES3Lib.Enums.Flags.ServicesFlag>();

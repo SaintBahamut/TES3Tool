@@ -126,8 +126,8 @@
     <Compile Include="Subrecords\CONT\FLAG.cs" />
     <Compile Include="Subrecords\CREA\CNAM.cs" />
     <Compile Include="Subrecords\DIAL\DATA.cs" />
-    <Compile Include="Subrecords\ENCH\ENDT.cs" />
     <Compile Include="Subrecords\ENCH\ENAM.cs" />
+    <Compile Include="Subrecords\ENCH\ENDT.cs" />
     <Compile Include="Subrecords\FACT\INTV.cs" />
     <Compile Include="Subrecords\FACT\FADT.cs" />
     <Compile Include="Subrecords\FACT\RNAM.cs" />
@@ -169,6 +169,7 @@
     <Compile Include="Subrecords\REFR\XCHG.cs" />
     <Compile Include="Subrecords\SNDG\CNAM.cs" />
     <Compile Include="Subrecords\SNDG\DATA.cs" />
+    <Compile Include="Subrecords\SPEL\ENAM.cs" />
     <Compile Include="Subrecords\_Shared\ANAM.cs" />
     <Compile Include="Subrecords\_Shared\BNAM.cs" />
     <Compile Include="Subrecords\_Shared\NNAM.cs" />
@@ -184,7 +185,6 @@
     <Compile Include="Subrecords\SKIL\SKDT.cs" />
     <Compile Include="Subrecords\SKIL\INDX.cs" />
     <Compile Include="Subrecords\SPEL\SPDT.cs" />
-    <Compile Include="Subrecords\SPEL\ENAM.cs" />
     <Compile Include="Subrecords\_Shared\AIDT.cs" />
     <Compile Include="Subrecords\CREA\FLAG.cs" />
     <Compile Include="Subrecords\CREA\NPDT.cs" />
