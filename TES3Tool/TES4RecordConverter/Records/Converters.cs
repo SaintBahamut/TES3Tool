@@ -222,7 +222,58 @@ namespace TES3Tool.TES4RecordConverter.Records
                 return new ConvertedRecordData(obRecord.FormId, mwCLAS.GetType().Name, mwCLAS.NAME.EditorId, mwCLAS);
             }
 
+            //FACTION
+            if (recordType.Equals("FACT"))
+            {
+                var mwFACT = ConvertFACT((TES4Lib.Records.FACT)obRecord);
+                return new ConvertedRecordData(obRecord.FormId, mwFACT.GetType().Name, mwFACT.NAME.EditorId, mwFACT);
+            }
+
             return null;
+        }
+
+        private static TES3Lib.Records.FACT ConvertFACT(TES4Lib.Records.FACT obFACT)
+        {
+            var mwFACT = new TES3Lib.Records.FACT
+            {
+                NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obFACT.EDID.EditorId) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = obFACT.FULL.DisplayName },
+                FADT = new TES3Lib.Subrecords.FACT.FADT
+                {
+                    FirstAttribute = TES3Lib.Enums.Attribute.Strength,
+                    SecondAttributre = TES3Lib.Enums.Attribute.Intelligence,
+                    IsHiddenFromPlayer = obFACT.DATA.Flags.Contains(TES4Lib.Enums.Flags.FactionFlag.HiddenFromPlayer) ? true : false,
+                    FavoredSkills = new TES3Lib.Enums.Skill[]
+                    {
+                        TES3Lib.Enums.Skill.LongBlade,
+                        TES3Lib.Enums.Skill.Destruction,
+                        TES3Lib.Enums.Skill.MediumArmor,
+                        TES3Lib.Enums.Skill.HeavyArmor,
+                        TES3Lib.Enums.Skill.LightArmor,
+                        TES3Lib.Enums.Skill.Axe
+                    },
+                    RankData = new TES3Lib.Subrecords.FACT.FADT.RankRequirement[obFACT.RNKS.Count]
+                },
+                RNAM = new List<TES3Lib.Subrecords.FACT.RNAM>()              
+            };
+
+            for (int i = 0; i < obFACT.RNKS.Count; i++)
+            {
+                mwFACT.RNAM.Add(new TES3Lib.Subrecords.FACT.RNAM { RankName = obFACT.RNKS[i].MNAM.MaleRankTitle }); //yes im totally assuming your gender here
+                mwFACT.FADT.RankData[i].FirstAttribute = 0;
+                mwFACT.FADT.RankData[i].SecondAttribute = 0;
+                mwFACT.FADT.RankData[i].FirstSkill = 0;
+                mwFACT.FADT.RankData[i].SecondSkill = 0;
+                mwFACT.FADT.RankData[i].Reputation = 0;
+            };
+
+            mwFACT.FactionsAttitudes = new List<(TES3Lib.Subrecords.Shared.ANAM name, TES3Lib.Subrecords.FACT.INTV value)>();
+            foreach (var factionDisp in obFACT.XNAM)
+            {
+                mwFACT.FactionsAttitudes.Add((new TES3Lib.Subrecords.Shared.ANAM { EditorId = "shieeeeeeeeit" },new TES3Lib.Subrecords.FACT.INTV { FactionReactionValue = factionDisp.Disposition}));
+            }
+
+            return mwFACT;
         }
 
         private static TES3Lib.Records.SPEL ConvertSPEL(TES4Lib.Records.SPEL obSPEL)
@@ -230,6 +281,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             var mwSPEL = new TES3Lib.Records.SPEL
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obSPEL.EDID.EditorId) },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = obSPEL.FULL.DisplayName },
                 SPDT = new TES3Lib.Subrecords.SPEL.SPDT
                 {
                     Type = CastSpellTypeToMW(obSPEL.SPIT.Type),

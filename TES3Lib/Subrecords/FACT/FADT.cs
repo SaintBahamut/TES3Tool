@@ -5,6 +5,7 @@ using System.Text;
 using TES3Lib.Base;
 using TES3Lib.Enums;
 using Utility;
+using Utility.Attributes;
 using Attribute = TES3Lib.Enums.Attribute;
 
 namespace TES3Lib.Subrecords.FACT
@@ -21,13 +22,12 @@ namespace TES3Lib.Subrecords.FACT
 
         public int Unknown { get; set; }
 
-        /// <summary>
-        /// 0 or 1
-        /// </summary>
-        public HashSet<FactionFlags> Flags { get; set; }
+        [SizeInBytes(4)]
+        public bool IsHiddenFromPlayer { get; set; }
 
         public FADT()
         {
+            Unknown = -1;
         }
 
         public FADT(byte[] rawData) : base(rawData)
@@ -86,7 +86,7 @@ namespace TES3Lib.Subrecords.FACT
             }
 
             data.AddRange(ByteWriter.ToBytes(Unknown, typeof(int)));
-            data.AddRange(ByteWriter.ToBytes(SerializeFlag(Flags), typeof(FactionFlags)));
+            data.AddRange(ByteWriter.ToBytes(IsHiddenFromPlayer, typeof(bool), (SizeInBytesAttribute)IsHiddenFromPlayer.GetType().GetCustomAttributes(true)[0]));
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
                .Concat(BitConverter.GetBytes(data.Count()))
@@ -104,11 +104,6 @@ namespace TES3Lib.Subrecords.FACT
             public int FirstSkill;
             public int SecondSkill;
             public int Reputation;
-        }
-
-        public enum FactionFlags : int
-        {
-            IsHiddenFromPlayer = 0x00001,
         }
     }
 }
