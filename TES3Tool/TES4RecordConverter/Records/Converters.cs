@@ -133,6 +133,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             if (recordType.Equals("ENCH"))
             {
                 var mwENCH = ConvertENCH((TES4Lib.Records.ENCH)obRecord);
+                if (mwENCH.ENAM.Count.Equals(0)) return null;
                 return new ConvertedRecordData(obRecord.FormId, mwENCH.GetType().Name, mwENCH.NAME.EditorId, mwENCH);
             }
 
@@ -789,8 +790,6 @@ namespace TES3Tool.TES4RecordConverter.Records
                 if(!enam.MagicEffect.Equals(TES3Lib.Enums.MagicEffect.None))
                     mwENCH.ENAM.Add(enam);
             }
-
-            if (mwENCH.ENAM.Count.Equals(0)) return null;
 
             return mwENCH;
         }

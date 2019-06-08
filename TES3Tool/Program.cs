@@ -10,11 +10,11 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-           //ConvertSI();
+           ConvertSI();
 
            //OblivionLoadTest();
 
-           MWLoadTest();
+           //MWLoadTest();
 
 
 
