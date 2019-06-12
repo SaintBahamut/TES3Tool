@@ -29,8 +29,8 @@ namespace TES3Tool
             var stat = TES4Load(fileESM, new List<string> {
                 "STAT","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT","SPEL",
                 "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO",
-                "CLOT","CREA","DOOR","FACT","CLAS","LVLC","LVLI","NPC_",
-                "RACE","CLAS","CELL","WRLD"
+                "CLOT","CREA","DOOR","CLAS","LVLC","LVLI","NPC_",
+                "RACE","CLAS","CELL","WRLD","FACT"
             });
             var testEX = ConvertInteriorsAndExteriors(stat);
             testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\SI.esp");

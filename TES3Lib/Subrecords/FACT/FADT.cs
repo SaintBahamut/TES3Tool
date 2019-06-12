@@ -6,6 +6,7 @@ using TES3Lib.Base;
 using TES3Lib.Enums;
 using Utility;
 using Utility.Attributes;
+using static Utility.Common;
 using Attribute = TES3Lib.Enums.Attribute;
 
 namespace TES3Lib.Subrecords.FACT
@@ -54,7 +55,7 @@ namespace TES3Lib.Subrecords.FACT
             }
 
             Unknown = reader.ReadBytes<int>(base.Data);
-            Flags = reader.ReadFlagBytes<FactionFlags>(base.Data);
+            IsHiddenFromPlayer = reader.ReadBytes<int>(base.Data) == 0 ? false : true;
         }
 
         public override byte[] SerializeSubrecord()
@@ -86,7 +87,9 @@ namespace TES3Lib.Subrecords.FACT
             }
 
             data.AddRange(ByteWriter.ToBytes(Unknown, typeof(int)));
-            data.AddRange(ByteWriter.ToBytes(IsHiddenFromPlayer, typeof(bool), (SizeInBytesAttribute)IsHiddenFromPlayer.GetType().GetCustomAttributes(true)[0]));
+
+           var getSizeProp = GetAttributeFromType<SizeInBytesAttribute>(this.GetType().GetProperty("IsHiddenFromPlayer"));
+           data.AddRange(ByteWriter.ToBytes(IsHiddenFromPlayer, typeof(bool), getSizeProp));
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
                .Concat(BitConverter.GetBytes(data.Count()))

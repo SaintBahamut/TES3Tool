@@ -634,7 +634,7 @@ namespace TES3Tool
                 {"Weapons\\SylsWarhammer\\SylsWarhammer.NIF\0","SI\\w\\SylsWarhammer.NIF\0"},
                 {"Weapons\\Gromite\\ObeliskStaff01.NIF\0","SI\\w\\obeliskstaff01.NIF\0"},
                 {"Weapons\\Adventurer\\TsaesciDuskBlade.NIF\0","SI\\w\\TsaesciDuskBlade.NIF\0"},
-                {"Weapons\\Adventurer\\AdventurersSword1.NIF\0","SI\\w\\AdventurersSword1.NIF\0"},
+                {"Weapons\\Adventurer\\AdventurersSword1.NIF\0","SI\\w\\AdventurersSword.NIF\0"},
                 {"Staffs\\TestStaff02.NIF\0","SI\\w\\TestStaff02.NIF\0"},
                 {"Staffs\\TestStaff03.NIF\0","SI\\w\\TestStaff03.NIF\0"},
                 {"Weapons\\Jyygylag\\Claymore.NIF\0","SI\\w\\JyygylagClaymore.NIF\0"},

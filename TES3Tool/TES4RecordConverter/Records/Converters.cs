@@ -237,7 +237,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             var mwFACT = new TES3Lib.Records.FACT
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obFACT.EDID.EditorId) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = obFACT.FULL.DisplayName },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = !IsNull(obFACT.FULL) ? NameFormater(obFACT.FULL.DisplayName) : EditorIdFormater(obFACT.EDID.EditorId) },
                 FADT = new TES3Lib.Subrecords.FACT.FADT
                 {
                     FirstAttribute = TES3Lib.Enums.Attribute.Strength,
@@ -259,7 +259,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             for (int i = 0; i < obFACT.RNKS.Count; i++)
             {
-                mwFACT.RNAM.Add(new TES3Lib.Subrecords.FACT.RNAM { RankName = obFACT.RNKS[i].MNAM.MaleRankTitle }); //yes im totally assuming your gender here
+                mwFACT.RNAM.Add(new TES3Lib.Subrecords.FACT.RNAM { RankName = !IsNull(obFACT.RNKS[i].MNAM) ? obFACT.RNKS[i].MNAM.MaleRankTitle : "/0" }); //yes im totally assuming your gender here
                 mwFACT.FADT.RankData[i].FirstAttribute = 0;
                 mwFACT.FADT.RankData[i].SecondAttribute = 0;
                 mwFACT.FADT.RankData[i].FirstSkill = 0;
@@ -268,10 +268,10 @@ namespace TES3Tool.TES4RecordConverter.Records
             };
 
             mwFACT.FactionsAttitudes = new List<(TES3Lib.Subrecords.Shared.ANAM name, TES3Lib.Subrecords.FACT.INTV value)>();
-            foreach (var factionDisp in obFACT.XNAM)
-            {
-                mwFACT.FactionsAttitudes.Add((new TES3Lib.Subrecords.Shared.ANAM { EditorId = "shieeeeeeeeit" },new TES3Lib.Subrecords.FACT.INTV { FactionReactionValue = factionDisp.Disposition}));
-            }
+            //foreach (var factionDisp in obFACT.XNAM)
+            //{
+            //    mwFACT.FactionsAttitudes.Add((new TES3Lib.Subrecords.Shared.ANAM { EditorId = "shieeeeeeeeit" },new TES3Lib.Subrecords.FACT.INTV { FactionReactionValue = factionDisp.Disposition}));
+            //}
 
             return mwFACT;
         }
