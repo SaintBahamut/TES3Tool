@@ -6,7 +6,7 @@ namespace TES3Lib.Subrecords.Shared
     /// <summary>
     /// AI Wander Package
     /// </summary>
-    public class AI_W : Subrecord
+    public class AI_W : Subrecord, IAIPackage
     {
         public short Distance { get; set; }
 
@@ -26,7 +26,7 @@ namespace TES3Lib.Subrecords.Shared
 
         public AI_W()
         {
-
+            Unknown = 1;
         }
 
         public AI_W(byte[] rawData) : base(rawData)

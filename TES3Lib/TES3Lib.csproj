@@ -172,6 +172,8 @@
     <Compile Include="Subrecords\SPEL\ENAM.cs" />
     <Compile Include="Subrecords\_Shared\ANAM.cs" />
     <Compile Include="Subrecords\_Shared\BNAM.cs" />
+    <Compile Include="Base\IAIPackage.cs" />
+    <Compile Include="Subrecords\_Shared\CNDT.cs" />
     <Compile Include="Subrecords\_Shared\NNAM.cs" />
     <Compile Include="Subrecords\LOCK\LKDT.cs" />
     <Compile Include="Subrecords\LTEX\INTV.cs" />
@@ -210,7 +212,6 @@
     <Compile Include="Subrecords\_Shared\AI_T.cs" />
     <Compile Include="Subrecords\_Shared\AI_W.cs" />
     <Compile Include="Subrecords\NPC_\CNAM.cs" />
-    <Compile Include="Subrecords\NPC_\CNDT.cs" />
     <Compile Include="Subrecords\_Shared\DNAM.cs" />
     <Compile Include="Subrecords\_Shared\DODT.cs" />
     <Compile Include="Subrecords\NPC_\FLAG.cs" />

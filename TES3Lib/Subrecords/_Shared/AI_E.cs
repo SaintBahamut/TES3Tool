@@ -7,7 +7,7 @@ namespace TES3Lib.Subrecords.Shared
     /// <summary>
     /// AI Escort Package
     /// </summary>
-    public class AI_E : Subrecord
+    public class AI_E : Subrecord, IAIPackage
     {
         public float DestinationX { get; set; }
 
@@ -17,8 +17,12 @@ namespace TES3Lib.Subrecords.Shared
 
         public short Duration { get; set; }
 
+        /// <summary>
+        /// Always 32 bytes, if EditorId is less, then its padded
+        /// with memory junk after null terminator
+        /// </summary>
         [SizeInBytes(32)]
-        public string CellDestination { get; set; }
+        public string TargetEditorId { get; set; }
 
         /// <summary>
         /// Unknown (0100?)
@@ -27,7 +31,10 @@ namespace TES3Lib.Subrecords.Shared
 
         public AI_E()
         {
-
+            DestinationX = 0x7F7FFFFF;
+            DestinationY = 0x7F7FFFFF;
+            DestinationZ = 0x7F7FFFFF;
+            Unknown = 1;
         }
 
         public AI_E(byte[] rawData) : base(rawData)
@@ -37,7 +44,7 @@ namespace TES3Lib.Subrecords.Shared
             DestinationY = reader.ReadBytes<float>(base.Data);
             DestinationZ = reader.ReadBytes<float>(base.Data);
             Duration = reader.ReadBytes<short>(base.Data);
-            CellDestination = reader.ReadBytes<string>(base.Data, 32);
+            TargetEditorId = reader.ReadBytes<string>(base.Data, 32);
             Unknown = reader.ReadBytes<short>(base.Data);
         }
     }

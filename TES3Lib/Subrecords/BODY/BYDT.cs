@@ -18,6 +18,10 @@ namespace TES3Lib.Subrecords.BODY
 
         public BYDT()
         {
+            BodyPart = BodyPart.Ankle;
+            IsVampire = 0;
+            Flags = new HashSet<BodyPartFlag> { BodyPartFlag.Playable };
+            PartType = BodyPartType.Skin;
         }
 
         public BYDT(byte[] rawData) : base(rawData)

@@ -297,6 +297,21 @@ namespace TES3Tool.TES4RecordConverter
                 {
                     bool cellMerge = false;
                     string cellFormId = exteriorCell.FormId;
+
+                    //mania/dementia garden hacks
+                    if (!IsNull(exteriorCell.EDID) && (exteriorCell.EDID.EditorId.Equals("SEDementiaGardenExterior\0") || exteriorCell.EDID.EditorId.Equals("SEManiaGardenExterior\0")))
+                    {
+                        exteriorCell.DATA.Flags.Add(TES4Lib.Enums.Flags.CellFlag.IsInteriorCell);
+                        exteriorCell.DATA.Flags.Add(TES4Lib.Enums.Flags.CellFlag.BehaveLikeExterior);
+
+                        var gardenCell = ConvertCELL(exteriorCell);
+                        var gardenChildren = subBlocks.Groups.FirstOrDefault(x => x.Label == exteriorCell.FormId);
+                        ConvertCellChildren(ref gardenCell, gardenChildren, cellFormId);
+                        ConvertedRecords["CELL"].Add(new ConvertedRecordData(exteriorCell.FormId, "CELL", exteriorCell.EDID.EditorId, gardenCell));
+                        return;
+                    }
+
+
                     var convertedCell = ConvertCELL(exteriorCell);
 
                     // resolve if this cell at this grid already exist

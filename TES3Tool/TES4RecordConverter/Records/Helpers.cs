@@ -166,6 +166,11 @@ namespace TES3Tool.TES4RecordConverter.Records
             .Replace("Male", "Ma");
         }
 
+        static string SoundEditorIdShortener(string name)
+        {
+            return name.Replace("DrainPipe", "DrainP");
+        }
+
         internal static string CreatureIdFormater(string sourceEditorId)
         {
             int idSize = sourceEditorId.Count();
@@ -222,13 +227,18 @@ namespace TES3Tool.TES4RecordConverter.Records
 
         internal static string SoundIdFormater(string sourceEditorId)
         {
-            int idSize = sourceEditorId.Count();
-            if (idSize <= 31)
-                return $"s{sourceEditorId}";
+            //int idSize = sourceEditorId.Count();
+            //if (idSize <= 31)
+            //    return $"s{sourceEditorId}";
+
+            var result = SoundEditorIdShortener(sourceEditorId);
+
+            int idSize = result.Count();
+            if (result.Length <= 31)
+                return result;
 
             int diff = idSize - 31;
-            string path = $"s{sourceEditorId.Remove(0, diff)}";
-            return path;
+            return $"s{result.Remove(0, diff)}";
         }
 
         /// <summary>

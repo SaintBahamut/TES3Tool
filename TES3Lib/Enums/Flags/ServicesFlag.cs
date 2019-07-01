@@ -20,5 +20,6 @@
         Spellmaking = 0x08000,
         Enchanting = 0x10000,
         RepairItem = 0x20000,
+        AutoCalc = 0xA00000 //is turn on when NPC has autocalc flag
     }
 }

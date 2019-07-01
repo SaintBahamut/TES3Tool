@@ -6,7 +6,7 @@ namespace TES3Lib.Subrecords.Shared
     /// <summary>
     /// AI Travel Package
     /// </summary>
-    public class AI_T : Subrecord
+    public class AI_T : Subrecord, IAIPackage
     {
         public float DestinationX { get; set; }
 

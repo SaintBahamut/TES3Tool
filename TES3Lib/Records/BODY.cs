@@ -34,6 +34,10 @@ namespace TES3Lib.Records
 
         public BODY()
         {
+            NAME = new NAME();
+            MODL = new MODL() { ModelPath = "\0" };
+            FNAM = new FNAM() { Name = "Argonian\0" };
+            BYDT = new BYDT();
         }
 
         public BODY(byte[] rawData) : base(rawData)

@@ -60,7 +60,7 @@ namespace TES3Lib.Base
 
         #endregion
 
-        public Record()
+        public Record() 
         {
             Header = 0;
             Flags = new HashSet<RecordFlag>();

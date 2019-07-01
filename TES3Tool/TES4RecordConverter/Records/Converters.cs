@@ -138,7 +138,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             }
 
             //SPELLS
-            if (recordType.Equals("SPELL"))
+            if (recordType.Equals("SPEL"))
             {
                 var mwSPEL = ConvertSPEL((TES4Lib.Records.SPEL)obRecord);
                 if (mwSPEL.ENAM.Count.Equals(0)) return null;
@@ -259,7 +259,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
             for (int i = 0; i < obFACT.RNKS.Count; i++)
             {
-                mwFACT.RNAM.Add(new TES3Lib.Subrecords.FACT.RNAM { RankName = !IsNull(obFACT.RNKS[i].MNAM) ? obFACT.RNKS[i].MNAM.MaleRankTitle : "/0" }); //yes im totally assuming your gender here
+                mwFACT.RNAM.Add(new TES3Lib.Subrecords.FACT.RNAM { RankName = !IsNull(obFACT.RNKS[i].MNAM) ? obFACT.RNKS[i].MNAM.MaleRankTitle : "\0" }); //yes im totally assuming your gender here
                 mwFACT.FADT.RankData[i].FirstAttribute = 0;
                 mwFACT.FADT.RankData[i].SecondAttribute = 0;
                 mwFACT.FADT.RankData[i].FirstSkill = 0;
@@ -276,12 +276,33 @@ namespace TES3Tool.TES4RecordConverter.Records
             return mwFACT;
         }
 
+        private static void ConvertLVSP(TES4Lib.Records.LVSP obLVSP)
+        {
+            // need a plan for that
+            // 1 loop over contents
+            // 2 check what entry is, leveled spells are prefixed with LL or SELL for SI
+            // 3 if its leveled list, dig in deeper, if its spell pick one
+
+            foreach (var leveledSpell in obLVSP.LVLO)
+            {
+                // need grab without converting
+                var spell = TES4Lib.TES4.TES4RecordIndex[leveledSpell.ItemFormId]; //could be LVSP or SPELL record
+                var editorId = spell.GetEditorId();
+                if(editorId.StartsWith("SELL") || editorId.StartsWith("SELL"))
+                {
+                    //go deeper
+                }
+
+
+            }
+        }
+
         private static TES3Lib.Records.SPEL ConvertSPEL(TES4Lib.Records.SPEL obSPEL)
         {
             var mwSPEL = new TES3Lib.Records.SPEL
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obSPEL.EDID.EditorId) },
-                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = obSPEL.FULL.DisplayName },
+                FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = !IsNull(obSPEL.FULL) ? NameFormater(obSPEL.FULL.DisplayName) : "\0" },
                 SPDT = new TES3Lib.Subrecords.SPEL.SPDT
                 {
                     Type = CastSpellTypeToMW(obSPEL.SPIT.Type),
@@ -353,6 +374,9 @@ namespace TES3Tool.TES4RecordConverter.Records
                 },
                 NPCS = new List<TES3Lib.Subrecords.Shared.NPCS>()
             };
+
+            for (int i = 0; i < 7; i++)
+                mwRACE.RADT.SkillBonuses[i] = new TES3Lib.Subrecords.RACE.RADT.SkillBonus();
 
             if (obRACE.DATA.IsPlayable) mwRACE.RADT.Flags.Add(TES3Lib.Enums.Flags.RaceFlags.Playable);
 
@@ -428,8 +452,10 @@ namespace TES3Tool.TES4RecordConverter.Records
                     Alarm = obNPC.AIDT.Responsibility,
                     Flags = CastServicesToMW(obNPC.AIDT.Services)
                 },
-              
             };
+
+            if (mwNPC.FLAG.Flags.Contains(TES3Lib.Enums.Flags.NPCFlag.AutoCalc))
+                mwNPC.AIDT.Flags.Add(TES3Lib.Enums.Flags.ServicesFlag.AutoCalc);
 
             string ClassName = GetBaseId(obNPC.CNAM.FormId);
             if (!string.IsNullOrEmpty(ClassName))
@@ -585,7 +611,12 @@ namespace TES3Tool.TES4RecordConverter.Records
                 },
                 XSCL = !IsNull(obCREA.BNAM) && !obCREA.BNAM.BaseScale.Equals(1.0f) ? new TES3Lib.Subrecords.Shared.XSCL { Scale = obCREA.BNAM.BaseScale } : null
             };
-
+            //if (mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.AutoCalc))
+            //{
+            //    mwCREA.AIDT.Flags.Add(TES3Lib.Enums.Flags.ServicesFlag.AutoCalc);
+            //}
+                
+       
             if (mwCREA.FLAG.Flags.Contains(TES3Lib.Enums.Flags.CreatureFlag.Biped))
             {
                 mwCREA.MODL.ModelPath = Config.CREABiped;

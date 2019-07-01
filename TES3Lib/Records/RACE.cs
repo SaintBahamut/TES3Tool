@@ -45,6 +45,11 @@ namespace TES3Lib.Records
 
         public RACE()
         {
+            NAME = new NAME();
+            FNAM = new FNAM();
+            DESC = new DESC();
+            RADT = new RADT();
+            NPCS = new List<NPCS>();
         }
 
         public RACE(byte[] rawData) : base(rawData)

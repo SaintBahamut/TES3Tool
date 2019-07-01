@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TES3Utilities\RaceCreator.cs" />
     <Compile Include="TES4RecordConverter\Config.cs" />
     <Compile Include="TES4RecordConverter\Oblivion2Morrowind.cs" />
     <Compile Include="TES4RecordConverter\Records\Converters.cs" />

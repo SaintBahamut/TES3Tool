@@ -137,7 +137,7 @@ namespace TES4Lib.Base
 
 
 
-            var worldSpacesList = new List<string>() { SEWorld, SETheFringe, SENSCrucible, SENSBliss , SENSPalace, SEVitharnWorld };
+            var worldSpacesList = new List<string>() { SEWorld, SETheFringe, SENSCrucible, SENSBliss , SENSPalace, SEVitharnWorld, SEManiaGarden, SEDementiaGarden };
 
             //find the WRLD we are looking for
             var reader = new ByteReader();

@@ -1,10 +1,10 @@
 ﻿using TES3Lib.Base;
 using Utility;
 
-namespace TES3Lib.Subrecords.NPC_
+namespace TES3Lib.Subrecords.Shared
 {
     /// <summary>
-    /// Cell escort/follow (optional)
+    /// Cell escort/follow for AI Package (optional)
     /// </summary>
     public class CNDT : Subrecord
     {
@@ -12,7 +12,6 @@ namespace TES3Lib.Subrecords.NPC_
 
         public CNDT()
         {
-
         }
 
         public CNDT(byte[] rawData) : base(rawData)

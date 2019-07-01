@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using TES3Lib.Base;
 using TES3Lib.Enums.Flags;
 using Utility;
+using Utility.Attributes;
 
 namespace TES3Lib.Subrecords.Shared
 {
@@ -44,6 +49,43 @@ namespace TES3Lib.Subrecords.Shared
             Unknown3 = reader.ReadBytes<byte>(base.Data);
             Unknown4 = reader.ReadBytes<byte>(base.Data);
             Flags = reader.ReadFlagBytes<ServicesFlag>(base.Data);
+        }
+
+        public override byte[] SerializeSubrecord()
+        {
+
+            var properties = this.GetType()
+                .GetProperties(BindingFlags.Public |
+                               BindingFlags.Instance |
+                               BindingFlags.DeclaredOnly)
+                               .OrderBy(x => x.MetadataToken)
+                               .ToList();
+
+            List<byte> data = new List<byte>();
+            foreach (PropertyInfo property in properties)
+            {
+                object value = property.GetValue(this);
+                var sizeAttribute = property.GetCustomAttributes<SizeInBytesAttribute>().FirstOrDefault();
+
+                //used for flags in subrecords
+                if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(HashSet<>))
+                {
+                    Type enumType = property.PropertyType.GetGenericArguments()[0];
+                    Type enumValueType = Enum.GetUnderlyingType(enumType);
+
+                    var xserialized = ByteWriter.ToBytes(SerializeFlag(value), enumValueType);
+
+                    data.AddRange(xserialized);
+                    continue;
+                }
+
+                data.AddRange(ByteWriter.ToBytes(value, property.PropertyType, sizeAttribute));
+            }
+
+            var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
+               .Concat(BitConverter.GetBytes(data.Count()))
+               .Concat(data).ToArray();
+            return serialized;
         }
     }
 }

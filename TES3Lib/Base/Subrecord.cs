@@ -56,7 +56,6 @@ namespace TES3Lib.Base
         public Subrecord()
         {
             Name = this.GetType().Name;
-
         }
 
         /// <summary>
