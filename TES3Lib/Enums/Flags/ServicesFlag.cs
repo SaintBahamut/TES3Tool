@@ -20,6 +20,10 @@
         Spellmaking = 0x08000,
         Enchanting = 0x10000,
         RepairItem = 0x20000,
-        AutoCalc = 0xA00000 //is turn on when NPC has autocalc flag
+        Unknown1 = 0x40000,
+        Unknown2 = 0x80000, //found on guars
+        Unknown3 = 0xC00000, //found on guars
+        AutoCalc = 0xA00000, //is turn on when NPC has autocalc flag
+        Unknown4 = 0x1000000 //found on guars
     }
 }

@@ -181,7 +181,8 @@ namespace Utility
             var enumValues = Enum.GetValues(typeof(T));
             foreach (var enumVal in enumValues)
             {
-                if ((converted & Convert.ToUInt32(enumVal)) != 0)
+                var flag = Convert.ToUInt32(enumVal);
+                if ((converted & flag) == flag)
                 {
                     setOfEnum.Add((T)Enum.ToObject(enumType, enumVal));
                 }

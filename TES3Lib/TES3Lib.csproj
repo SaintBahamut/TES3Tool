@@ -125,6 +125,7 @@
     <Compile Include="Subrecords\CONT\CNDT.cs" />
     <Compile Include="Subrecords\CONT\FLAG.cs" />
     <Compile Include="Subrecords\CREA\CNAM.cs" />
+    <Compile Include="Subrecords\CREA\CNDT.cs" />
     <Compile Include="Subrecords\DIAL\DATA.cs" />
     <Compile Include="Subrecords\ENCH\ENAM.cs" />
     <Compile Include="Subrecords\ENCH\ENDT.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Subrecords\LEVC\CNAM.cs" />
     <Compile Include="Subrecords\LEVC\INDX.cs" />
     <Compile Include="Subrecords\LEVC\INTV.cs" />
+    <Compile Include="Subrecords\NPC_\CNDT.cs" />
     <Compile Include="Subrecords\PGRD\PGRC.cs" />
     <Compile Include="Subrecords\PGRD\PGRP.cs" />
     <Compile Include="Subrecords\PGRD\DATA.cs" />
@@ -173,7 +175,6 @@
     <Compile Include="Subrecords\_Shared\ANAM.cs" />
     <Compile Include="Subrecords\_Shared\BNAM.cs" />
     <Compile Include="Base\IAIPackage.cs" />
-    <Compile Include="Subrecords\_Shared\CNDT.cs" />
     <Compile Include="Subrecords\_Shared\NNAM.cs" />
     <Compile Include="Subrecords\LOCK\LKDT.cs" />
     <Compile Include="Subrecords\LTEX\INTV.cs" />
