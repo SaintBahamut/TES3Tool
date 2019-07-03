@@ -54,7 +54,7 @@ namespace TES3Lib.Subrecords.FACT
                 FavoredSkills[i] = reader.ReadBytes<Skill>(rawData);
             }
 
-            Unknown = reader.ReadBytes<int>(base.Data);
+            Unknown = reader.ReadBytes<uint>(base.Data);
             IsHiddenFromPlayer = reader.ReadBytes<int>(base.Data) == 0 ? false : true;
         }
 
