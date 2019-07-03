@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace TES3Lib.Enums
+﻿namespace TES3Lib.Enums
 {
     /// <summary>
     /// Source MWSE
     /// https://github.com/MWSE/MWSE/blob/master/MWSE/TES3MagicEffect.h
     /// </summary>
-    public enum MagicEffect : short
+    public enum MagicEffect : int
     {
         None = -1,
         WaterBreathing = 0,

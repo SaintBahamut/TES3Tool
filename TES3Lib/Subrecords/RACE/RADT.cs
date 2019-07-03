@@ -41,7 +41,7 @@ namespace TES3Lib.Subrecords.RACE
             SkillBonuses = new SkillBonus[7];
             for (int i = 0; i < 7; i++)
             {
-                SkillBonuses[i].Skill = (Skill)reader.ReadBytes<int>(base.Data);
+                SkillBonuses[i].Skill = reader.ReadBytes<Skill>(base.Data);
                 SkillBonuses[i].Bonus = reader.ReadBytes<int>(base.Data);
             }
 
@@ -87,8 +87,8 @@ namespace TES3Lib.Subrecords.RACE
 
             for (int i = 0; i < 7; i++)
             {
-                data.AddRange(SkillBonuses[i].Skill.Equals(Skill.Unused) ? new byte[] { 255, 255, 255, 255 } : ByteWriter.ToBytes((int)SkillBonuses[i].Skill, typeof(int)));
-                data.AddRange(ByteWriter.ToBytes((int)SkillBonuses[i].Bonus, typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(SkillBonuses[i].Skill, typeof(uint)));
+                data.AddRange(ByteWriter.ToBytes(SkillBonuses[i].Bonus, typeof(int)));
             }
             data.AddRange(ByteWriter.ToBytes(Male.Strength, typeof(int)));
             data.AddRange(ByteWriter.ToBytes(Female.Strength, typeof(int)));
@@ -125,7 +125,7 @@ namespace TES3Lib.Subrecords.RACE
 
             public SkillBonus()
             {
-                Skill = Skill.Unused;
+                Skill = Skill.None;
                 Bonus = 0;
             }
         }

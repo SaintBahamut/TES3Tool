@@ -9,9 +9,6 @@ namespace TES3Tool.TES4RecordConverter.Records
 {
     internal static class Helpers
     {
-        //DELET DIS
-        internal static HashSet<String> temporary = new HashSet<string>();
-
         internal static Dictionary<string, List<ConvertedRecordData>> ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
 
         internal static Dictionary<string, List<ConvertedExteriorPathgrid>> ExteriorPathGrids = new Dictionary<string, List<ConvertedExteriorPathgrid>>();

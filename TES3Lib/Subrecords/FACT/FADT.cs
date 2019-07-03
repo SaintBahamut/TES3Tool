@@ -21,22 +21,22 @@ namespace TES3Lib.Subrecords.FACT
 
         public Skill[] FavoredSkills { get; set; }
 
-        public int Unknown { get; set; }
+        public uint Unknown { get; set; }
 
         [SizeInBytes(4)]
         public bool IsHiddenFromPlayer { get; set; }
 
         public FADT()
         {
-            Unknown = -1;
+            Unknown = 0xFFFFFFFF;
         }
 
         public FADT(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
 
-            FirstAttribute = (Attribute)reader.ReadBytes<int>(base.Data);
-            SecondAttributre = (Attribute)reader.ReadBytes<int>(base.Data);
+            FirstAttribute = reader.ReadBytes<Attribute>(base.Data);
+            SecondAttributre = reader.ReadBytes<Attribute>(base.Data);
 
             RankData = new RankRequirement[10];
             for (int i = 0; i < RankData.Length; i++)
@@ -51,7 +51,7 @@ namespace TES3Lib.Subrecords.FACT
             FavoredSkills = new Skill[6];
             for (int i = 0; i < FavoredSkills.Length; i++)
             {
-                FavoredSkills[i] = (Skill)reader.ReadBytes<int>(rawData);
+                FavoredSkills[i] = reader.ReadBytes<Skill>(rawData);
             }
 
             Unknown = reader.ReadBytes<int>(base.Data);
@@ -69,8 +69,8 @@ namespace TES3Lib.Subrecords.FACT
 
             List<byte> data = new List<byte>();
          
-            data.AddRange(ByteWriter.ToBytes(FirstAttribute, typeof(int)));
-            data.AddRange(ByteWriter.ToBytes(SecondAttributre, typeof(int)));
+            data.AddRange(ByteWriter.ToBytes(FirstAttribute, typeof(uint)));
+            data.AddRange(ByteWriter.ToBytes(SecondAttributre, typeof(uint)));
 
             for (int i = 0; i < RankData.Length; i++)
             {
@@ -83,7 +83,7 @@ namespace TES3Lib.Subrecords.FACT
 
             for (int i = 0; i < FavoredSkills.Length; i++)
             {
-                data.AddRange(ByteWriter.ToBytes(FavoredSkills[i], typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(FavoredSkills[i], typeof(uint)));
             }
 
             data.AddRange(ByteWriter.ToBytes(Unknown, typeof(int)));

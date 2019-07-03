@@ -31,16 +31,16 @@ namespace TES3Lib.Records
         /// Ingredient parameters and effects
         /// </summary>
         public IRDT IRDT { get; set; }
-        
-        /// <summary>
-        /// Icon
-        /// </summary>
-        public ITEX ITEX { get; set; }
 
         /// <summary>
         /// Script
         /// </summary>
         public SCRI SCRI { get; set; }
+
+        /// <summary>
+        /// Icon
+        /// </summary>
+        public ITEX ITEX { get; set; }
 
         public INGR()
         {

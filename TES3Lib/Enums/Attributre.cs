@@ -1,6 +1,6 @@
 ﻿namespace TES3Lib.Enums
 {
-    public enum Attribute : byte
+    public enum Attribute : uint
     {
         Strength = 0,
         Intelligence = 1,
@@ -10,6 +10,6 @@
         Endurance = 5,
         Personality = 6,
         Luck = 7,
-        Unused = 255,
+        None = 0xFFFFFFFF,
     }
 }

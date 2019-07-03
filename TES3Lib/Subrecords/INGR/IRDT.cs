@@ -6,6 +6,7 @@ using System.Text;
 using TES3Lib.Base;
 using TES3Lib.Enums;
 using Utility;
+using Utility.Attributes;
 using Attribute = TES3Lib.Enums.Attribute;
 
 namespace TES3Lib.Subrecords.INGR
@@ -19,10 +20,11 @@ namespace TES3Lib.Subrecords.INGR
         /// <summary>
         /// Most relevant, decides if SkillId or AttributeId is used
         /// </summary>
+        [SizeInBytes(4)]
         public MagicEffect[] EffectIds { get; set; }
 
         /// <summary>
-        /// Default is skill witt Id 0 (Block), only used with appriorpate EffectId
+        /// Default is skill with Id 0 (Block), only used with appriorpate EffectId
         /// </summary>
         public Skill[] SkillIds { get; set; }
 
@@ -33,7 +35,6 @@ namespace TES3Lib.Subrecords.INGR
 
         public IRDT()
         {
-
         }
 
         public IRDT(byte[] rawData) : base(rawData)
@@ -44,24 +45,24 @@ namespace TES3Lib.Subrecords.INGR
             Value = reader.ReadBytes<int>(base.Data);
             EffectIds = new MagicEffect[]
             {
-                (MagicEffect)reader.ReadBytes<int>(base.Data),
-                (MagicEffect)reader.ReadBytes<int>(base.Data),
-                (MagicEffect)reader.ReadBytes<int>(base.Data),
-                (MagicEffect)reader.ReadBytes<int>(base.Data),
+                reader.ReadBytes<MagicEffect>(base.Data),
+                reader.ReadBytes<MagicEffect>(base.Data),
+                reader.ReadBytes<MagicEffect>(base.Data),
+                reader.ReadBytes<MagicEffect>(base.Data),
             };
             SkillIds = new Skill[]
             {
-                (Skill)reader.ReadBytes<int>(base.Data),
-                (Skill)reader.ReadBytes<int>(base.Data),
-                (Skill)reader.ReadBytes<int>(base.Data),
-                (Skill)reader.ReadBytes<int>(base.Data),
+                reader.ReadBytes<Skill>(base.Data),
+                reader.ReadBytes<Skill>(base.Data),
+                reader.ReadBytes<Skill>(base.Data),
+                reader.ReadBytes<Skill>(base.Data),
             };
             AttributeIds = new Attribute[]
             {
-                (Attribute)reader.ReadBytes<int>(base.Data),
-                (Attribute)reader.ReadBytes<int>(base.Data),
-                (Attribute)reader.ReadBytes<int>(base.Data),
-                (Attribute)reader.ReadBytes<int>(base.Data),
+                reader.ReadBytes<Attribute>(base.Data),
+                reader.ReadBytes<Attribute>(base.Data),
+                reader.ReadBytes<Attribute>(base.Data),
+                reader.ReadBytes<Attribute>(base.Data),
             };
         }
 
@@ -79,12 +80,12 @@ namespace TES3Lib.Subrecords.INGR
 
             for (int i = 0; i < SkillIds.Length; i++)
             {
-                data.AddRange(ByteWriter.ToBytes(Convert.ToInt32(SkillIds[i]), typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(SkillIds[i], typeof(uint)));
             }
 
             for (int i = 0; i < AttributeIds.Length; i++)
             {
-                data.AddRange(ByteWriter.ToBytes(Convert.ToInt32(AttributeIds[i]), typeof(int)));
+                data.AddRange(ByteWriter.ToBytes(AttributeIds[i], typeof(uint)));
             }
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)

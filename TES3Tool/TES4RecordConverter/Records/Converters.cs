@@ -873,9 +873,9 @@ namespace TES3Tool.TES4RecordConverter.Records
                     MagicEffect = CastMagicEffectToMW(effect.EFIT.MagicEffect),
                     Duration = effect.EFIT.Duration,
                     Magnitude = effect.EFIT.Magnitude,
-                    Unknown1 = 1,
-                    Unknown2 = 2,
-                    Unknown3 = 3,
+                    Unknown1 = 0,
+                    Unknown2 = 0,
+                    Unknown3 = 0,
                 };
                 enam.Skill = CastActorValueToSkillEffectMW(effect.EFIT.ActorValue, enam.MagicEffect);
                 enam.Attribute = CastActorValueToAttributeEffectMW(effect.EFIT.ActorValue, enam.MagicEffect);
@@ -892,11 +892,16 @@ namespace TES3Tool.TES4RecordConverter.Records
                 ENDT = new TES3Lib.Subrecords.ENCH.ENDT
                 {
                     Type = CastEnchantmentTypeToMW(obENCH.ENIT.EnchantmentType),
-                    AutoCalculate = obENCH.ENIT.Flags.Equals(0) ? true : false,
+                    AutoCalculate = obENCH.ENIT.Flags.Equals(0) ? AutoCalculateFlag.On : AutoCalculateFlag.Off,
                     Charge = obENCH.ENIT.Charge,
                     EnchantCost = obENCH.ENIT.EnchantCost,
                 }
             };
+
+            if(mwENCH.ENDT.Type.Equals(TES3Lib.Enums.EnchantmentType.ConstantEffect))
+            {
+                mwENCH.ENDT.AutoCalculate = AutoCalculateFlag.Unavailable;
+            }
 
             mwENCH.ENAM = new List<TES3Lib.Subrecords.ENCH.ENAM>();
             foreach (var effect in obENCH.EFCT)
@@ -982,8 +987,8 @@ namespace TES3Tool.TES4RecordConverter.Records
                 else
                 {
                     IRDT.EffectIds[i] = TES3Lib.Enums.MagicEffect.None;
-                    IRDT.SkillIds[i] = TES3Lib.Enums.Skill.Unused;
-                    IRDT.AttributeIds[i] = TES3Lib.Enums.Attribute.Unused;
+                    IRDT.SkillIds[i] = TES3Lib.Enums.Skill.None;
+                    IRDT.AttributeIds[i] = TES3Lib.Enums.Attribute.None;
                 }
             }
             return mwINGR;

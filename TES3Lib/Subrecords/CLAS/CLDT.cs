@@ -40,7 +40,7 @@ namespace TES3Lib.Subrecords.CLAS
 
         /// <summary>
         /// Flags
-		///	0x0001 = Playable
+		///	0x0001 = Playable TODO make this a bool
         /// </summary>
         public int IsPlayable { get; set; }
 
@@ -56,16 +56,16 @@ namespace TES3Lib.Subrecords.CLAS
             PrimaryAttribute1 = (Attribute)reader.ReadBytes<int>(base.Data);
             PrimaryAttribute2 = (Attribute)reader.ReadBytes<int>(base.Data);
             Specialization = (Specialization)reader.ReadBytes<int>(base.Data);
-            Minor1 = (Skill)reader.ReadBytes<int>(base.Data);
-            Major1 = (Skill)reader.ReadBytes<int>(base.Data);
-            Minor2 = (Skill)reader.ReadBytes<int>(base.Data);
-            Major2 = (Skill)reader.ReadBytes<int>(base.Data);
-            Minor3 = (Skill)reader.ReadBytes<int>(base.Data);
-            Major3 = (Skill)reader.ReadBytes<int>(base.Data);
-            Minor4 = (Skill)reader.ReadBytes<int>(base.Data);
-            Major4 = (Skill)reader.ReadBytes<int>(base.Data);
-            Minor5 = (Skill)reader.ReadBytes<int>(base.Data);
-            Major5 = (Skill)reader.ReadBytes<int>(base.Data);
+            Minor1 = reader.ReadBytes<Skill>(base.Data);
+            Major1 = reader.ReadBytes<Skill>(base.Data);
+            Minor2 = reader.ReadBytes<Skill>(base.Data);
+            Major2 = reader.ReadBytes<Skill>(base.Data);
+            Minor3 = reader.ReadBytes<Skill>(base.Data);
+            Major3 = reader.ReadBytes<Skill>(base.Data);
+            Minor4 = reader.ReadBytes<Skill>(base.Data);
+            Major4 = reader.ReadBytes<Skill>(base.Data);
+            Minor5 = reader.ReadBytes<Skill>(base.Data);
+            Major5 = reader.ReadBytes<Skill>(base.Data);
             IsPlayable = reader.ReadBytes<int>(base.Data);
             Services = reader.ReadFlagBytes<ServicesFlag>(base.Data);
         }

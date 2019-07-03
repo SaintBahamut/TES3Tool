@@ -1,6 +1,6 @@
 ﻿namespace TES3Lib.Enums
 {
-    public enum Skill : byte
+    public enum Skill : uint
     {
         Block = 0,
         Armorer = 1,
@@ -29,6 +29,6 @@
         Mercantile = 24,
         Speechcraft = 25,
         HandToHand = 26,
-        Unused = 255
+        None = 0xFFFFFFFF
     }
 }

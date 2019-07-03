@@ -14,7 +14,6 @@ namespace TES3Lib.Subrecords.Shared
 
         public SCRI()
         {
-
         }
 
         public SCRI(byte[] rawData) : base(rawData)

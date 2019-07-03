@@ -38,7 +38,7 @@ namespace TES3Lib.Subrecords.BOOK
             Weight = reader.ReadBytes<float>(base.Data);
             Value = reader.ReadBytes<int>(base.Data);
             Flag = reader.ReadBytes<BookFlag>(base.Data);
-            Skill = (Skill)reader.ReadBytes<int>(base.Data);
+            Skill = reader.ReadBytes<Skill>(base.Data);
             EnchantPoints = reader.ReadBytes<int>(base.Data);
         }
 
@@ -51,7 +51,7 @@ namespace TES3Lib.Subrecords.BOOK
             data.AddRange(ByteWriter.ToBytes(Weight, typeof(float)));
             data.AddRange(ByteWriter.ToBytes(Value, typeof(int)));
             data.AddRange(ByteWriter.ToBytes((int)Flag, typeof(int)));
-            data.AddRange(ByteWriter.ToBytes(Skill.Equals(Skill.Unused) ? UInt32.MaxValue : (uint)Skill, typeof(uint)));
+            data.AddRange(ByteWriter.ToBytes(Skill, typeof(uint)));
             data.AddRange(ByteWriter.ToBytes(EnchantPoints, typeof(int)));
 
             var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)

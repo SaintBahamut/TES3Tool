@@ -1,5 +1,6 @@
 ﻿using TES3Lib.Base;
 using TES3Lib.Enums;
+using TES3Lib.Enums.Flags;
 using Utility;
 using Utility.Attributes;
 
@@ -16,8 +17,7 @@ namespace TES3Lib.Subrecords.ENCH
 
         public int Charge { get; set; }
 
-        [SizeInBytes(4)]
-        public bool AutoCalculate { get; set; }
+        public AutoCalculateFlag AutoCalculate { get; set; }
 
         public ENDT()
         {
@@ -29,7 +29,7 @@ namespace TES3Lib.Subrecords.ENCH
             Type = reader.ReadBytes<EnchantmentType>(base.Data);
             EnchantCost = reader.ReadBytes<int>(base.Data);
             Charge = reader.ReadBytes<int>(base.Data);
-            AutoCalculate = reader.ReadBytes<bool>(base.Data);
+            AutoCalculate = reader.ReadBytes<AutoCalculateFlag>(base.Data);
         }
     }
 }

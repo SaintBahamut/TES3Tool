@@ -104,10 +104,28 @@ namespace Utility
                 Type enumValueType = Enum.GetUnderlyingType(t);
                 int enumValueSize = Marshal.SizeOf(enumValueType);
 
+                if (enumValueType == typeof(uint) && bytesToRead != null)
+                {
+                    var slicedData = data.Skip(offset).Take((int)bytesToRead).ToArray();
+                    Array.Resize(ref slicedData, 4);
+
+                    var converted = BitConverter.ToUInt32(slicedData, 0);
+                    offset += (int)bytesToRead;
+                    return (T)Enum.ToObject(t, converted);
+                }
                 if (enumValueType == typeof(uint))
                 {
                     var converted = BitConverter.ToUInt32(data, offset);
                     offset += enumValueSize;
+                    return (T)Enum.ToObject(t, converted);
+                }
+                if (enumValueType == typeof(int) && bytesToRead != null)
+                {
+                    var slicedData = data.Skip(offset).Take((int)bytesToRead).ToArray();
+                    Array.Resize(ref slicedData, 4);
+
+                    var converted = BitConverter.ToInt32(slicedData, 0);
+                    offset += (int)bytesToRead;
                     return (T)Enum.ToObject(t, converted);
                 }
                 if (enumValueType == typeof(int))

@@ -143,6 +143,6 @@ namespace TES3Lib.Subrecords.NPC_
 
         public void SetNPCSkill(Skill skill, int value) => Skills[(int)skill] = (byte)value;
 
-        public int GetNPCSkill(Skill skill, int value) => Skills[(int)skill] = (byte)value;
+        public uint GetNPCSkill(Skill skill, int value) => Skills[(int)skill] = (byte)value;
     }
 }
