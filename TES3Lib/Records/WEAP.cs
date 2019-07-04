@@ -12,17 +12,43 @@ namespace TES3Lib.Records
     [DebuggerDisplay("{NAME.EditorId}")]
     public class WEAP : Record
     {
+        /// <summary>
+        /// EditorId
+        /// </summary>
         public NAME NAME { get; set; }
+
+        /// <summary>
+        /// Model
+        /// </summary>
         public MODL MODL { get; set; }
+
+        /// <summary>
+        /// Display name
+        /// </summary>
         public FNAM FNAM { get; set; }
+
+        /// <summary>
+        /// Weapon properties
+        /// </summary>
         public WPDT WPDT { get; set; }
-        public ITEX ITEX { get; set; }
-        public ENAM ENAM { get; set; }
+
+        /// <summary>
+        /// Script
+        /// </summary>
         public SCRI SCRI { get; set; }
+
+        /// <summary>
+        /// Icon
+        /// </summary>
+        public ITEX ITEX { get; set; }
+
+        /// <summary>
+        /// Enchantment
+        /// </summary>
+        public ENAM ENAM { get; set; }
 
         public WEAP()
         {
-
         }
 
         public WEAP(byte[] rawData) : base(rawData)

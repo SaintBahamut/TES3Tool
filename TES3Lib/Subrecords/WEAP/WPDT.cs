@@ -1,5 +1,7 @@
-﻿using TES3Lib.Base;
+﻿using System.Collections.Generic;
+using TES3Lib.Base;
 using TES3Lib.Enums;
+using TES3Lib.Enums.Flags;
 using Utility;
 
 namespace TES3Lib.Subrecords.WEAP
@@ -35,16 +37,11 @@ namespace TES3Lib.Subrecords.WEAP
 
         public byte ThrustMax { get; set; }
 
-        /// <summary>
-        /// Flags (0 to 1)
-		///	0 = ?
-		///	1 = Ignore Normal Weapon Resistance?
-        /// </summary>
-        public int Flags { get; set; }
+        public HashSet<WeaponFlag> Flags { get; set; }
 
         public WPDT()
         {
-
+            Flags = new HashSet<WeaponFlag>();
         }
 
         public WPDT(byte[] rawData) : base(rawData)
@@ -63,7 +60,7 @@ namespace TES3Lib.Subrecords.WEAP
             SlashMax = reader.ReadBytes<byte>(base.Data);
             ThrustMin = reader.ReadBytes<byte>(base.Data);
             ThrustMax = reader.ReadBytes<byte>(base.Data);
-            Flags = reader.ReadBytes<int>(base.Data);
+            Flags = reader.ReadFlagBytes<WeaponFlag>(base.Data);
         }
     }
 }

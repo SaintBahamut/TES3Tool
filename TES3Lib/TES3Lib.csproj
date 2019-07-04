@@ -51,6 +51,7 @@
     <Compile Include="Enums\Flags\AutoCalculateFlag.cs" />
     <Compile Include="Enums\Flags\ContainerFlag.cs" />
     <Compile Include="Enums\Flags\RaceFlags.cs" />
+    <Compile Include="Enums\Flags\WeaponFlag.cs" />
     <Compile Include="Enums\GenderType.cs" />
     <Compile Include="Enums\ArmorType.cs" />
     <Compile Include="Enums\Attributre.cs" />

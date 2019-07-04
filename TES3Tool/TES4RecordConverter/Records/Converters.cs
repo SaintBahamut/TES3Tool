@@ -414,7 +414,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     PrimaryAttribute1 = CastActorValueToAttributeMW(obCLAS.DATA.PrimaryAttribute1),
                     PrimaryAttribute2 = CastActorValueToAttributeMW(obCLAS.DATA.PrimaryAttribute2),
                     Specialization = (TES3Lib.Enums.Specialization)obCLAS.DATA.Specialization,
-                    IsPlayable = obCLAS.DATA.Flags.Contains(ClassFlag.Playable) ? 1 : 0,
+                    IsPlayable = obCLAS.DATA.Flags.Contains(ClassFlag.Playable) ? true : false,
                     Services = CastServicesToMW(obCLAS.DATA.Services),
                     Major1 = CastActorValueToSkillMW(obCLAS.DATA.MajorSkills[0]),
                     Major2 = CastActorValueToSkillMW(obCLAS.DATA.MajorSkills[1]),

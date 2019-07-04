@@ -41,6 +41,7 @@ namespace TES3Lib.Subrecords.RACE
             SkillBonuses = new SkillBonus[7];
             for (int i = 0; i < 7; i++)
             {
+                SkillBonuses[i] = new SkillBonus();
                 SkillBonuses[i].Skill = reader.ReadBytes<Skill>(base.Data);
                 SkillBonuses[i].Bonus = reader.ReadBytes<int>(base.Data);
             }

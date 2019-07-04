@@ -9,6 +9,9 @@ namespace TES3Lib.Subrecords.FACT
 {
     public class RNAM : Subrecord
     {
+        /// <summary>
+        /// Always 32 bytes padded with junk data if less
+        /// </summary>
         public string RankName { get; set; }
 
         public RNAM()

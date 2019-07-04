@@ -38,9 +38,9 @@ namespace TES3Tool
 
         public static void MWLoadTest()
         {
-            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\fact.ESP";
+            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\weap.ESP";
 
-            var tes3 = TES3Load(fileESM, new List<string> { "FACT"});
+            var tes3 = TES3Load(fileESM, new List<string> { "WEAP"});
 
 
             //foreach (var item in tes3.Records)
@@ -69,7 +69,7 @@ namespace TES3Tool
             //    }
             //}
 
-            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\fact_out.esp");
+            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\weap_out.esp");
         }
 
         public static void OblivionLoadTest()

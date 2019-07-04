@@ -6,6 +6,7 @@ using TES3Lib.Base;
 using TES3Lib.Enums;
 using TES3Lib.Enums.Flags;
 using Utility;
+using Utility.Attributes;
 using Attribute = TES3Lib.Enums.Attribute;
 
 namespace TES3Lib.Subrecords.CLAS
@@ -38,11 +39,8 @@ namespace TES3Lib.Subrecords.CLAS
 
         public Skill Major5 { get; set; }
 
-        /// <summary>
-        /// Flags
-		///	0x0001 = Playable TODO make this a bool
-        /// </summary>
-        public int IsPlayable { get; set; }
+        [SizeInBytes(4)]
+        public bool IsPlayable { get; set; }
 
         public HashSet<ServicesFlag> Services { get; set; }
 
@@ -66,7 +64,7 @@ namespace TES3Lib.Subrecords.CLAS
             Major4 = reader.ReadBytes<Skill>(base.Data);
             Minor5 = reader.ReadBytes<Skill>(base.Data);
             Major5 = reader.ReadBytes<Skill>(base.Data);
-            IsPlayable = reader.ReadBytes<int>(base.Data);
+            IsPlayable = reader.ReadBytes<int>(base.Data,4) == 1 ? true : false;
             Services = reader.ReadFlagBytes<ServicesFlag>(base.Data);
         }
 

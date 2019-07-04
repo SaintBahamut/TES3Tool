@@ -57,7 +57,7 @@ namespace TES3Lib.Records
         public List<(INDX INDX, BNAM BNAM, CNAM CNAM)> BPSL { get; set; }
 
         /// <summary>
-        /// Enhancement
+        /// Enchantment
         /// </summary>
         public ENAM ENAM { get; set; }
 

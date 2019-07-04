@@ -6,7 +6,6 @@ using System.Text;
 using TES3Lib.Base;
 using TES3Lib.Subrecords.FACT;
 using TES3Lib.Subrecords.Shared;
-using static Utility.Common;
 using Utility;
 using TES3Lib.Enums.Flags;
 using System.Diagnostics;
