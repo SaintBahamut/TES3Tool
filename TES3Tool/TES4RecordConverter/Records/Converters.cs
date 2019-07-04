@@ -250,7 +250,8 @@ namespace TES3Tool.TES4RecordConverter.Records
                         TES3Lib.Enums.Skill.MediumArmor,
                         TES3Lib.Enums.Skill.HeavyArmor,
                         TES3Lib.Enums.Skill.LightArmor,
-                        TES3Lib.Enums.Skill.Axe
+                        TES3Lib.Enums.Skill.Axe,
+                        TES3Lib.Enums.Skill.Restoration,
                     },
                     RankData = new TES3Lib.Subrecords.FACT.FADT.RankRequirement[obFACT.RNKS.Count]
                 },

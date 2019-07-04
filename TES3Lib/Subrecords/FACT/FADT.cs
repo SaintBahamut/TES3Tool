@@ -21,14 +21,11 @@ namespace TES3Lib.Subrecords.FACT
 
         public Skill[] FavoredSkills { get; set; }
 
-        public uint Unknown { get; set; }
-
         [SizeInBytes(4)]
         public bool IsHiddenFromPlayer { get; set; }
 
         public FADT()
         {
-            Unknown = 0xFFFFFFFF;
         }
 
         public FADT(byte[] rawData) : base(rawData)
@@ -48,13 +45,12 @@ namespace TES3Lib.Subrecords.FACT
                 RankData[i].Reputation = reader.ReadBytes<int>(base.Data);
             }
 
-            FavoredSkills = new Skill[6];
+            FavoredSkills = new Skill[7];
             for (int i = 0; i < FavoredSkills.Length; i++)
             {
-                FavoredSkills[i] = reader.ReadBytes<Skill>(rawData);
+                FavoredSkills[i] = reader.ReadBytes<Skill>(base.Data);
             }
 
-            Unknown = reader.ReadBytes<uint>(base.Data);
             IsHiddenFromPlayer = reader.ReadBytes<int>(base.Data) == 0 ? false : true;
         }
 
@@ -85,8 +81,6 @@ namespace TES3Lib.Subrecords.FACT
             {
                 data.AddRange(ByteWriter.ToBytes(FavoredSkills[i], typeof(uint)));
             }
-
-            data.AddRange(ByteWriter.ToBytes(Unknown, typeof(int)));
 
            var getSizeProp = GetAttributeFromType<SizeInBytesAttribute>(this.GetType().GetProperty("IsHiddenFromPlayer"));
            data.AddRange(ByteWriter.ToBytes(IsHiddenFromPlayer, typeof(bool), getSizeProp));
