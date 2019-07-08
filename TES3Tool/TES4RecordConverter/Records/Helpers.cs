@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tes3Tool.TES3Utilities;
 using static Utility.Common;
 
 namespace TES3Tool.TES4RecordConverter.Records
@@ -41,6 +42,27 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             string template = "begin Sound__PLACEHOLDER_\r\n\r\nif(CellChanged == 0)\r\n\tif(GetSoundPlaying \"_PLACEHOLDER_\" == 0 )\r\n\t\tPlayLoopSound3DVP \"_PLACEHOLDER_\", 1.0, 1.0\r\n\tendif\r\nendif\r\n\r\nend";
             return template.Replace("_PLACEHOLDER_", SoundEditorId);
+        }
+
+        internal static void CreateRaceBodyParts(TES3Lib.Records.RACE mwRACE)
+        {
+            var config = new RaceCreator.CreatorConfig();
+            config.EditorId = mwRACE.NAME.EditorId;
+            config.IsBodyPartsOnly = true;
+            config.IsMale = true;
+            config.EditorIdPrefix = "SE";
+            config.IsFemale = mwRACE.NAME.EditorId.Equals("Sheogorath\0") ? false : true;
+            config.ModelFolderPath = $"{Config.convertedRootFolder}\\{Config.RACEPath}\\{mwRACE.NAME.EditorId.TrimEnd('\0')}";
+            config.IsBeast = false;
+            var bodyParts = RaceCreator.CreateRace(config);
+
+            if (!ConvertedRecords.ContainsKey("BODY"))
+                ConvertedRecords.Add("BODY", new List<ConvertedRecordData>());
+
+            foreach (var item in bodyParts)
+            {
+                Helpers.ConvertedRecords["BODY"].Add(new ConvertedRecordData("Unavailable", "BODY", item.GetEditorId(), item));
+            }
         }
 
         internal static void UpdateDoorReferences()

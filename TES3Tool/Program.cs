@@ -10,11 +10,11 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-           //ConvertSI();
+           ConvertSI();
 
            //OblivionLoadTest();
 
-           MWLoadTest();
+           //MWLoadTest();
 
 
 
@@ -29,8 +29,8 @@ namespace TES3Tool
             var stat = TES4Load(fileESM, new List<string> {
                 "STAT","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT",
                 "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO",
-                "CLOT","DOOR","LVLC","LVLI","_NPC",
-                "RACE","CELL","WRLD"//,"FACT","CLAS","SPEL","NPC_","CREA"
+                "CLOT","DOOR","LVLC","LVLI",
+                "RACE","CELL","WRLD","SPEL","NPC_","CREA","CLAS","FACT"
             });
             var testEX = ConvertInteriorsAndExteriors(stat);
             testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\SI.esp");

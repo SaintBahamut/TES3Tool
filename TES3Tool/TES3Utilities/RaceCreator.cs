@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TES3Lib.Base;
 using TES3Lib.Enums;
+using TES3Lib.Enums.Flags;
 using TES3Lib.Records;
-using TES3Lib.Subrecords.RACE;
-using TES3Lib.Subrecords.Shared;
 
 namespace Tes3Tool.TES3Utilities
 {
@@ -21,7 +17,8 @@ namespace Tes3Tool.TES3Utilities
         {
             BodyPart.Ankle, BodyPart.Chest,BodyPart.Foot, BodyPart.Forearm,
             BodyPart.Groin, BodyPart.Hand, BodyPart.Knee, BodyPart.Neck,
-            BodyPart.Upperarm, BodyPart.Upperleg, BodyPart.Wrist
+            BodyPart.Upperarm, BodyPart.Upperleg, BodyPart.Wrist, BodyPart.Hair,
+            BodyPart.Head
         };
 
         public static List<Record> CreateRace(CreatorConfig config)
@@ -38,10 +35,10 @@ namespace Tes3Tool.TES3Utilities
             }
 
             if(config.IsMale)
-                outputRecords.AddRange(CreateBodyParts(config, config.IsMale, bodyParts));
+                outputRecords.AddRange(CreateBodyParts(config, true, bodyParts));
 
             if (config.IsFemale)
-                outputRecords.AddRange(CreateBodyParts(config, config.IsMale, bodyParts));
+                outputRecords.AddRange(CreateBodyParts(config, false, bodyParts));
 
             return outputRecords;
         }
@@ -50,25 +47,54 @@ namespace Tes3Tool.TES3Utilities
         {
             var outputRecords = new List<Record>();
             var symbol = IsMale ? "m" : "f";
+            var EditorIdTrimmed = config.EditorId.TrimEnd('\0');
 
             if (bodyParts.Contains(BodyPart.Hand))
             {
                 var body = new BODY();
-                body.FNAM.Name = config.Name;
-                body.MODL.ModelPath = $"{config.ModelFolderPath}_{symbol}1st.nif";
+                body.BYDT.BodyPart = BodyPart.Hand;
+                body.FNAM.Name = config.EditorId;
+                body.MODL.ModelPath = $"{config.ModelFolderPath}_{symbol}_body1st.nif\0";
                 body.BYDT.PartType = BodyPartType.Skin;
-                body.NAME.EditorId = $"b_n_{config.EditorId}_{symbol}_hand.1st\0";
+                body.NAME.EditorId = $"{config.EditorIdPrefix}b_n_{EditorIdTrimmed}_{symbol}_hand.1st\0";
+                body.BYDT.Flags.Add(BodyPartFlag.Playable);
+                if (!IsMale)
+                {
+                    body.BYDT.Flags.Add(BodyPartFlag.Female);
+                }
+
                 outputRecords.Add(body);
             }
         
             foreach (var part in bodyParts)
             {
                 var body = new BODY();
+                body.BYDT.BodyPart = part;
+                body.FNAM.Name = config.EditorId;
+                
+                if(part.Equals(BodyPart.Head))
+                {
+                    body.NAME.EditorId = $"{config.EditorIdPrefix}b_n_{EditorIdTrimmed}_{symbol}_head01\0";
+                    body.MODL.ModelPath = $"{config.ModelFolderPath}_{symbol}_head01.nif\0";
+                }
+                else if(part.Equals(BodyPart.Hair))
+                {
+                    body.NAME.EditorId = $"{config.EditorIdPrefix}b_n_{EditorIdTrimmed}_{symbol}_hair01\0";
+                    body.MODL.ModelPath = $"{config.ModelFolderPath}_{symbol}_hair01.nif\0";
+                }
+                else
+                {
+                    body.NAME.EditorId = $"{config.EditorIdPrefix}b_n_{EditorIdTrimmed}_{symbol}_{part.ToString().ToLower()}\0";
+                    body.MODL.ModelPath = $"{config.ModelFolderPath}_{symbol}_body.nif\0";
+                }
 
-                body.FNAM.Name = config.Name;
-                body.MODL.ModelPath = $"{config.ModelFolderPath}_{symbol}.nif";
                 body.BYDT.PartType = BodyPartType.Skin;
-                body.NAME.EditorId = $"b_n_{config.EditorId}_{symbol}_{part.ToString().ToLower()}\0";
+               
+                body.BYDT.Flags.Add(BodyPartFlag.Playable);
+                if (!IsMale)
+                {
+                    body.BYDT.Flags.Add(BodyPartFlag.Female);
+                }
                 outputRecords.Add(body);
             }
 
@@ -82,6 +108,8 @@ namespace Tes3Tool.TES3Utilities
             public string Name { get; set; }
 
             public string Description { get; set; }
+
+            public string EditorIdPrefix { get; set; }
 
             /// <summary>
             /// Format of path: Race\\FilePrefix*
@@ -99,6 +127,7 @@ namespace Tes3Tool.TES3Utilities
 
             public CreatorConfig()
             {
+                EditorIdPrefix = String.Empty;
                 IsBodyPartsOnly = false;
                 IsMale = true;
                 IsFemale = true;

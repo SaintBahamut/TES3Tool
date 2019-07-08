@@ -11,7 +11,7 @@ namespace TES3Tool
         public static int cellShiftY = 50;
 
         public static string convertedRootFolder = "SI";
-
+        public static string convertedExtraEditorIdPrefix = "SE";
         //path for records
         public static string ARMOPath = "a";
         public static string MISCPath = "m";
@@ -30,6 +30,7 @@ namespace TES3Tool
         public static string BOOKPath = "p";
         public static string ALCHPath = "h";
         public static string APPAPath = "h";
+        public static string RACEPath = "b";
 
         public static string CREABiped = "r\\Skeleton.NIF\0";
         public static string CREAamphibious = "r\\swimmer.NIF\0";
@@ -108,7 +109,7 @@ namespace TES3Tool
                 {"000982E6","Monk\0"},
                 {"00093488","Blade\0"},
                 {"00092D99","Mage\0"},
-                {"0004B90A","Conjurer\0"},
+                //{"0004B90A","Conjurer\0"},
                 {"0003D7FC","Guard\0"},
                 {"0003D06A","Thief Service\0"},
                 {"00034521","Warrior\0"},
@@ -201,6 +202,13 @@ namespace TES3Tool
             MWRaceHairs.Add("Wood Elf F", new List<string>());
             MWRaceHairs.Add("High Elf M", new List<string>());
             MWRaceHairs.Add("High Elf F", new List<string>());
+
+            MWRaceHairs.Add("DarkSeducer M", new List<string>());
+            MWRaceHairs.Add("GoldenSaint F", new List<string>());
+            MWRaceHairs.Add("DarkSeducer F", new List<string>());
+            MWRaceHairs.Add("GoldenSaint M", new List<string>());
+            MWRaceHairs.Add("Sheogorath M", new List<string>());
+            MWRaceHairs.Add("Sheogorath F", new List<string>());
 
             MWRaceHairs["Dark Elf M"].Add("b_n_dark elf_m_hair_01\0");
             MWRaceHairs["Dark Elf M"].Add("b_n_dark elf_m_hair_02\0");
@@ -382,6 +390,13 @@ namespace TES3Tool
             MWRaceFaces.Add("Wood Elf F", new List<string>());
             MWRaceFaces.Add("High Elf M", new List<string>());
             MWRaceFaces.Add("High Elf F", new List<string>());
+
+            MWRaceFaces.Add("DarkSeducer M", new List<string>());
+            MWRaceFaces.Add("GoldenSaint F", new List<string>());
+            MWRaceFaces.Add("DarkSeducer F", new List<string>());
+            MWRaceFaces.Add("GoldenSaint M", new List<string>());
+            MWRaceFaces.Add("Sheogorath M", new List<string>());
+            MWRaceFaces.Add("Sheogorath F", new List<string>());
 
             MWRaceFaces["Breton M"].Add("b_n_breton_m_head_01\0");
             MWRaceFaces["Dark Elf M"].Add("b_n_dark elf_m_head_01\0");

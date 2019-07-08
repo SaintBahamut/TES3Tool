@@ -138,6 +138,7 @@ namespace TES4Lib.Base
 
 
             var worldSpacesList = new List<string>() { SEWorld, SETheFringe, SENSCrucible, SENSBliss , SENSPalace, SEVitharnWorld, SEManiaGarden, SEDementiaGarden };
+            //var worldSpacesList = new List<string>() { SEManiaGarden, SEDementiaGarden };
 
             //find the WRLD we are looking for
             var reader = new ByteReader();
@@ -151,7 +152,7 @@ namespace TES4Lib.Base
                 string FormId = GetFormId(reader);
    
 
-                if (name.Equals("WRLD") && worldSpacesList.Contains(FormId))//hard coded SEWorld
+                if (name.Equals("WRLD") && worldSpacesList.Contains(FormId))
                 {
                     var WRLD = new Records.WRLD(reader.ReadBytes<byte[]>(Data, size + TES4_RECORD_HEADER_SIZE));
                     TES4.TES4RecordIndex.Add(WRLD.FormId, WRLD);

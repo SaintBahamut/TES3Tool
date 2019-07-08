@@ -7,6 +7,7 @@ using static TES3Tool.TES4RecordConverter.Records.Converters;
 using TES3Tool.TES4RecordConverter.Records;
 using TES4Lib.Enums;
 using TES4Lib.Base;
+using TES3Lib.Records;
 
 namespace TES3Tool.TES4RecordConverter
 {
@@ -112,13 +113,10 @@ namespace TES3Tool.TES4RecordConverter
             {
                 ProcessInteriorSubBlocks(cellBlock);
             }
-
-
         }
 
         private static void ConvertExteriorCells(TES4Lib.TES4 tes4)
         {
-
             //convert cells
             var wrldGroupsTop = tes4.Groups.FirstOrDefault(x => x.Label == "WRLD");
             if (IsNull(wrldGroupsTop))
@@ -154,6 +152,23 @@ namespace TES3Tool.TES4RecordConverter
 
                 if (!IsNull(wrldCell))
                 {
+                   
+
+                    //gardens hacks
+                    if (wrld.EDID.EditorId.Equals("SEManiaGarden\0") || wrld.EDID.EditorId.Equals("SEDementiaGarden\0"))
+                    {
+                        wrldCell.DATA.Flags.Add(TES4Lib.Enums.Flags.CellFlag.IsInteriorCell);
+                        wrldCell.DATA.Flags.Add(TES4Lib.Enums.Flags.CellFlag.BehaveLikeExterior);
+
+                        var convertedGardenCell = ConvertCELL(wrldCell);
+
+                        var gWrldCellChildren = worldChildren.Groups.FirstOrDefault(x => x.Type.Equals(GroupLabel.CellChildren));
+                        ConvertCellChildren(ref convertedGardenCell, gWrldCellChildren, wrld.FormId);
+
+                        DistributeGardenReferences(convertedGardenCell, wrld.EDID.EditorId);
+                        continue;
+                    }
+
                     var convertedCell = ConvertCELL(wrldCell);
                     var wrldCellChildren = worldChildren.Groups.FirstOrDefault(x => x.Type.Equals(GroupLabel.CellChildren));
                     ConvertCellChildren(ref convertedCell, wrldCellChildren, wrld.FormId);
@@ -167,6 +182,29 @@ namespace TES3Tool.TES4RecordConverter
                 //    ConvertedRecords["PGRD"].Add(new ConvertedRecordData("PGRD", "PGRD", "PGRD", mergedGrid));
                 //}
 
+            }
+        }
+
+        private static void DistributeGardenReferences(TES3Lib.Records.CELL convertedCell, string gardenWorldName)
+        {
+
+            string cellName = gardenWorldName == "SEManiaGarden\0" ? "SEManiaGardenExterior\0" : "SEDementiaGardenExterior\0";
+            ConvertedRecordData targetConvertedCell = ConvertedRecords["CELL"].FirstOrDefault(x =>
+                  (x.Record as TES3Lib.Records.CELL).NAME.EditorId.Equals(cellName));
+
+            foreach (var cellReference in convertedCell.REFR)
+            {
+                if (!IsNull(targetConvertedCell))
+                {
+                    var cellRecord = targetConvertedCell.Record as TES3Lib.Records.CELL;
+                    cellRecord.NAM0.ReferenceCount++;
+                    cellReference.FRMR.ObjectIndex = cellRecord.NAM0.ReferenceCount;
+                    cellRecord.REFR.Add(cellReference);
+
+                    //need update parent formId
+                    var convertedReference = CellReferences.FirstOrDefault(x => x.Reference.Equals(cellReference));
+                    convertedReference.ParentCellFormId = targetConvertedCell.OriginFormId;
+                }
             }
         }
 

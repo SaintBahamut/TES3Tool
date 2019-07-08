@@ -22,7 +22,7 @@
         //REGN,
         //BSGN,
         //LTEX,
-        //BODY,
+        BODY,
         ARMO,
         CLOT,
         CONT,

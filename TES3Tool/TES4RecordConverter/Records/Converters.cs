@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using TES4Lib.Records;
 using TES3Lib.Enums.Flags;
 using TES4Lib.Enums.Flags;
+using Tes3Tool.TES3Utilities;
 
 namespace TES3Tool.TES4RecordConverter.Records
 {
@@ -371,7 +372,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                     },
                     SkillBonuses = new TES3Lib.Subrecords.RACE.RADT.SkillBonus[7],
                     Flags = new HashSet<RaceFlags>()
-                    
+
                 },
                 NPCS = new List<TES3Lib.Subrecords.Shared.NPCS>()
             };
@@ -386,7 +387,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 mwRACE.RADT.SkillBonuses[i].Skill = CastActorValueToSkillMW(obRACE.DATA.SkillBoosts[i].Skill);
                 mwRACE.RADT.SkillBonuses[i].Bonus = obRACE.DATA.SkillBoosts[i].Bonus;
             }
-             
+
             if (!IsNull(obRACE.SPLO))
             {
                 foreach (var spell in obRACE.SPLO)
@@ -398,6 +399,8 @@ namespace TES3Tool.TES4RecordConverter.Records
                     }
                 }
             }
+
+            CreateRaceBodyParts(mwRACE);
 
             return mwRACE;
         }
@@ -477,20 +480,17 @@ namespace TES3Tool.TES4RecordConverter.Records
             if (!IsNull(obNPC.SNAM))
             {
                 string FactionId = GetBaseId(obNPC.SNAM[0].FormId);
-                mwNPC.ANAM.EditorId = FactionId;
+                if (!string.IsNullOrEmpty(FactionId))
+                {
+                    mwNPC.ANAM.EditorId = FactionId;
+                }
             }
 
-            //oblivion actors have many factions, im getting just first one
-            if (!IsNull(obNPC.SNAM))
-            {
-                string FactionId = GetBaseId(obNPC.SNAM[0].FormId);
-                mwNPC.ANAM.EditorId = FactionId;
-            }
-
+            var gender = obNPC.ACBS.Flags.Contains(TES4Lib.Enums.Flags.NPCFlag.Female) ? "F" : "M";
             if (IsStandardMWRace(RaceId))
             {
                 var rnd = new Random(DateTime.Now.Millisecond);
-                var gender = obNPC.ACBS.Flags.Contains(TES4Lib.Enums.Flags.NPCFlag.Female) ? 'F' : 'M';
+                
                 var key = $"{RaceId} {gender}";
                 int headTypesCount = Config.MWRaceFaces[key].Count;
                 int hairTypesCount = Config.MWRaceHairs[key].Count;
@@ -498,6 +498,14 @@ namespace TES3Tool.TES4RecordConverter.Records
                 mwNPC.KNAM = new TES3Lib.Subrecords.NPC_.KNAM { HairModel = Config.MWRaceHairs[key][rnd.Next(0, hairTypesCount)] };
                 mwNPC.BNAM = new TES3Lib.Subrecords.Shared.BNAM { EditorId = Config.MWRaceFaces[key][rnd.Next(0, headTypesCount)] };
             }
+            else
+            {
+                var editorIdBase = $"{Config.convertedExtraEditorIdPrefix}b_n_{mwNPC.RNAM.RaceName.TrimEnd('\0')}_{gender.ToLower()}";
+                mwNPC.KNAM = new TES3Lib.Subrecords.NPC_.KNAM { HairModel = $"{editorIdBase}_hair01\0"};
+                mwNPC.BNAM = new TES3Lib.Subrecords.Shared.BNAM { EditorId = $"{editorIdBase}_head01\0"};
+            }
+
+
             mwNPC.NPDT = new TES3Lib.Subrecords.NPC_.NPDT
             {
                 Level = obNPC.ACBS.Flags.Contains(TES4Lib.Enums.Flags.NPCFlag.PCLevelOffset) ? (short)Math.Max(obNPC.ACBS.CalcMax, obNPC.ACBS.CalcMin) : (short)obNPC.ACBS.Level,
