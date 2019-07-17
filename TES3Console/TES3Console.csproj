@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{647BF9DF-7C62-49DF-8E17-57F9F953B78F}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Tes3Tool</RootNamespace>
-    <AssemblyName>TES3Tool</AssemblyName>
+    <RootNamespace>TES3Console</RootNamespace>
+    <AssemblyName>TES3Console</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -63,12 +63,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TES3Utilities\RaceCreator.cs" />
-    <Compile Include="TES4RecordConverter\Config.cs" />
-    <Compile Include="TES4RecordConverter\Oblivion2Morrowind.cs" />
-    <Compile Include="TES4RecordConverter\Records\Converters.cs" />
-    <Compile Include="TES4RecordConverter\Records\Helpers.cs" />
-    <Compile Include="TES4RecordConverter\Records\TypeConverters.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -78,6 +72,10 @@
     <ProjectReference Include="..\TES3Lib\TES3Lib.csproj">
       <Project>{eb6c834a-b58e-4bbf-8bc5-4dee6a925b4b}</Project>
       <Name>TES3Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TES3Oblivion\TES3Oblivion.csproj">
+      <Project>{73ee8cfd-cb48-4bda-a5f5-ef1a2400662a}</Project>
+      <Name>TES3Oblivion</Name>
     </ProjectReference>
     <ProjectReference Include="..\TES4Lib\TES4Lib.csproj">
       <Project>{53183f83-12f9-499b-afad-c28415ba2ae5}</Project>

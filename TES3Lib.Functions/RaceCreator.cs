@@ -5,7 +5,7 @@ using TES3Lib.Enums;
 using TES3Lib.Enums.Flags;
 using TES3Lib.Records;
 
-namespace Tes3Tool.TES3Utilities
+namespace TES3Lib.Functions
 {
     /// <summary>
     /// Create race template (Better Bodies)

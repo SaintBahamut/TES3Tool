@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Tes3Tool.TES3Utilities;
+using TES3Lib.Functions;
 using static Utility.Common;
 
-namespace TES3Tool.TES4RecordConverter.Records
+namespace TES3Oblivion
 {
     internal static class Helpers
     {
@@ -17,6 +15,25 @@ namespace TES3Tool.TES4RecordConverter.Records
         internal static List<TES3Lib.Records.REFR> DoorReferences = new List<TES3Lib.Records.REFR>();
 
         internal static List<ConvertedCellReference> CellReferences = new List<ConvertedCellReference>();
+
+        internal static TES3Lib.Records.TES3 createTES3HEader()
+        {
+            var header = new TES3Lib.Records.TES3
+            {
+                HEDR = new TES3Lib.Subrecords.TES3.HEDR
+                {
+                    CompanyName = "TES3Tool\0",
+                    Description = "\0",
+                    NumRecords = 666,
+                    ESMFlag = 0,
+                    Version = 1.3f,
+                },
+            };
+            header.Masters = new List<(TES3Lib.Subrecords.TES3.MAST MAST, TES3Lib.Subrecords.TES3.DATA DATA)>();
+            header.Masters.Add((new TES3Lib.Subrecords.TES3.MAST { Filename = "Morrowind.esm\0" }, new TES3Lib.Subrecords.TES3.DATA { MasterDataSize = 6666 }));
+
+            return header;
+        }
 
         internal static bool IsStandardMWRace(string EditorId)
         {
@@ -265,7 +282,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         /// </summary>
         /// <param name="formId">oblivion form id</param>
         /// <returns></returns>
-        static string GetDefaultIdFromFormId(string formId)
+        internal static string GetDefaultIdFromFormId(string formId)
         {
             string mwEditorId = string.Empty;
             var dupa = Config.ACTIPath;
@@ -275,7 +292,7 @@ namespace TES3Tool.TES4RecordConverter.Records
 
     }
 
-    public class ConvertedRecordData
+    internal class ConvertedRecordData
     {
         public string OriginFormId;
         public readonly string Type;
@@ -291,7 +308,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         }
     }
 
-    public class ConvertedCellReference
+    internal class ConvertedCellReference
     {
         public string ParentCellFormId;
         public readonly string ReferenceFormId;
@@ -307,7 +324,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         }
     }
 
-    public class ConvertedExteriorPathgrid
+    internal class ConvertedExteriorPathgrid
     {
         public TES3Lib.Records.PGRD PathGrid;
         public TES4Lib.Subrecords.PGRD.PGRI InterCellConnections;

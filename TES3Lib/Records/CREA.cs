@@ -11,6 +11,7 @@ using TES3Lib.Enums.Flags;
 using static Utility.Common;
 using System.Collections;
 using System.Diagnostics;
+using TES3Lib.Base.Interfaces;
 
 namespace TES3Lib.Records
 {
@@ -18,7 +19,7 @@ namespace TES3Lib.Records
     /// Creature Record
     /// </summary>
     [DebuggerDisplay("{NAME.EditorId}")]
-    public class CREA : Record
+    public class CREA : Record, IActor
     {
         /// <summary>
         /// EditorId

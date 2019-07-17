@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using static Utility.Common;
 using System.Diagnostics;
+using BNAM = TES3Lib.Subrecords.ARMO.BNAM;
 
 namespace TES3Lib.Records
 {
@@ -16,7 +17,7 @@ namespace TES3Lib.Records
     /// Armor Record
     /// </summary>
     [DebuggerDisplay("{NAME.EditorId}")]
-    public class ARMO : Record
+    public class ARMO : Record, IEquipement
     {
         /// <summary>
         /// EditorId

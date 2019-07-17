@@ -1,7 +1,7 @@
 ﻿using System;
 using static TES4Lib.TES4;
 using static TES3Lib.TES3;
-using static TES3Tool.TES4RecordConverter.Oblivion2Morrowind;
+using static TES3Oblivion.CellConverter;
 using System.Collections.Generic;
 
 namespace TES3Tool
@@ -10,13 +10,9 @@ namespace TES3Tool
     {
         static void Main(string[] args)
         {
-           ConvertSI();
-
-           //OblivionLoadTest();
-
-           //MWLoadTest();
-
-
+            ConvertSI();
+            //OblivionLoadTest();
+            //MWLoadTest();
 
             Console.WriteLine("Done");
             Console.ReadLine();
@@ -38,9 +34,9 @@ namespace TES3Tool
 
         public static void MWLoadTest()
         {
-            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\weap.ESP";
+            string fileESM = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Morrowind.esm";
 
-            var tes3 = TES3Load(fileESM, new List<string> { "WEAP"});
+            var tes3 = TES3Load(fileESM, new List<string> { "ARMO"});
 
 
             //foreach (var item in tes3.Records)
@@ -69,7 +65,7 @@ namespace TES3Tool
             //    }
             //}
 
-            tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\weap_out.esp");
+            //tes3.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\weap_out.esp");
         }
 
         public static void OblivionLoadTest()

@@ -1,18 +1,16 @@
-﻿using static TES3Tool.TES4RecordConverter.Records.Helpers;
-using static Utility.Common;
-using static TES3Tool.TES4RecordConverter.Oblivion2Morrowind;
-using static TES3Tool.TES4RecordConverter.Records.TypeConverters;
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using TES4Lib.Records;
 using TES3Lib.Enums.Flags;
 using TES4Lib.Enums.Flags;
-using Tes3Tool.TES3Utilities;
+using static TES3Oblivion.TypeConverter;
+using static TES3Oblivion.Helpers;
+using static Utility.Common;
 
-namespace TES3Tool.TES4RecordConverter.Records
+namespace TES3Oblivion
 {
-    public static class Converters
+    internal static class RecordConverter
     {
         /// <summary>
         /// Converts Oblivion Record to Morrowind Record
@@ -762,7 +760,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 var BaseId = GetBaseId(obCLOT.ENAM.EnchantmentFormId);
                 if (!string.IsNullOrEmpty(BaseId))
                 {
-                    mwCLOT.ENAM = new TES3Lib.Subrecords.CLOT.ENAM { EnchantmentId = BaseId };
+                    mwCLOT.ENAM = new TES3Lib.Subrecords.ARMO.ENAM { EnchantmentId = BaseId };
                 }
             }
 
@@ -1100,7 +1098,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             return new TES3Lib.Records.STAT()
             {
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obFLOR.MODL.ModelPath, TES3Tool.Config.FLORPath) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obFLOR.MODL.ModelPath, Config.FLORPath) },
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obFLOR.EDID.EditorId) },
             };
         }
@@ -1110,7 +1108,7 @@ namespace TES3Tool.TES4RecordConverter.Records
             var CONT = new TES3Lib.Records.CONT
             {
                 NAME = new TES3Lib.Subrecords.Shared.NAME { EditorId = EditorIdFormater(obFLOR.EDID.EditorId) },
-                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obFLOR.MODL.ModelPath, TES3Tool.Config.FLORPath) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL { ModelPath = PathFormater(obFLOR.MODL.ModelPath, Config.FLORPath) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM { Name = NameFormater(obFLOR.FULL.DisplayName) },
                 CNDT = new TES3Lib.Subrecords.CONT.CNDT { Weight = 0 },
                 FLAG = new TES3Lib.Subrecords.CONT.FLAG { Flags = new HashSet<ContainerFlag> { ContainerFlag.Organic, ContainerFlag.Respawns, ContainerFlag.DefaultUnknown } },
@@ -1281,7 +1279,7 @@ namespace TES3Tool.TES4RecordConverter.Records
                 },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM()
                 {
-                    Name = PathFormater(obSOUND.FNAM.SoundFilename, TES3Tool.Config.SOUNPath)
+                    Name = PathFormater(obSOUND.FNAM.SoundFilename, Config.SOUNPath)
                 },
                 DATA = new TES3Lib.Subrecords.SOUN.DATA()
                 {
@@ -1296,7 +1294,7 @@ namespace TES3Tool.TES4RecordConverter.Records
         {
             return new TES3Lib.Records.ACTI()
             {
-                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obACTI.MODL.ModelPath, TES3Tool.Config.ACTIPath) },
+                MODL = new TES3Lib.Subrecords.Shared.MODL() { ModelPath = PathFormater(obACTI.MODL.ModelPath, Config.ACTIPath) },
                 NAME = new TES3Lib.Subrecords.Shared.NAME() { EditorId = EditorIdFormater(obACTI.EDID.EditorId) },
                 FNAM = new TES3Lib.Subrecords.Shared.FNAM() { Name = !IsNull(obACTI.FULL) ? NameFormater(obACTI.FULL.DisplayName) : "\0" },
             };
@@ -1731,6 +1729,17 @@ namespace TES3Tool.TES4RecordConverter.Records
                 BaseId = mwRecordFromREFR.EditorId;
             }
             return BaseId;
+        }
+
+        internal static ConvertedRecordData ConvertRecordFromFormId(string BaseFormId)
+        {
+            TES4Lib.Base.Record record;
+            TES4Lib.TES4.TES4RecordIndex.TryGetValue(BaseFormId, out record);
+            if (IsNull(record)) return null;
+
+            var mwRecordFromREFR = ConvertRecord(record);
+
+            return mwRecordFromREFR;
         }
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using TES4Lib.Enums;
 using TES3Lib.Enums;
 
-namespace TES3Tool.TES4RecordConverter.Records
+namespace TES3Oblivion
 {
-    public static class TypeConverters
+    internal static class TypeConverter
     {
         public static byte CalcThrust(TES3Lib.Enums.WeaponType type, short damage)
         {

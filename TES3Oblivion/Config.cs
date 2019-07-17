@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace TES3Tool
+namespace TES3Oblivion
 {
-    public static class Config
+    internal static class Config
     {
         //positon shift
         public static int mwCellSize = 8192;

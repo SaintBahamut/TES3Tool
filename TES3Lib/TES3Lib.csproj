@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\Interfaces\IActor.cs" />
+    <Compile Include="Base\Interfaces\IEquipement.cs" />
+    <Compile Include="Enums\BodyPartSlot.cs" />
     <Compile Include="Enums\Flags\AutoCalculateFlag.cs" />
     <Compile Include="Enums\Flags\ContainerFlag.cs" />
     <Compile Include="Enums\Flags\RaceFlags.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="Subrecords\ALCH\TEXT.cs" />
     <Compile Include="Subrecords\APPA\AADT.cs" />
     <Compile Include="Subrecords\ARMO\AODT.cs" />
+    <Compile Include="Subrecords\ARMO\BNAM.cs" />
     <Compile Include="Subrecords\ARMO\CNAM.cs" />
     <Compile Include="Subrecords\ARMO\ENAM.cs" />
     <Compile Include="Subrecords\ARMO\INDX.cs" />
@@ -120,10 +124,7 @@
     <Compile Include="Subrecords\BSGN\TNAM.cs" />
     <Compile Include="Subrecords\CELL\INTV.cs" />
     <Compile Include="Subrecords\CLAS\CLDT.cs" />
-    <Compile Include="Subrecords\CLOT\CNAM.cs" />
     <Compile Include="Subrecords\CLOT\CTDT.cs" />
-    <Compile Include="Subrecords\CLOT\ENAM.cs" />
-    <Compile Include="Subrecords\CLOT\INDX.cs" />
     <Compile Include="Subrecords\CONT\CNDT.cs" />
     <Compile Include="Subrecords\CONT\FLAG.cs" />
     <Compile Include="Subrecords\CREA\CNAM.cs" />
@@ -176,7 +177,7 @@
     <Compile Include="Subrecords\SPEL\ENAM.cs" />
     <Compile Include="Subrecords\_Shared\ANAM.cs" />
     <Compile Include="Subrecords\_Shared\BNAM.cs" />
-    <Compile Include="Base\IAIPackage.cs" />
+    <Compile Include="Base\Interfaces\IAIPackage.cs" />
     <Compile Include="Subrecords\_Shared\NNAM.cs" />
     <Compile Include="Subrecords\LOCK\LKDT.cs" />
     <Compile Include="Subrecords\LTEX\INTV.cs" />

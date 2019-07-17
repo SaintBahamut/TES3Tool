@@ -9,6 +9,8 @@ using TES3Lib.Subrecords.Shared;
 using static Utility.Common;
 using Utility;
 using System.Diagnostics;
+using TES3Lib.Subrecords.ARMO;
+using BNAM = TES3Lib.Subrecords.ARMO.BNAM;
 
 namespace TES3Lib.Records
 {
@@ -16,7 +18,7 @@ namespace TES3Lib.Records
     /// Clothing Record
     /// </summary>
     [DebuggerDisplay("{NAME.EditorId}")]
-    public class CLOT : Record
+    public class CLOT : Record, IEquipement
     {
         /// <summary>
         /// EditorId

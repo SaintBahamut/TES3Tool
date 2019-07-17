@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using static Utility.Common;
-using static TES3Tool.TES4RecordConverter.Records.Helpers;
-using static TES3Tool.TES4RecordConverter.Records.Converters;
-using TES3Tool.TES4RecordConverter.Records;
-using TES4Lib.Enums;
+using static TES3Oblivion.Helpers;
+using static TES3Oblivion.RecordConverter;
+using static TES3Oblivion.SIPostProcessing.Definitions.BodyParts;
+using TES3Oblivion.SIPostProcessing.Definitions;
 using TES4Lib.Base;
-using TES3Lib.Records;
+using TES4Lib.Enums;
+using System.Threading.Tasks;
 
-namespace TES3Tool.TES4RecordConverter
+namespace TES3Oblivion
 {
-    public static class Oblivion2Morrowind
+    public static class CellConverter
     {
         public static TES3Lib.TES3 ConvertInteriorsAndExteriors(TES4Lib.TES4 tes4)
         {
             ConvertRecords(tes4, "SE");
-
-            //temporary.ToList().ForEach(x => Console.WriteLine(x));
 
             ConvertedRecords.Add("CELL", new List<ConvertedRecordData>());
             ConvertedRecords.Add("PGRD", new List<ConvertedRecordData>());
@@ -27,14 +26,24 @@ namespace TES3Tool.TES4RecordConverter
 
             UpdateDoorReferences();
 
+            //SI
+            PostProcessing();
+
             var tes3 = new TES3Lib.TES3();
             TES3Lib.Records.TES3 header = createTES3HEader();
             tes3.Records.Add(header);
 
             foreach (var record in Enum.GetNames(typeof(TES3Lib.RecordTypes)))
             {
+                //SI
+                if (record.Equals("BODY"))
+                {
+                    tes3.Records.AddRange(GetListOfBodyParts());
+                    continue;
+                }
+
                 if (!ConvertedRecords.ContainsKey(record)) continue;
-                tes3.Records.InsertRange(tes3.Records.Count, ConvertedRecords[record].Select(x => x.Record));
+                tes3.Records.AddRange(ConvertedRecords[record].Select(x => x.Record));
             }
 
             //dispose helper structures
@@ -420,10 +429,11 @@ namespace TES3Tool.TES4RecordConverter
                         mwREFR = ConvertREFR(obREFR, BaseId, mwCELL.NAM0.ReferenceCount, mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell));
                         CellReferences.Add(new ConvertedCellReference(originalCellFormId, obREFR.FormId, mwREFR)); //for tracking
 
-                        // disable exterior statics as requested, remove when SI mod will be finished
-                        if (!mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell))
-                            if (ConvertedRecords.ContainsKey("STAT") && ConvertedRecords["STAT"].Any(x => x.EditorId.Equals(BaseId)))
-                                continue;
+                        {// disable exterior statics as requested, remove when SI mod will be finished
+                            if (!mwCELL.DATA.Flags.Contains(TES3Lib.Enums.Flags.CellFlag.IsInteriorCell))
+                                if (ConvertedRecords.ContainsKey("STAT") && ConvertedRecords["STAT"].Any(x => x.EditorId.Equals(BaseId)))
+                                    continue;
+                        }               
 
                         mwCELL.REFR.Add(mwREFR);
                         mwCELL.NAM0.ReferenceCount++;
@@ -532,6 +542,25 @@ namespace TES3Tool.TES4RecordConverter
             }
         }
 
+        private static void PostProcessing()
+        {
+            //1 split TODO
+            
+            Parallel.ForEach(ConvertedRecords["CLOT"], item => {
+                if (EquipementItemsMap.ProcessItem.ContainsKey(item.EditorId))
+                {
+                    EquipementItemsMap.ProcessItem[item.EditorId].Invoke(item.Record as TES3Lib.Base.IEquipement);
+                }
+            });
+
+            //Parallel.ForEach(ConvertedRecords["ARMO"], item => {
+            //    if (EquipementItemsMap.ProcessItem.ContainsKey(item.EditorId))
+            //    {
+            //        EquipementItemsMap.ProcessItem[item.EditorId].Invoke(item.Record as TES3Lib.Base.IEquipement);
+            //    }
+            //});
+        }
+
         private static TES3Lib.Records.CELL mergeExteriorCells(TES3Lib.Records.CELL cellBase, TES3Lib.Records.CELL cellToMerge)
         {
             cellBase.NAME = cellBase.NAME.EditorId.Equals("\0") ? cellToMerge.NAME : cellBase.NAME;
@@ -540,34 +569,6 @@ namespace TES3Tool.TES4RecordConverter
             return cellBase;
         }
 
-        private static TES3Lib.Records.TES3 createTES3HEader()
-        {
-            var header = new TES3Lib.Records.TES3
-            {
-                HEDR = new TES3Lib.Subrecords.TES3.HEDR
-                {
-                    CompanyName = "TES3Tool\0",
-                    Description = "\0",
-                    NumRecords = 666,
-                    ESMFlag = 0,
-                    Version = 1.3f,
-                },
-            };
-            header.Masters = new List<(TES3Lib.Subrecords.TES3.MAST MAST, TES3Lib.Subrecords.TES3.DATA DATA)>();
-            header.Masters.Add((new TES3Lib.Subrecords.TES3.MAST { Filename = "Morrowind.esm\0" }, new TES3Lib.Subrecords.TES3.DATA { MasterDataSize = 6666 }));
-
-            return header;
-        }
-
-        public static ConvertedRecordData ConvertRecordFromFormId(string BaseFormId)
-        {
-            TES4Lib.Base.Record record;
-            TES4Lib.TES4.TES4RecordIndex.TryGetValue(BaseFormId, out record);
-            if (IsNull(record)) return null;
-
-            var mwRecordFromREFR = ConvertRecord(record);
-
-            return mwRecordFromREFR;
-        }
+       
     }
 }
