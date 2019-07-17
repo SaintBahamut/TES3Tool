@@ -21,7 +21,7 @@ namespace TES3Lib.Functions
                 {
                     BodyPart = bodyPart,
                     IsVampire = 0,
-                    Flags = new HashSet<BodyPartFlag>(),
+                    Flags = isFemale ? new HashSet<BodyPartFlag>() { BodyPartFlag.Female } : new HashSet<BodyPartFlag>(),
                     PartType = type,
                 }
             };

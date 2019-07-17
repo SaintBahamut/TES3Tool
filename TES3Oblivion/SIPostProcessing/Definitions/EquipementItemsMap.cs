@@ -14,7 +14,7 @@ namespace TES3Oblivion.SIPostProcessing.Definitions
 
         static EquipementItemsMap()
         {
-            ProcessItem.Add("SESylsDress", x=>EquipementProcessing.SESylsDress(x));
+            ProcessItem.Add("SESylsDress\0", x=>EquipementProcessing.SESylsDress(x));
         }
     }
 }
