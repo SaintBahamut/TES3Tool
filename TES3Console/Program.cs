@@ -26,7 +26,7 @@ namespace TES3Tool
                 "STAT","SOUN", "MISC","KEYM","FURN","ACTI","LIGH","CONT",
                 "FLOR","WEAP","INGR","BOOK","ENCH","ALCH","AMMO","APPA", "ARMO",
                 "CLOT","DOOR","LVLC","LVLI",
-                "RACE","CELL","WRLD","SPEL","NPC_","CREA","CLAS","FACT"
+                "RACE","SPEL","NPC_","CREA","CLAS","FACT"//,"WRLD","CELL"
             });
             var testEX = ConvertInteriorsAndExteriors(stat);
             testEX.TES3Save("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Morrowind\\Data Files\\SI.esp");

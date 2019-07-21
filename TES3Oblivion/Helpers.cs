@@ -78,7 +78,7 @@ namespace TES3Oblivion
 
             foreach (var item in bodyParts)
             {
-                Helpers.ConvertedRecords["BODY"].Add(new ConvertedRecordData("Unavailable", "BODY", item.GetEditorId(), item));
+                Helpers.ConvertedRecords["BODY"].Add(new ConvertedRecordData("generated", "BODY", item.GetEditorId(), item));
             }
         }
 

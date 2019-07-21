@@ -9,6 +9,8 @@ using TES3Oblivion.SIPostProcessing.Definitions;
 using TES4Lib.Base;
 using TES4Lib.Enums;
 using System.Threading.Tasks;
+using TES3Oblivion.Records.SIPostProcessing.Definitions;
+using TES3Oblivion.SIPostProcessing;
 
 namespace TES3Oblivion
 {
@@ -33,13 +35,14 @@ namespace TES3Oblivion
             TES3Lib.Records.TES3 header = createTES3HEader();
             tes3.Records.Add(header);
 
+            EquipementSplitter.SELL0NPCOrderKnightArmor100();
+
             foreach (var record in Enum.GetNames(typeof(TES3Lib.RecordTypes)))
             {
                 //SI
                 if (record.Equals("BODY"))
                 {
                     tes3.Records.AddRange(GetListOfBodyParts());
-                    continue;
                 }
 
                 if (!ConvertedRecords.ContainsKey(record)) continue;
@@ -50,6 +53,8 @@ namespace TES3Oblivion
             ConvertedRecords = new Dictionary<string, List<ConvertedRecordData>>();
             CellReferences = new List<ConvertedCellReference>();
             DoorReferences = new List<TES3Lib.Records.REFR>();
+
+            var dupex = tes3.Records.Find(x => x.GetEditorId() == "SEOrderKnightArmor1Iron\0");
 
             return tes3;
         }
@@ -547,9 +552,9 @@ namespace TES3Oblivion
             //1 split TODO
             
             Parallel.ForEach(ConvertedRecords["CLOT"], item => {
-                if (EquipementItemsMap.ProcessItem.ContainsKey(item.EditorId))
+                if (EquipementProcessMap.ProcessItem.ContainsKey(item.EditorId))
                 {
-                    EquipementItemsMap.ProcessItem[item.EditorId].Invoke(item.Record as TES3Lib.Base.IEquipement);
+                    EquipementProcessMap.ProcessItem[item.EditorId].Invoke(item.Record as TES3Lib.Base.IEquipement);
                 }
             });
 
@@ -568,7 +573,5 @@ namespace TES3Oblivion
 
             return cellBase;
         }
-
-       
     }
 }

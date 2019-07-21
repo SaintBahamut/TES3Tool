@@ -47,10 +47,9 @@
     <Compile Include="Converters\RecordConverter.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="SIPostProcessing\Definitions\BodyParts.cs" />
-    <Compile Include="SIPostProcessing\Definitions\Dictionary.cs" />
-    <Compile Include="SIPostProcessing\Definitions\EquipementItemsMap.cs" />
-    <Compile Include="SIPostProcessing\EquipementProcessor.cs" />
+    <Compile Include="SIPostProcessing\Definitions\EquipementProcessMap.cs" />
     <Compile Include="SIPostProcessing\EquipementSplitter.cs" />
+    <Compile Include="SIPostProcessing\EquipementProcessor.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>

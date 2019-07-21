@@ -9,7 +9,6 @@ using TES3Lib.Enums.Flags;
 using TES3Lib.Subrecords.LEVI;
 using TES3Lib.Subrecords.Shared;
 using Utility;
-using static Utility.Common;
 
 namespace TES3Lib.Records
 {
@@ -48,6 +47,10 @@ namespace TES3Lib.Records
 
         public LEVI()
         {
+            NAME = new NAME();
+            NNAM = new NNAM();
+            INDX = new INDX();
+            DATA = new DATA();
             ITEM = new List<(INAM INAM, INTV INTV)>();
         }
 
