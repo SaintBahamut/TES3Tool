@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TES3Console</RootNamespace>
     <AssemblyName>TES3Console</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PublishUrl>publish\</PublishUrl>
@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TES3Lib\TES3Lib.csproj">
-      <Project>{eb6c834a-b58e-4bbf-8bc5-4dee6a925b4b}</Project>
+      <Project>{a4a00c99-8e2c-4cf5-aba1-8a35d2d82753}</Project>
       <Name>TES3Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\TES3Oblivion\TES3Oblivion.csproj">
@@ -78,11 +78,11 @@
       <Name>TES3Oblivion</Name>
     </ProjectReference>
     <ProjectReference Include="..\TES4Lib\TES4Lib.csproj">
-      <Project>{53183f83-12f9-499b-afad-c28415ba2ae5}</Project>
+      <Project>{acafd32c-5817-4da6-9f79-3adf236bd849}</Project>
       <Name>TES4Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{1bc5cbbb-e155-4d9a-bc55-6fe75109c1b9}</Project>
+      <Project>{c83d9606-b5c7-4781-a65a-887797492b3b}</Project>
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>

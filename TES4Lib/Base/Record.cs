@@ -4,9 +4,9 @@ using System.IO;
 using System.Reflection;
 using TES4Lib.Enums.Flags;
 using Utility;
-using zlib;
 using static Utility.Common;
 using TES4Lib.Subrecords.Shared;
+using ComponentAce.Compression.Libs.zlib;
 
 namespace TES4Lib.Base
 {
