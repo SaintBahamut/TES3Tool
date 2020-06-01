@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TES3Oblivion</RootNamespace>
     <AssemblyName>TES3Oblivion</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,11 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
@@ -53,25 +54,25 @@
     <Compile Include="Converters\TypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Records\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\TES3Lib.Functions\TES3Lib.Functions.csproj">
-      <Project>{d8bacebe-c3a3-45ca-8318-d29ae9063026}</Project>
+      <Project>{a3cefd91-336d-413c-b002-56ae078a4406}</Project>
       <Name>TES3Lib.Functions</Name>
     </ProjectReference>
     <ProjectReference Include="..\TES3Lib\TES3Lib.csproj">
-      <Project>{eb6c834a-b58e-4bbf-8bc5-4dee6a925b4b}</Project>
+      <Project>{a4a00c99-8e2c-4cf5-aba1-8a35d2d82753}</Project>
       <Name>TES3Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\TES4Lib\TES4Lib.csproj">
-      <Project>{53183f83-12f9-499b-afad-c28415ba2ae5}</Project>
+      <Project>{acafd32c-5817-4da6-9f79-3adf236bd849}</Project>
       <Name>TES4Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{1bc5cbbb-e155-4d9a-bc55-6fe75109c1b9}</Project>
+      <Project>{c83d9606-b5c7-4781-a65a-887797492b3b}</Project>
       <Name>Utility</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Records\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
