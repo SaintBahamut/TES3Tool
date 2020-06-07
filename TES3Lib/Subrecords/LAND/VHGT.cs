@@ -1,4 +1,5 @@
-﻿using TES3Lib.Base;
+﻿using System;
+using TES3Lib.Base;
 using Utility;
 
 namespace TES3Lib.Subrecords.LAND
@@ -8,7 +9,9 @@ namespace TES3Lib.Subrecords.LAND
     /// </summary>
     public class VHGT : Subrecord
     {
-        const int size = 65;
+        public const int CELL_SIDE = 65;
+        public const int CELL_SIZE = CELL_SIDE* CELL_SIDE;
+
 
         /// <summary>
         /// A height offset for the entire cell.
@@ -23,9 +26,13 @@ namespace TES3Lib.Subrecords.LAND
         /// Thus a pixel value of 0 means it has the same height as the last pixel.Note that
         /// the y-direction of the data is from the bottom up.
         /// </summary>
-        public byte[,] HeightDelta { get; set; }
+        public sbyte[,] HeightDelta { get; set; }
 
-        public short Unknown { get; set; }
+        public sbyte[] HeightVector { get; set; }
+
+        public short Unknown1 { get; set; }
+
+        public byte Unknown2 { get; set; }
 
         public VHGT()
         {
@@ -35,17 +42,17 @@ namespace TES3Lib.Subrecords.LAND
         {
             var reader = new ByteReader();
             HeightOffset = reader.ReadBytes<float>(base.Data);
-
-            HeightDelta = new byte[size, size];
-            for (int x = 0; x < size; x++)
+            HeightDelta = new sbyte[CELL_SIDE, CELL_SIDE];
+            for (int y = 0; y < CELL_SIDE; y++)
             {
-                for (int y = 0; y < size; y++)
+                for (int x = 0; x < CELL_SIDE; x++)
                 {
-                    HeightDelta[x,y] = reader.ReadBytes<byte>(base.Data, 3);
+                    HeightDelta[y,x] = reader.ReadBytes<sbyte>(base.Data);
                 }
             }
 
-            Unknown = reader.ReadBytes<short>(base.Data);
+            Unknown1 = reader.ReadBytes<short>(base.Data);
+            Unknown2 = reader.ReadBytes<byte>(base.Data);
         }
     }
 }

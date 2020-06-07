@@ -11,6 +11,11 @@ namespace Utility
     {
         public int offset = 0;
 
+        static ByteReader()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        }
+
         /// <summary>
         /// Its shit but works
         /// Read raw bytes from byte array, 
@@ -92,6 +97,12 @@ namespace Utility
                 var converted = data.Skip(offset).Take(1).ToArray()[0];
                 offset += sizeof(byte);
                 return (T)(object)converted;
+            }
+            if (t == typeof(sbyte))
+            {
+                var converted = data.Skip(offset).Take(1).ToArray()[0];
+                offset += sizeof(sbyte);
+                return (T)(object)unchecked((sbyte)converted);
             }
             if (t == typeof(bool))
             {
