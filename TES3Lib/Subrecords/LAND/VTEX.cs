@@ -10,7 +10,7 @@ namespace TES3Lib.Subrecords.LAND
     {
         const int size = 16;
 
-        public byte[,] TexIndices { get; set; }
+        public ushort[,] TexIndices { get; set; }
 
         public VTEX()
         {
@@ -20,12 +20,12 @@ namespace TES3Lib.Subrecords.LAND
         {
             var reader = new ByteReader();
     
-            TexIndices = new byte[size, size];
-            for (int x = 0; x < size; x++)
+            TexIndices = new ushort[size, size];
+            for (int y = 0; y < size; y++)
             {
-                for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
                 {
-                    TexIndices[x, y] = reader.ReadBytes<byte>(base.Data, 3);
+                    TexIndices[x, y] = reader.ReadBytes<ushort>(base.Data);
                 }
             }
         }

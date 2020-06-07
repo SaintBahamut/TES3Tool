@@ -7,6 +7,11 @@ namespace Utility
 {
     public static class ByteWriter
     {
+        static ByteWriter()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        }
+
         public static byte[] ToBytes(object data, Type type, SizeInBytesAttribute size = null)
         {
             byte[] bytes;
@@ -23,7 +28,7 @@ namespace Utility
             else if (type == typeof(short))
                 bytes = BitConverter.GetBytes((short)data);
             else if (type == typeof(string))
-                bytes = WriteStringBytes((string)data);             
+                bytes = WriteStringBytes((string)data);
             else if (type == typeof(long))
                 bytes = BitConverter.GetBytes((long)data);
             else if (type == typeof(ulong))
@@ -37,7 +42,7 @@ namespace Utility
 
             if (IsNull(size))
                 return bytes;
-       
+
             Array.Resize(ref bytes, size.TypeSize);
             return bytes;
         }

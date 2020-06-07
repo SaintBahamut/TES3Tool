@@ -1,4 +1,5 @@
-﻿using TES3Lib.Base;
+﻿using System.Diagnostics;
+using TES3Lib.Base;
 using TES3Lib.Subrecords.LAND;
 
 namespace TES3Lib.Records
@@ -6,6 +7,8 @@ namespace TES3Lib.Records
     /// <summary>
     /// Landscape Record
     /// </summary>
+    /// 
+    [DebuggerDisplay("LAND:{INTV.CellX} x {INTV.CellY}")]
     public class LAND : Record
     {
         /// <summary>
@@ -46,6 +49,18 @@ namespace TES3Lib.Records
         public LAND(byte[] rawData) : base(rawData)
         {
             BuildSubrecords();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is LAND)
+            {
+                var land2 = obj as LAND;
+                return this.INTV.CellX == land2.INTV.CellX && this.INTV.CellY == land2.INTV.CellY;
+
+            }
+
+            return false;
         }
     }
 }
