@@ -1,4 +1,5 @@
-﻿using TES3Lib.Base;
+﻿using System;
+using TES3Lib.Base;
 using Utility;
 
 namespace TES3Lib.Subrecords.LAND
@@ -10,7 +11,10 @@ namespace TES3Lib.Subrecords.LAND
     {
         const int size = 16;
 
-        public ushort[,] TexIndices { get; set; }
+        /// <summary>
+        /// 0 - is NOTEX,so in reality indices are +1 values from LTEX
+        /// </summary>
+        public ushort[,] TexIndices { get; set; }      
 
         public VTEX()
         {
@@ -19,13 +23,13 @@ namespace TES3Lib.Subrecords.LAND
         public VTEX(byte[] rawData) : base(rawData)
         {
             var reader = new ByteReader();
-    
+
             TexIndices = new ushort[size, size];
             for (int y = 0; y < size; y++)
             {
                 for (int x = 0; x < size; x++)
                 {
-                    TexIndices[x, y] = reader.ReadBytes<ushort>(base.Data);
+                    TexIndices[y, x] = reader.ReadBytes<ushort>(base.Data);
                 }
             }
         }

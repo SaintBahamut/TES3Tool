@@ -29,9 +29,9 @@ namespace TES3Lib.Subrecords.LAND
                 for (int x = 0; x < size; x++)
                 {
                     var bytes = reader.ReadBytes<byte[]>(base.Data, 3);
-                    normals[x, y].x = bytes[0];
-                    normals[x, y].y = bytes[1];
-                    normals[x, y].z = bytes[2];
+                    normals[y, x].x = bytes[0];
+                    normals[y, x].y = bytes[1];
+                    normals[y, x].z = bytes[2];
                 }
             }
         }
