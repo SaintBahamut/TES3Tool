@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TES3Lib.Records;
 using TES3 = TES3Lib.TES3;
-using static TES3Landgen.Utils;
+using static TES3Landgen.Utility;
 
 namespace TES3Landgen
 {
@@ -44,45 +44,64 @@ namespace TES3Landgen
             PluginsRef = plugins;
         }
 
-        public void ReadMapData(string output, bool heightmap = false, bool normalmap = false, bool vcolmap = false, bool texturePlacement = false)
+        public void ReadMapData(string output, ExportOptions mapOptions)
         {
             var land = GetLandRecords();
             LoadBaseInformation(land);
             GetLandTextures();
 
-            if (heightmap || normalmap || vcolmap)
+            if (mapOptions.HeightMap || mapOptions.NormalMap || mapOptions.VertexColorMap)
             {
-                ImportMaps(land, heightmap, normalmap, vcolmap);
+                ImportMaps(land, mapOptions);
             }
 
-            if (texturePlacement)
+            if (mapOptions.VertexColorMap)
             {
                 ImportTexturePlacement(land, output);
             }
 
-            SaveMapData(output, heightmap, normalmap, vcolmap, texturePlacement);
+            SaveMapData(output, mapOptions);
         }
 
-        public void SaveMapData(string output, bool heightmap = false, bool normalmap = false, bool vcolmap = false, bool texturePlacement = false)
+        public void SaveMapData(string output, ExportOptions mapOptions)
         {
-            if (heightmap)
+            if (mapOptions.HeightMap)
             {
+                if (mapOptions.ExportHeightAsRaw)
+                {
+                    RawImage.Save($"{output}_hm", Heightmap, HeightMin, ColorDepth.Gray16);
+                    var test = RawImage.LoadGrayscale16($"{output}_hm.raw", width, height, -269);
+
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            if (test[i, j] != Heightmap[i, j])
+                            {
+                                var dd = test[i, j];
+                                var dd2 = Heightmap[i, j];
+                            }
+                        }
+                    }
+                    RawImage.SaveMetaData($"{output}_metadata", width, height, (int)HeightMin);
+                }
+
                 SaveHeightmapAsBitmap($"{output}_hm.bmp", Heightmap, HeightMin, HeightMax);
             }
 
-            if (normalmap)
+            if (mapOptions.NormalMap)
             {
-                SaveMapAsBitmap($"{output}_nm.bmp", Normals);
+                SaveMapAsBitmap($"{output}_nm", Normals);
             }
 
-            if (vcolmap)
+            if (mapOptions.VertexColorMap)
             {
-                SaveMapAsBitmap($"{output}_vc.bmp", VertexColors);
+                SaveMapAsBitmap($"{output}_vc", VertexColors);
             }
 
-            if (texturePlacement)
+            if (mapOptions.TexturePlacementMap)
             {
-                SaveTexturePlacementAsBitmap($"{output}_tx.bmp", TexturePlacement);
+                SaveTexturePlacementAsBitmap($"{output}_tex", TexturePlacement);
             }
         }
 
@@ -134,14 +153,14 @@ namespace TES3Landgen
 
             foreach (LAND land in records)
             {
-
-                maxX = maxX > land.INTV.CellX ? maxX : land.INTV.CellX;
-                maxY = maxY > land.INTV.CellY ? maxY : land.INTV.CellY;
-                minX = minX < land.INTV.CellX ? minX : land.INTV.CellX;
-                minY = minY < land.INTV.CellY ? minY : land.INTV.CellY;
+               
+                maxX = Math.Max(maxX, land.INTV.CellX);
+                maxY = Math.Max(maxY, land.INTV.CellY);
+                minX = Math.Min(minX, land.INTV.CellX);
+                minY = Math.Min(minY, land.INTV.CellY);
             }
-            offsetFromCenterX = minX > 0 ? minX : 0;
-            offsetFromCenterY = minY > 0 ? minY : 0;
+            offsetFromCenterX = Math.Max(minX,0);
+            offsetFromCenterY = Math.Max(minY, 0);
 
             minX = minX > 0 ? 0 : minX;
             minY = minY > 0 ? 0 : minY;
@@ -150,11 +169,11 @@ namespace TES3Landgen
             height = CalculateSideLength(maxY, minY) * CELL_SIZE;
         }
 
-        private void ImportMaps(List<LAND> records, bool heightmap = false, bool normalmap = false, bool vcolmap = false)
+        private void ImportMaps(List<LAND> records, ExportOptions exportOptions)
         {
-            Heightmap = heightmap ? new float[height, width] : null;
-            Normals = normalmap ? new Rgb[height, width] : null;
-            VertexColors = vcolmap ? new Rgb[height, width] : null;
+            Heightmap = exportOptions.HeightMap ? new float[height, width] : null;
+            Normals = exportOptions.NormalMap ? new Rgb[height, width] : null;
+            VertexColors = exportOptions.VertexColorMap ? new Rgb[height, width] : null;
 
             HeightMax = float.MinValue;
             HeightMin = float.MaxValue;
@@ -163,7 +182,7 @@ namespace TES3Landgen
 
             Parallel.ForEach(records, (land) =>
             {
-                float heightOffsetRow = heightmap && land.VNML != null ? land.VHGT.HeightOffset : 0;
+                float heightOffsetRow = exportOptions.HeightMap && land.VNML != null ? land.VHGT.HeightOffset : 0;
                 for (int y = 0; y < CELL_SIZE; y++)
                 {
                     float heightOffsetCol = 0;
@@ -173,7 +192,7 @@ namespace TES3Landgen
                         int cordX = CELL_SIZE * (Math.Abs(minX) + land.INTV.CellX) + x;
                         int cordY = CELL_SIZE * (Math.Abs(minY) + land.INTV.CellY) + y;
 
-                        if (heightmap && land.VHGT != null)
+                        if (exportOptions.HeightMap && land.VHGT != null)
                         {
                             float heightPixel = 0;
                             if (x == 0)
@@ -191,19 +210,20 @@ namespace TES3Landgen
 
                             lock (@lock)
                             {
-                                HeightMax = HeightMax < heightPixel ? heightPixel : HeightMax;
-                                HeightMin = HeightMin > heightPixel ? heightPixel : HeightMin;
+
+                                HeightMax = Math.Max(HeightMax, heightPixel);
+                                HeightMin = Math.Min(HeightMin, heightPixel);
                             }
                         }
 
-                        if (normalmap && land.VNML != null)
+                        if (exportOptions.NormalMap && land.VNML != null)
                         {
                             Normals[cordY, cordX].r = land.VNML.normals[y, x].x;
                             Normals[cordY, cordX].g = land.VNML.normals[y, x].y;
                             Normals[cordY, cordX].b = land.VNML.normals[y, x].z;
                         }
 
-                        if (vcolmap && land.VCLR != null)
+                        if (exportOptions.VertexColorMap && land.VCLR != null)
                         {
                             VertexColors[cordY, cordX].r = land.VCLR.VertexColors[y, x].r;
                             VertexColors[cordY, cordX].g = land.VCLR.VertexColors[y, x].g;
@@ -216,7 +236,7 @@ namespace TES3Landgen
 
         private void SaveHeightmapAsBitmap(string outputPath, float[,] heightmap, float min, float max)
         {
-            var bitmap = new Bitmap(this.width, this.height);
+            var bitmap = new Bitmap(this.width, this.height, PixelFormat.Format16bppGrayScale);
             for (int y = 0; y < heightmap.GetLength(0); y++)
             {
                 for (int x = 0; x < heightmap.GetLength(1); x++)
@@ -228,7 +248,7 @@ namespace TES3Landgen
             }
 
             bitmap.RotateFlip(RotateFlipType.Rotate180FlipX);
-            bitmap.Save(outputPath, ImageFormat.Bmp);
+            bitmap.Save($"{outputPath}.bmp", ImageFormat.Bmp);
             bitmap.Dispose();
         }
 
@@ -245,7 +265,7 @@ namespace TES3Landgen
             }
 
             bitmap.RotateFlip(RotateFlipType.Rotate180FlipX);
-            bitmap.Save(outputPath, ImageFormat.Bmp);
+            bitmap.Save($"{outputPath}.bmp", ImageFormat.Bmp);
             bitmap.Dispose();
         }
 
@@ -294,5 +314,37 @@ namespace TES3Landgen
             bitmap.Save(outputPath, ImageFormat.Bmp);
             bitmap.Dispose();
         }
+    }
+
+    /// <summary>
+    /// Configuration of export options
+    /// </summary>
+    public class ExportOptions
+    {
+        /// <summary>
+        /// Export heightmap data as grayscale image (1 cell is 65x65 pixels)
+        /// </summary>
+        public bool HeightMap { get; set; }
+
+        /// <summary>
+        /// Export lands normal map as RGB image (1 cell is 65x65 pixels)
+        /// </summary>
+        public bool NormalMap { get; set; }
+
+        /// <summary>
+        /// Export lands vertex coloring as RGB image  (1 cell is 65x65 pixels)
+        /// </summary>
+        public bool VertexColorMap { get; set; }
+
+        /// <summary>
+        /// Export texture placement map as RGB image (1 cell is 16x16 pixels)
+        /// Where 1 pixel is equals to 4 pixels of heightmap
+        /// </summary>
+        public bool TexturePlacementMap { get; set; }
+
+        /// <summary>
+        /// Export as raw 16bit grayscale image
+        /// </summary>
+        public bool ExportHeightAsRaw { get; set; }
     }
 }

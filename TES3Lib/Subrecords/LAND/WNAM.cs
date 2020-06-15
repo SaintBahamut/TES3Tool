@@ -19,11 +19,11 @@ namespace TES3Lib.Subrecords.LAND
             var reader = new ByteReader();
 
             LowLodHeightMap = new byte[9, 9];
-            for (int x = 0; x < 9; x++)
+            for (int y = 0; y < 9; y++)
             {
-                for (int y = 0; y < 9; y++)
+                for (int x = 0; x < 9; x++)
                 {
-                    LowLodHeightMap[x, y] = reader.ReadBytes<byte>(base.Data, 3);
+                    LowLodHeightMap[y, x] = reader.ReadBytes<byte>(base.Data);
                 }
             }
         }

@@ -27,7 +27,8 @@ namespace TES3Landgen
 
             var heightmap = new TES3HeightMap(tes3);
 
-            heightmap.ReadMapData("output",true,true,true,true);
+            var options = new ExportOptions() { HeightMap = true, ExportHeightAsRaw = true };
+            heightmap.ReadMapData(@"C:/mapstuff/output", options);
             timer.Stop();
 
             Console.WriteLine($"Done in {timer.ElapsedMilliseconds} ms");
