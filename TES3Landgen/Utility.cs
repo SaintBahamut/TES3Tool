@@ -55,9 +55,11 @@ namespace TES3Landgen
 
     internal static class RawImage
     {
+        const int mwScaleUnit = 8;
+
         internal static void Save(string path, float[,] pixels, float zeroOffset, ColorDepth colorDepth)
         {
-            const int mwScaleUnit = 8;
+           
 
             using (var writer = new BinaryWriter(File.Open($"{path}.raw", FileMode.Create)))
             {
@@ -84,7 +86,7 @@ namespace TES3Landgen
                 for (int j = 0; j < image.GetLength(1); j++)
                 {
                     var pix = reader.ReadUInt16();
-                    image[i, j] = pix - offset;
+                    image[i, j] = (pix / mwScaleUnit)+offset;
                 }
             }
             reader.Dispose();
@@ -101,7 +103,6 @@ namespace TES3Landgen
             Console.WriteLine($"width: {width}");
             Console.WriteLine($"offset from sea level: {zeroOffset}");
         }
-    }
 
     internal struct Rgb
     {

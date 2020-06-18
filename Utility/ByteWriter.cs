@@ -23,18 +23,20 @@ namespace Utility
                 bytes = new byte[] { Convert.ToByte(data) };
             else if (type == typeof(int))
                 bytes = BitConverter.GetBytes(Convert.ToInt32(data));
+            else if (type == typeof(uint))
+                bytes = BitConverter.GetBytes((uint)data);
             else if (type == typeof(float))
                 bytes = BitConverter.GetBytes((float)data);
             else if (type == typeof(short))
                 bytes = BitConverter.GetBytes((short)data);
+            else if (type == typeof(ushort))
+                bytes = BitConverter.GetBytes((ushort)data);
             else if (type == typeof(string))
                 bytes = WriteStringBytes((string)data);
             else if (type == typeof(long))
                 bytes = BitConverter.GetBytes((long)data);
             else if (type == typeof(ulong))
-                bytes = BitConverter.GetBytes((ulong)data);
-            else if (type == typeof(uint))
-                bytes = BitConverter.GetBytes((uint)data);
+                bytes = BitConverter.GetBytes((ulong)data);   
             else if (type.IsEnum)
                 bytes = ToBytes(data, type.GetEnumUnderlyingType());
             else

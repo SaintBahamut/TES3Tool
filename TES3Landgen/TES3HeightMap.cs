@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 using TES3Lib.Records;
 using TES3 = TES3Lib.TES3;
 using static TES3Landgen.Utility;
+using System.IO;
+using TES3Lib.Subrecords.LAND;
 
 namespace TES3Landgen
 {
     public class TES3HeightMap
     {
         private const int CELL_SIZE = 65;
-
         private int width { get; set; }
         private int height { get; set; }
         private int maxX { get; set; }
@@ -52,7 +53,7 @@ namespace TES3Landgen
 
             if (mapOptions.HeightMap || mapOptions.NormalMap || mapOptions.VertexColorMap)
             {
-                ImportMaps(land, mapOptions);
+                ImportMapsFromRecords(land, mapOptions);
             }
 
             if (mapOptions.VertexColorMap)
@@ -63,30 +64,38 @@ namespace TES3Landgen
             SaveMapData(output, mapOptions);
         }
 
+        public void ValidateImportTesting(string output)
+        {
+            var test = RawImage.LoadGrayscale16($"{output}_hm.raw", width, height, (int)HeightMin);
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    if (test[i, j] != Heightmap[i, j])
+                    {
+                        var dd = test[i, j];
+                        var dd2 = Heightmap[i, j];
+                    }
+                }
+            }
+        }
+
         public void SaveMapData(string output, ExportOptions mapOptions)
         {
             if (mapOptions.HeightMap)
             {
                 if (mapOptions.ExportHeightAsRaw)
                 {
-                    RawImage.Save($"{output}_hm", Heightmap, HeightMin, ColorDepth.Gray16);
-                    var test = RawImage.LoadGrayscale16($"{output}_hm.raw", width, height, -269);
-
-                    for (int i = 0; i < height; i++)
-                    {
-                        for (int j = 0; j < width; j++)
-                        {
-                            if (test[i, j] != Heightmap[i, j])
-                            {
-                                var dd = test[i, j];
-                                var dd2 = Heightmap[i, j];
-                            }
-                        }
-                    }
+                    RawImage.Save($"{output}_hm", Heightmap, HeightMin, ColorDepth.Gray16);              
                     RawImage.SaveMetaData($"{output}_metadata", width, height, (int)HeightMin);
-                }
 
-                SaveHeightmapAsBitmap($"{output}_hm.bmp", Heightmap, HeightMin, HeightMax);
+                    ImportMapsFromImage(output);
+                }
+                else
+                {
+                    SaveHeightmapAsBitmap($"{output}_hm.bmp", Heightmap, HeightMin, HeightMax);
+                }           
             }
 
             if (mapOptions.NormalMap)
@@ -159,8 +168,8 @@ namespace TES3Landgen
                 minX = Math.Min(minX, land.INTV.CellX);
                 minY = Math.Min(minY, land.INTV.CellY);
             }
-            offsetFromCenterX = Math.Max(minX,0);
-            offsetFromCenterY = Math.Max(minY, 0);
+            offsetFromCenterX = Math.Max(Math.Abs(minX),0);
+            offsetFromCenterY = Math.Max(Math.Abs(minY), 0);
 
             minX = minX > 0 ? 0 : minX;
             minY = minY > 0 ? 0 : minY;
@@ -169,7 +178,7 @@ namespace TES3Landgen
             height = CalculateSideLength(maxY, minY) * CELL_SIZE;
         }
 
-        private void ImportMaps(List<LAND> records, ExportOptions exportOptions)
+        private void ImportMapsFromRecords(List<LAND> records, ExportOptions exportOptions)
         {
             Heightmap = exportOptions.HeightMap ? new float[height, width] : null;
             Normals = exportOptions.NormalMap ? new Rgb[height, width] : null;
@@ -182,7 +191,8 @@ namespace TES3Landgen
 
             Parallel.ForEach(records, (land) =>
             {
-                float heightOffsetRow = exportOptions.HeightMap && land.VNML != null ? land.VHGT.HeightOffset : 0;
+
+                float heightOffsetRow = exportOptions.HeightMap && land.VHGT != null ? land.VHGT.HeightOffset : 0;
                 for (int y = 0; y < CELL_SIZE; y++)
                 {
                     float heightOffsetCol = 0;
@@ -231,7 +241,98 @@ namespace TES3Landgen
                         }
                     }
                 }
+                //if(land.VHGT != null) VHGTTester(land);              
             });
+        }
+
+        internal void VHGTTester(LAND land)
+        {
+            //testing
+            int cordX = CELL_SIZE * (Math.Abs(minX) + land.INTV.CellX);
+            int cordY = CELL_SIZE * (Math.Abs(minY) + land.INTV.CellY);
+
+            var heightSubrecord = CreateHeightMapSubrecord(cordX, cordY, Heightmap);
+            {//compare
+                var check = land.VHGT.HeightOffset == heightSubrecord.HeightOffset &&
+                land.VHGT.Unknown1 == heightSubrecord.Unknown1 && land.VHGT.Unknown2 == heightSubrecord.Unknown2;
+
+                for (int i = 0; i < 65; i++)
+                {
+                    for (int j = 0; j < 65; j++)
+                    {
+                        if (check && land.VHGT.HeightDelta[i, j] != heightSubrecord.HeightDelta[i, j])
+                        {
+                            throw new Exception("failed");
+                        }
+                    }
+                }
+            }
+        }
+
+        private VHGT CreateHeightMapSubrecord(int offsetX,int offsetY, float[,] importedHeightMap)
+        {
+            var heightDeltas = new sbyte[CELL_SIZE, CELL_SIZE];
+            for (int y = heightDeltas.GetLength(0)-1; y >=0; y--)
+            {
+                for (int x = heightDeltas.GetLength(1) - 1; x >= 0; x--)
+                {
+                    var y2 = offsetY + y;
+                    var x2 = offsetX + x;
+
+                    if (x==0)
+                    {
+                        if(y==0)
+                        {
+                            heightDeltas[y, x] = 0;
+                            return new VHGT
+                            {
+                                HeightDelta = heightDeltas,
+                                HeightOffset = importedHeightMap[y2, x2],
+                            };
+                        }
+                        heightDeltas[y, x] = (sbyte)(importedHeightMap[y2, x2] - importedHeightMap[y2 - 1, x2]);
+                        continue;
+                    }
+
+                    heightDeltas[y, x] = (sbyte)(importedHeightMap[y2, x2] - importedHeightMap[y2, x2 - 1]);
+                }
+            }
+            return null;
+        }
+
+        private void ImportMapsFromImage(string output)
+        {
+            //var heightFromImage = RawImage.LoadGrayscale16($"{output}_hm.raw", width, height, (int)HeightMin);
+
+
+            //for (int y = 0; y <= width; y+=65)
+            //{
+            //    for (int x = 0; x <= height; x+=65)
+            //    {
+   
+                  
+            //            ProcessSector(y1, x1, heightFromImage);
+                
+            //    }
+            //}
+
+            //Parallel.For(0, height, (j,statej) => {
+            //    Parallel.For(0, width, (i,statei) => {
+            //        int y = j * 65;
+            //        int x = i * 65;
+
+            //        if(y >= height || x >= width)
+            //        {
+            //            statej.Break();
+            //            statei.Break();
+            //        } else
+            //        {
+            //            ProcessSector(y, x, heightFromImage);
+            //        }
+
+                   
+            //    });
+            //});
         }
 
         private void SaveHeightmapAsBitmap(string outputPath, float[,] heightmap, float min, float max)
