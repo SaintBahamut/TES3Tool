@@ -19,6 +19,8 @@ namespace Utility
                 bytes = (byte[])data;
             else if (type == typeof(byte))
                 bytes = new byte[] { Convert.ToByte(data) };
+            else if (type == typeof(sbyte))
+                bytes = new byte[] { unchecked((byte)(sbyte)data) };
             else if (type == typeof(bool))
                 bytes = new byte[] { Convert.ToByte(data) };
             else if (type == typeof(int))

@@ -1,4 +1,8 @@
-﻿using TES3Lib.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TES3Lib.Base;
 using Utility;
 
 namespace TES3Lib.Subrecords.LAND
@@ -34,6 +38,26 @@ namespace TES3Lib.Subrecords.LAND
                     normals[y, x].z = bytes[2];
                 }
             }
+        }
+
+        public override byte[] SerializeSubrecord()
+        {
+            List<byte> data = new List<byte>();
+
+            for (int y = 0; y < normals.GetLength(0); y++)
+            {
+                for (int x = 0; x < normals.GetLength(1); x++)
+                {
+                    data.AddRange(ByteWriter.ToBytes(normals[y, x].x, typeof(byte)));
+                    data.AddRange(ByteWriter.ToBytes(normals[y, x].y, typeof(byte)));
+                    data.AddRange(ByteWriter.ToBytes(normals[y, x].z, typeof(byte)));
+                }
+            }
+
+            var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
+               .Concat(BitConverter.GetBytes(data.Count()))
+               .Concat(data).ToArray();
+            return serialized;
         }
     }
 

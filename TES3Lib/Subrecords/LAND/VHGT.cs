@@ -66,7 +66,7 @@ namespace TES3Lib.Subrecords.LAND
             {
                 for (int x = 0; x < HeightDelta.GetLength(1); x++)
                 {
-                    data.AddRange(ByteWriter.ToBytes(HeightDelta[y,x], typeof(ushort)));
+                    data.AddRange(ByteWriter.ToBytes(HeightDelta[y,x], typeof(sbyte)));
                 }            
             }
             data.AddRange(ByteWriter.ToBytes(Unknown1, typeof(short)));

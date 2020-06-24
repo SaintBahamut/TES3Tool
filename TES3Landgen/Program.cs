@@ -19,16 +19,27 @@ namespace TES3Landgen
 
         public static void MWLoadTest()
         {
-            string fileESM = "C:\\Software\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Morrowind.esm";
+            string fileESM = "C:\\Software\\Steam\\steamapps\\common\\Morrowind\\Data Files\\seWORLD.esp";
             //string BM = "C:\\Software\\Steam\\steamapps\\common\\Morrowind\\Data Files\\Bloodmoon.esm";
             var timer = Stopwatch.StartNew();
             TES3 tes3 = TES3.TES3Load(fileESM, new List<string> { "LAND","LTEX" });
             //TES3 bm = TES3.TES3Load(BM, new List<string> { "LAND","LTEX" });
 
-            var heightmap = new TES3HeightMap(tes3);
+            //tes3.TES3Save("C:/mapstuff/out.esp");
 
-            var options = new ExportOptions() { HeightMap = true, ExportHeightAsRaw = true };
-            heightmap.ReadMapData(@"C:/mapstuff/output", options);
+            //var heightmap = new TES3HeightMap(tes3);
+
+            //var options = new ExportOptions() { HeightMap = true, VertexColorMap = false, TexturePlacementMap = false, ExportHeightAsRaw = true };
+            //heightmap.ReadMapData(@"C:/mapstuff/output", options);
+
+
+            //heightmap.ImportMapFromImage("C:/mapstuff/output");
+
+            var test = new TES3HeightMap();
+            test.ImportMapFromImage("C:/mapstuff/SEWorld", -50, -20);
+
+            //var options2 = new ExportOptions() { HeightMap = true, VertexColorMap = false, TexturePlacementMap = false, ExportHeightAsRaw = false };
+            //heightmap.ReadMapData(@"C:/mapstuff/output", options2);
             timer.Stop();
 
             Console.WriteLine($"Done in {timer.ElapsedMilliseconds} ms");

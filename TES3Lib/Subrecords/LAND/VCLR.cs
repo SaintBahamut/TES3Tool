@@ -1,4 +1,8 @@
-﻿using TES3Lib.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TES3Lib.Base;
 using Utility;
 
 namespace TES3Lib.Subrecords.LAND
@@ -30,6 +34,25 @@ namespace TES3Lib.Subrecords.LAND
                     VertexColors[y, x].b = bytes[2];
                 }
             }
+        }
+        public override byte[] SerializeSubrecord()
+        {
+            List<byte> data = new List<byte>();
+
+            for (int y = 0; y < VertexColors.GetLength(0); y++)
+            {
+                for (int x = 0; x < VertexColors.GetLength(1); x++)
+                {
+                    data.AddRange(ByteWriter.ToBytes(VertexColors[y, x].r, typeof(byte)));
+                    data.AddRange(ByteWriter.ToBytes(VertexColors[y, x].g, typeof(byte)));
+                    data.AddRange(ByteWriter.ToBytes(VertexColors[y, x].b, typeof(byte)));
+                }
+            }
+
+            var serialized = Encoding.ASCII.GetBytes(this.GetType().Name)
+               .Concat(BitConverter.GetBytes(data.Count()))
+               .Concat(data).ToArray();
+            return serialized;
         }
     }
 
