@@ -163,21 +163,18 @@ namespace TES3Landgen
         {
             var pathFix = path.EndsWith(".raw") ? path : $"{path}.raw";
             var reader = new BinaryReader(File.Open(pathFix, FileMode.Open, FileAccess.Read));
-            var image = new float[rawParams.height, rawParams.width];
-            for (int i = image.GetLength(0) - 1; i >= 0; i--)
+
+            var padding = 1; 
+
+            var image = new float[rawParams.height+ padding, rawParams.width + padding];
+            for (int i = image.GetLength(0) - 1 - padding; i >= 0; i--)
             {
-                for (int j = 0; j < image.GetLength(1); j++)
+                for (int j = 0; j < image.GetLength(1) - padding; j++)
                 {
                     var pix = reader.ReadUInt16();
 
-                    if (j == 552 && i == 2217)
-                        Console.WriteLine(pix);
-
-
                     image[i, j] = (pix / rawParams.heightScaleMultiplier) + rawParams.zeroOffset;
 
-                    if (j == 552 && i == 2217)
-                        Console.WriteLine(image[i, j]);
                 }
             }
             reader.Dispose();
@@ -279,7 +276,7 @@ namespace TES3Landgen
         public RawImageParams()
         {
             bitsPerPixel = 16;
-            heightScaleMultiplier = 8;
+            heightScaleMultiplier = 1;
         }
     }
 }

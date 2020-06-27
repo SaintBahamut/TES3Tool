@@ -17,7 +17,9 @@ namespace TES3Landgen
     public class TES3HeightMap
     {
         #region parameters
-        private const int CELL_SIZE = 65;
+        private const int MW_CELL = 64;
+        private const int HEIGHT_CELL_SIZE = 65;
+        private const int TEXTURE_CELL_SIZE = 16;
         private int width { get; set; }
         private int height { get; set; }
         private int maxX { get; set; }
@@ -79,8 +81,8 @@ namespace TES3Landgen
             minX = minX > 0 ? 0 : minX;
             minY = minY > 0 ? 0 : minY;
 
-            width = CalculateSideLength(maxX, minX) * CELL_SIZE;
-            height = CalculateSideLength(maxY, minY) * CELL_SIZE;
+            width = CalculateSideLength(maxX, minX) * MW_CELL;
+            height = CalculateSideLength(maxY, minY) * MW_CELL;
         }
 
         public void ReadMapData(string output, ExportOptions mapOptions)
@@ -191,14 +193,14 @@ namespace TES3Landgen
             {
 
                 float heightOffsetRow = exportOptions.HeightMap && land.VHGT != null ? land.VHGT.HeightOffset : 0;
-                for (int y = 0; y < CELL_SIZE; y++)
+                for (int y = 0; y < HEIGHT_CELL_SIZE; y++)
                 {
                     float heightOffsetCol = 0;
-                    for (int x = 0; x < CELL_SIZE; x++)
+                    for (int x = 0; x < HEIGHT_CELL_SIZE; x++)
                     {
 
-                        int cordX = CELL_SIZE * (Math.Abs(minX) + land.INTV.CellX) + x;
-                        int cordY = CELL_SIZE * (Math.Abs(minY) + land.INTV.CellY) + y;
+                        int cordX = HEIGHT_CELL_SIZE * (Math.Abs(minX) + land.INTV.CellX) + x;
+                        int cordY = HEIGHT_CELL_SIZE * (Math.Abs(minY) + land.INTV.CellY) + y;
 
                         if (exportOptions.HeightMap && land.VHGT != null)
                         {
@@ -214,34 +216,35 @@ namespace TES3Landgen
                                 heightPixel = land.VHGT.HeightDelta[y, x] + heightOffsetCol;
                                 heightOffsetCol = heightPixel;
                             }
-                            Heightmap[cordY, cordX] = heightPixel;
+
+                            if (x > HEIGHT_CELL_SIZE || y > HEIGHT_CELL_SIZE)
+                            {
+                                Heightmap[cordY, cordX] = heightPixel;
+                            }
 
                             lock (@lock)
                             {
-
                                 HeightMax = Math.Max(HeightMax, heightPixel);
                                 HeightMin = Math.Min(HeightMin, heightPixel);
-                                
-                                if(HeightMin < 0)
-                                {
-                                    { }
-                                }
-
                             }
                         }
 
-                        if (exportOptions.NormalMap && land.VNML != null)
+                        if (x > HEIGHT_CELL_SIZE || y > HEIGHT_CELL_SIZE)
                         {
-                            Normals[cordY, cordX].r = land.VNML.normals[y, x].x;
-                            Normals[cordY, cordX].g = land.VNML.normals[y, x].y;
-                            Normals[cordY, cordX].b = land.VNML.normals[y, x].z;
-                        }
+                            if (exportOptions.NormalMap && land.VNML != null)
+                            {
 
-                        if (exportOptions.VertexColorMap && land.VCLR != null)
-                        {
-                            VertexColors[cordY, cordX].r = land.VCLR.VertexColors[y, x].r;
-                            VertexColors[cordY, cordX].g = land.VCLR.VertexColors[y, x].g;
-                            VertexColors[cordY, cordX].b = land.VCLR.VertexColors[y, x].b;
+                                Normals[cordY, cordX].r = land.VNML.normals[y, x].x;
+                                Normals[cordY, cordX].g = land.VNML.normals[y, x].y;
+                                Normals[cordY, cordX].b = land.VNML.normals[y, x].z;
+                            }
+
+                            if (exportOptions.VertexColorMap && land.VCLR != null)
+                            {
+                                VertexColors[cordY, cordX].r = land.VCLR.VertexColors[y, x].r;
+                                VertexColors[cordY, cordX].g = land.VCLR.VertexColors[y, x].g;
+                                VertexColors[cordY, cordX].b = land.VCLR.VertexColors[y, x].b;
+                            }
                         }
                     }
                 }
@@ -251,7 +254,7 @@ namespace TES3Landgen
 
         private void ImportTexturePlacement(List<LAND> records)
         {
-            TexturePlacement = new ushort[16 * height / CELL_SIZE, 16 * width / CELL_SIZE];
+            TexturePlacement = new ushort[TEXTURE_CELL_SIZE * height / HEIGHT_CELL_SIZE, TEXTURE_CELL_SIZE * width / HEIGHT_CELL_SIZE];
 
             const bool forceNonParallel = false;
             var options = new ParallelOptions { MaxDegreeOfParallelism = forceNonParallel ? 1 : -1 };
@@ -261,12 +264,12 @@ namespace TES3Landgen
 
                 ushort[,] texTransformed = TransformRowsToBlock(land.VTEX.TexIndices);
 
-                for (int y = 0; y < 16; y++)
+                for (int y = 0; y < TEXTURE_CELL_SIZE; y++)
                 {
-                    for (int x = 0; x < 16; x++)
+                    for (int x = 0; x < TEXTURE_CELL_SIZE; x++)
                     {
-                        int cordX = 16 * (Math.Abs(minX) + land.INTV.CellX) + x;
-                        int cordY = 16 * (Math.Abs(minY) + land.INTV.CellY) + y;
+                        int cordX = TEXTURE_CELL_SIZE * (Math.Abs(minX) + land.INTV.CellX) + x;
+                        int cordY = TEXTURE_CELL_SIZE * (Math.Abs(minY) + land.INTV.CellY) + y;
 
                         TexturePlacement[cordY, cordX] = texTransformed[y, x];
                     }
@@ -279,8 +282,8 @@ namespace TES3Landgen
             var heightMeta = RawImage.LoadRawMetadataFromJson(path);
             var heightData = RawImage.LoadGrayscale16(path, heightMeta);
 
-            int cellNumberX = heightData.GetLength(1) / 65;
-            int cellNumberY = heightData.GetLength(0) / 65;
+            int cellNumberX = heightData.GetLength(1) / MW_CELL;
+            int cellNumberY = heightData.GetLength(0) / MW_CELL;
 
             var landList = new List<Record>();
 
@@ -295,9 +298,7 @@ namespace TES3Landgen
                         CellY = y + moveY,
                     };
                     landRecord.DATA = new DATA();
-                    landRecord.VHGT = CreateHeightMapSubrecord(x * CELL_SIZE, y * CELL_SIZE, heightData);
-                    landRecord.VNML = CreateVertexNormalSubrecord(x * CELL_SIZE, y * CELL_SIZE, heightData);
-
+                    landRecord.VHGT = CreateHeightMapSubrecord(x * 64, y * 64, heightData);
 
                     var cellRecord = new CELL
                     {
@@ -327,8 +328,8 @@ namespace TES3Landgen
         #region subrecord_creators
         private VHGT CreateHeightMapSubrecord(int offsetX, int offsetY, float[,] importedHeightMap)
         {
-            var heightDeltas = new sbyte[CELL_SIZE, CELL_SIZE];
-
+            var heightDeltas = new sbyte[HEIGHT_CELL_SIZE, HEIGHT_CELL_SIZE];
+            float grad = 0;
             for (int y = heightDeltas.GetLength(0) - 1; y >= 0; y--)
             {
                 for (int x = heightDeltas.GetLength(1) - 1; x >= 0; x--)
@@ -348,12 +349,18 @@ namespace TES3Landgen
                             };
                         }
 
+                        grad = (importedHeightMap[y2, x2] - importedHeightMap[y2 - 1, x2]);
+                        grad = grad > 127 ? 127 : grad;
+                        grad = grad < -128 ? -128 : grad;
 
-                        heightDeltas[y, x] = (sbyte)(importedHeightMap[y2, x2] - importedHeightMap[y2 - 1, x2]);
+
+                        heightDeltas[y, x] = (sbyte)grad;
                         continue;
                     }
 
-                    var grad = (importedHeightMap[y2, x2] - importedHeightMap[y2, x2 - 1]);
+                    grad = (importedHeightMap[y2, x2] - importedHeightMap[y2, x2 - 1]);
+                    grad = grad > 127 ? 127 : grad;
+                    grad = grad < -128 ? -128 : grad;
 
                     heightDeltas[y, x] = (sbyte)grad;
                 }
@@ -363,7 +370,7 @@ namespace TES3Landgen
 
         private VNML CreateVertexNormalSubrecord(int offsetX, int offsetY, float[,] importedHeightMap)
         {
-            var normals = new normal[CELL_SIZE, CELL_SIZE];
+            var normals = new normal[HEIGHT_CELL_SIZE, HEIGHT_CELL_SIZE];
             for (int y = 0 - 1; y >= 0; y--)
             {
                 for (int x = normals.GetLength(1) - 1; x >= 0; x--)
@@ -388,10 +395,10 @@ namespace TES3Landgen
 
         private VTEX CreateTexturePlacementSubrecord(int offsetX, int offsetY, ushort[,] importedTextureData)
         {
-            var texturePlacement = new ushort[16, 16];
-            for (int y = 0; y < 16; y++)
+            var texturePlacement = new ushort[TEXTURE_CELL_SIZE, TEXTURE_CELL_SIZE];
+            for (int y = 0; y < TEXTURE_CELL_SIZE; y++)
             {
-                for (int x = 0; x < 16; x++)
+                for (int x = 0; x < TEXTURE_CELL_SIZE; x++)
                 {
                     var y2 = offsetY + y;
                     var x2 = offsetX + x;
@@ -436,8 +443,8 @@ namespace TES3Landgen
         internal void VHGTTester(LAND land)
         {
             //testing
-            int cordX = CELL_SIZE * (Math.Abs(minX) + land.INTV.CellX);
-            int cordY = CELL_SIZE * (Math.Abs(minY) + land.INTV.CellY);
+            int cordX = HEIGHT_CELL_SIZE * (Math.Abs(minX) + land.INTV.CellX);
+            int cordY = HEIGHT_CELL_SIZE * (Math.Abs(minY) + land.INTV.CellY);
 
             var heightSubrecord = CreateHeightMapSubrecord(cordX, cordY, Heightmap);
             {//compare

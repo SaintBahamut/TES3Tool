@@ -27,6 +27,7 @@ namespace TES3Lib.Subrecords.LAND
         /// height data is not absolute values but uses differences between adjacent pixels.
         /// Thus a pixel value of 0 means it has the same height as the last pixel.Note that
         /// the y-direction of the data is from the bottom up.
+        /// row/cell 65 is height data from adjacent north-east cells
         /// </summary>
         public sbyte[,] HeightDelta { get; set; }
 
